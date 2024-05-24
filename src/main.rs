@@ -11,68 +11,7 @@ mod data;
 mod keccak;
 mod types;
 use types::Primitive;
-
-
-// Define the Mapping struct with generic types for Key and Value
-struct Mapping<Value> {
-    __slot: U256,
-    __marker: PhantomData<Value>,
-}
-
-// Implement the Mapping struct
-impl<Value> Mapping<Value> {
-    fn new(slot: U256) -> Self {
-        Self {
-            __slot: slot,
-            __marker: PhantomData,
-        }
-    }
-
-    fn get_item<Key>(&self, key: Key) -> Value
-        where
-            Key: Into<CommonKey>,
-            Value: From<U256>,
-    {
-        // Convert the key into a common representation [u8; 32]
-        let key_bytes = key.into().to_key_bytes();
-        let value_slot_bytes = keccak256_concat(key_bytes, u256_to_bytes32(self.__slot));
-        let value_slot = bytes32_to_u256(value_slot_bytes);
-        Value::from(value_slot)
-    }
-}
-
-impl<Key, Value> Index<Key> for Mapping<Value>
-    where
-        Key: Into<CommonKey>,
-        Value: From<U256>,
-{
-    type Output = Value;
-
-    fn index(&self, key: Key) -> &Self::Output {
-        // Compute the value on the fly and return a reference to it
-        let value = self.get_item(key);
-        Box::leak(Box::new(value))
-    }
-}
-
-impl From<u64> for CommonKey {
-    fn from(key: u64) -> Self {
-        let mut bytes = [0u8; 32];
-        bytes[0..std::mem::size_of::<u64>()].copy_from_slice(&key.to_be_bytes());
-        CommonKey(bytes)
-    }
-}
-
-
-#[derive(Debug)]
-struct CommonKey([u8; 32]);
-
-// Implement methods for CommonKey
-impl CommonKey {
-    fn to_key_bytes(&self) -> [u8; 32] {
-        self.0
-    }
-}
+use crate::types::Mapping;
 
 
 #[derive(Debug)]
@@ -127,7 +66,7 @@ fn main() {
     // };
     // println!("{:#?}", contract.plainUint32.slot());
 
-    let mapping = Mapping::<MyStruct>::new(U256::from(137));
+    let mapping = Mapping::<MyStruct>::from(U256::from(137));
     println!("Value: {:?}", mapping[10u64]);  // Outputs: Value: MyStruct(137)
 }
 
