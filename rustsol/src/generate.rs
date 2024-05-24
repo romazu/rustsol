@@ -14,6 +14,8 @@ pub fn generate_struct_from_member_defs(struct_name: &str, member_defs: Vec<Memb
     }).collect();
 
     let struct_definition = quote! {
+        #[derive(Default)]
+        #[allow(non_snake_case)]
         pub struct #struct_name {
             #(#fields),*
         }
@@ -29,7 +31,13 @@ fn get_nested_type(nested_type: &NestedType) -> TokenStream {
         NestedType::Mapping(key, value) => {
             let key_type = get_nested_type(key);
             let value_type = get_nested_type(value);
-            quote! { Mapping<#key_type, #value_type> }
+            let key_type_for_mapping = match key.as_ref() {
+                NestedType::Primitive => quote! { PrimitiveKey },
+                NestedType::Bytes => quote! { BytesKey },
+                _ => panic!("Bad key type")
+            };
+
+            quote! { Mapping<#key_type_for_mapping, #value_type> }
         }
     }
 }

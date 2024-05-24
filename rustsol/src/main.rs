@@ -5,10 +5,11 @@ use std::marker::PhantomData;
 use std::ops::Index;
 use prettyplease::unparse;
 use primitive_types::U256;
+use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use serde::Deserialize;
 use sha3::digest::consts::U2;
-use syn::Item;
+use syn::{Item, parse_str};
 use crate::keccak::{bytes32_to_u256, keccak256_concat, u256_to_bytes32};
 
 mod layout;
@@ -98,21 +99,35 @@ fn main() {
     let struct_definition = generate::generate_struct_from_member_defs("MyContract", member_defs);
     // println!("{}", struct_definition);
 
-    let predefined_structs_content = fs::read_to_string("src/types.rs").expect("Unable to read file");
-    let syntax_tree1 = syn::parse_file(&predefined_structs_content).expect("Unable to parse file");
-    let predefined_structs_tokens = syntax_tree1.to_token_stream();
+    // let generated_tokens = struct_definition;
 
-    // Combine predefined structures with generated struct
-    let combined_tokens = quote! {
+    // let predefined_structs_content = fs::read_to_string("src/types.rs").expect("Unable to read file");
+    // let syntax_tree1 = syn::parse_file(&predefined_structs_content).expect("Unable to parse file");
+    // let predefined_structs_tokens = syntax_tree1.to_token_stream();
+    //
+    // // Combine predefined structures with generated struct
+    // let generated_tokens = quote! {
+    //     #predefined_structs_tokens
+    //     #struct_definition
+    // };
+
+    let predefined_structs: Vec<Item> = vec![
+        parse_str("use rustsol::types::{Primitive, Bytes, Mapping, PrimitiveKey, BytesKey};").expect("Failed to parse"),
+        // parse_str("pub struct Bytes;").expect("Failed to parse"),
+        // parse_str("pub struct Mapping<K, V> { pub key: K, pub value: V, }").expect("Failed to parse"),
+    ];
+    let predefined_structs_tokens: TokenStream = predefined_structs.into_iter().map(|item| item.into_token_stream()).collect();
+    let generated_tokens = quote! {
         #predefined_structs_tokens
         #struct_definition
     };
 
+
     // Convert TokenStream to a pretty-printed string
-    let syntax_tree  = syn::parse_file(&combined_tokens.to_string()).expect("Failed to parse TokenStream");
+    let syntax_tree  = syn::parse_file(&generated_tokens.to_string()).expect("Failed to parse TokenStream");
     let formatted_code = prettyplease::unparse(&syntax_tree);
 
-    let file_path = "generated_contract.rs";
+    let file_path = "generated/src/generated_contract.rs";
     let mut file = File::create(file_path).expect("Unable to create file");
     file.write_all(formatted_code.as_bytes()).expect("Unable to write data");
 

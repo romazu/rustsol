@@ -4,7 +4,7 @@ use proc_macro2::{TokenStream};
 use quote::quote;
 use syn::Ident;
 
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, Deserialize, Default)]
 #[serde(rename_all = "camelCase")]
 pub struct Member {
     pub ast_id: u64,

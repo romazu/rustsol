@@ -1,17 +1,6 @@
-workspace = { members = ["generated"] }
-[package]
-name = "rustsol"
-version = "0.1.0"
-edition = "2021"
-
-[dependencies]
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-primitive-types = "0.12.2"
-sha3 = "0.10"
-
-syn = { version = "2", features = ["full", "parsing", "printing"] }
-quote = "1.0"
-proc-macro2 = "1.0"
-
-prettyplease = "0.2"
+[workspace]
+members = [
+    "rustsol",
+    "generated",
+]
+resolver = "2"
