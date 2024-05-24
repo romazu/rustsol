@@ -1,10 +1,14 @@
+use std::fs;
 use std::fs::File;
-use std::io::Read;
+use std::io::{Read, Write};
 use std::marker::PhantomData;
 use std::ops::Index;
+use prettyplease::unparse;
 use primitive_types::U256;
+use quote::{quote, ToTokens};
 use serde::Deserialize;
 use sha3::digest::consts::U2;
+use syn::Item;
 use crate::keccak::{bytes32_to_u256, keccak256_concat, u256_to_bytes32};
 
 mod layout;
@@ -12,6 +16,8 @@ mod layout;
 mod data;
 mod keccak;
 mod types;
+mod generate;
+
 use types::{Primitive, Mapping};
 
 //
@@ -89,9 +95,25 @@ fn main() {
         println!("{:?}", nested_type);
     }
 
-    let struct_definition = layout::generate_struct_from_member_defs("MyContract", member_defs);
+    let struct_definition = generate::generate_struct_from_member_defs("MyContract", member_defs);
+    // println!("{}", struct_definition);
 
-    println!("{}", struct_definition);
+    let predefined_structs_content = fs::read_to_string("src/types.rs").expect("Unable to read file");
+    let syntax_tree1 = syn::parse_file(&predefined_structs_content).expect("Unable to parse file");
+    let predefined_structs_tokens = syntax_tree1.to_token_stream();
 
+    // Combine predefined structures with generated struct
+    let combined_tokens = quote! {
+        #predefined_structs_tokens
+        #struct_definition
+    };
+
+    // Convert TokenStream to a pretty-printed string
+    let syntax_tree  = syn::parse_file(&combined_tokens.to_string()).expect("Failed to parse TokenStream");
+    let formatted_code = prettyplease::unparse(&syntax_tree);
+
+    let file_path = "generated_contract.rs";
+    let mut file = File::create(file_path).expect("Unable to create file");
+    file.write_all(formatted_code.as_bytes()).expect("Unable to write data");
 
 }

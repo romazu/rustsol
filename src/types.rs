@@ -1,7 +1,6 @@
 use std::marker::PhantomData;
 use std::ops::Index;
 use primitive_types::U256;
-use serde_json::Value;
 use crate::keccak::{bytes32_to_u256, keccak256_concat, u256_to_bytes32};
 
 #[derive(Debug)]
