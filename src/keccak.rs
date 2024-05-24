@@ -10,17 +10,11 @@ fn to_bytes32(num: u64) -> [u8; 32] {
 }
 
 /// Computes the keccak256 hash of the concatenation of two 32-byte arrays
-fn keccak256_concat(a: [u8; 32], b: [u8; 32]) -> [u8; 32] {
+pub fn keccak256_concat(a: [u8; 32], b: [u8; 32]) -> [u8; 32] {
     let mut hasher = Keccak256::new();
     hasher.update(a);
     hasher.update(b);
     hasher.finalize().as_slice().try_into().expect("Wrong length")
-}
-
-/// Computes the storage slot for a nested mapping
-fn compute_mapping_slot(key: U256, mapping_slot: U256) -> U256 {
-    let slot_bytes = keccak256_concat(u256_to_bytes32(key), u256_to_bytes32(mapping_slot));
-    bytes32_to_u256(slot_bytes)
 }
 
 fn ceil_div(a: u64, b: u64) -> u64 {
@@ -44,12 +38,12 @@ fn compute_array_element_slot(base_slot: U256, index: u64, element_size: u64) ->
     }
 }
 
-fn u256_to_bytes32(num: U256) -> [u8; 32] {
+pub fn u256_to_bytes32(num: U256) -> [u8; 32] {
     let mut bytes = [0u8; 32];
     num.to_big_endian(&mut bytes);
     bytes
 }
 
-fn bytes32_to_u256(bytes: [u8; 32]) -> U256 {
+pub fn bytes32_to_u256(bytes: [u8; 32]) -> U256 {
     U256::from_big_endian(&bytes)
 }
