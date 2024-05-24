@@ -1,5 +1,9 @@
 use serde::{Deserialize, Deserializer};
 use std::collections::{HashMap, HashSet};
+use proc_macro2::{TokenStream};
+use quote::quote;
+use syn::Ident;
+use macros::generate_struct;
 
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -188,7 +192,7 @@ impl StorageLayout {
                     } else {
                         None
                     }
-                },
+                }
                 MemberType::Bytes { .. } => Some(NestedType::Bytes),
                 MemberType::Primitive { .. } => Some(NestedType::Primitive),
                 _ => None,
@@ -210,3 +214,44 @@ impl StorageLayout {
         }
     }
 }
+
+pub fn generate_struct_from_member_defs(struct_name: &str, member_defs: Vec<MemberDef>) -> TokenStream {
+    let struct_name = Ident::new(struct_name, proc_macro2::Span::call_site());
+
+    let fields: Vec<TokenStream> = member_defs.iter().map(|member_def| {
+        let field_name = Ident::new(&member_def.member_info.label, proc_macro2::Span::call_site());
+        let field_type = get_nested_type(&member_def.type_def);
+        quote! {
+            pub #field_name: #field_type
+        }
+    }).collect();
+
+    let struct_definition = quote! {
+        pub struct #struct_name {
+            #(#fields),*
+        }
+    };
+
+    struct_definition.into()
+}
+
+fn get_nested_type(nested_type: &NestedType) -> TokenStream {
+    match nested_type {
+        NestedType::Primitive => quote! { types::Primitive },
+        NestedType::Bytes => quote! { types::Bytes },
+        NestedType::Mapping(key, value) => {
+            let key_type = get_nested_type(key);
+            let value_type = get_nested_type(value);
+            quote! { types::Mapping<#key_type, #value_type> }
+        }
+    }
+}
+
+// pub struct GeneratedStruct {
+//     pub plainUint112: Primitive,
+//     pub plainUint32: Primitive,
+//     pub plainString: Bytes,
+//     pub myMapping1: Mapping<Primitive, Primitive>,
+//     pub myMapping2: Mapping<Bytes, Primitive>,
+//     pub myNestedMapping: Mapping<Primitive, Mapping<Primitive, Primitive>>,
+// }

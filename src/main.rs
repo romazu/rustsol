@@ -82,12 +82,16 @@ fn main() {
 
     let (member_defs, nested_types) = storage_layout.traverse_mappings();
 
-    for member_def in member_defs {
+    for member_def in &member_defs {
         println!("{:?}", member_def);
     }
-    for nested_type in nested_types {
+    for nested_type in &nested_types {
         println!("{:?}", nested_type);
     }
+
+    let struct_definition = layout::generate_struct_from_member_defs("MyContract", member_defs);
+
+    println!("{}", struct_definition);
 
 
 }
