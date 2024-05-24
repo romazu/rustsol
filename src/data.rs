@@ -55,15 +55,15 @@ pub const STORAGE_STRING: &str = r#"
       "label": "myMapping",
       "offset": 0,
       "slot": "10",
-      "type": "t_mapping(t_string_memory_ptr,t_uint256)"
+      "type": "t_mapping(t_uint256,t_uint256)"
     },
     {
-      "astId": 32,
+      "astId": 31,
       "contract": "<stdin>:MyContract",
       "label": "myNestedMapping",
       "offset": 0,
       "slot": "11",
-      "type": "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(MyStruct)11_storage))"
+      "type": "t_mapping(t_uint256,t_mapping(t_uint256,t_uint256))"
     }
   ],
   "types": {
@@ -84,31 +84,19 @@ pub const STORAGE_STRING: &str = r#"
       "label": "uint256[]",
       "numberOfBytes": "32"
     },
-    "t_mapping(t_string_memory_ptr,t_uint256)": {
+    "t_mapping(t_uint256,t_mapping(t_uint256,t_uint256))": {
       "encoding": "mapping",
-      "key": "t_string_memory_ptr",
-      "label": "mapping(string => uint256)",
+      "key": "t_uint256",
+      "label": "mapping(uint256 => mapping(uint256 => uint256))",
+      "numberOfBytes": "32",
+      "value": "t_mapping(t_uint256,t_uint256)"
+    },
+    "t_mapping(t_uint256,t_uint256)": {
+      "encoding": "mapping",
+      "key": "t_uint256",
+      "label": "mapping(uint256 => uint256)",
       "numberOfBytes": "32",
       "value": "t_uint256"
-    },
-    "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(MyStruct)11_storage))": {
-      "encoding": "mapping",
-      "key": "t_uint256",
-      "label": "mapping(uint256 => mapping(uint256 => struct MyContract.MyStruct))",
-      "numberOfBytes": "32",
-      "value": "t_mapping(t_uint256,t_struct(MyStruct)11_storage)"
-    },
-    "t_mapping(t_uint256,t_struct(MyStruct)11_storage)": {
-      "encoding": "mapping",
-      "key": "t_uint256",
-      "label": "mapping(uint256 => struct MyContract.MyStruct)",
-      "numberOfBytes": "32",
-      "value": "t_struct(MyStruct)11_storage"
-    },
-    "t_string_memory_ptr": {
-      "encoding": "bytes",
-      "label": "string",
-      "numberOfBytes": "32"
     },
     "t_string_storage": {
       "encoding": "bytes",

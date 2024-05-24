@@ -1,7 +1,7 @@
 use serde::{Deserialize, Deserializer};
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Member {
     pub ast_id: u64,
@@ -24,8 +24,9 @@ pub enum MemberType {
         label: String,
         number_of_bytes: u64,
     },
-    StaticArray {
-        base: String,
+    Mapping {
+        key: String,
+        value: String,
         label: String,
         number_of_bytes: u64,
     },
@@ -34,16 +35,21 @@ pub enum MemberType {
         label: String,
         number_of_bytes: u64,
     },
-    Mapping {
-        key: String,
-        value: String,
+    StaticArray {
+        base: String,
         label: String,
+        number_of_bytes: u64,
+    },
+    Struct {
+        label: String,
+        members: Vec<Member>,
         number_of_bytes: u64,
     },
 }
 
 #[derive(Debug, Deserialize)]
 pub struct StorageLayout {
+    #[serde(rename = "storage")]
     pub members: Vec<Member>,
     pub types: HashMap<String, MemberType>,
 }
@@ -63,6 +69,7 @@ impl<'de> Deserialize<'de> for MemberType {
             base: Option<String>,
             key: Option<String>,
             value: Option<String>,
+            members: Option<Vec<Member>>,
         }
 
         let intermediate = IntermediateMemberType::deserialize(deserializer)?;
@@ -72,6 +79,12 @@ impl<'de> Deserialize<'de> for MemberType {
                     Ok(MemberType::StaticArray {
                         base,
                         label: intermediate.label,
+                        number_of_bytes: intermediate.number_of_bytes,
+                    })
+                } else if let Some(members) = intermediate.members {
+                    Ok(MemberType::Struct {
+                        label: intermediate.label,
+                        members: members,
                         number_of_bytes: intermediate.number_of_bytes,
                     })
                 } else {
@@ -107,4 +120,93 @@ fn string_to_u64<'de, D>(deserializer: D) -> Result<u64, D::Error>
 {
     let slot_str = String::deserialize(deserializer)?;
     slot_str.parse::<u64>().map_err(serde::de::Error::custom)
+}
+
+
+#[derive(Debug, Clone)]
+pub enum NestedType {
+    Bytes,
+    Primitive,
+    Mapping(Box<NestedType>, Box<NestedType>), // Box is needed to avoid problems with recursive definition of NestedType
+}
+
+impl NestedType {
+    fn to_string(&self) -> String {
+        match self {
+            NestedType::Bytes => "Bytes".to_string(),
+            NestedType::Primitive => "Primitive".to_string(),
+            NestedType::Mapping(key, value) => {
+                format!("Mapping<{}, {}>", key.to_string(), value.to_string())
+            }
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct MemberDef {
+    pub type_def: NestedType,
+    pub member_info: Member,
+}
+
+impl StorageLayout {
+    pub fn traverse_mappings(&self) -> (Vec<MemberDef>, Vec<NestedType>) {
+        let mut member_defs = Vec::new();
+        let mut nested_types = Vec::new();
+        let mut unique_representations = HashSet::new();
+
+        for member in &self.members {
+            if let Some(nested_type) = self.traverse_type_for_mapping(&member.type_name) {
+                member_defs.push(MemberDef {
+                    type_def: nested_type.clone(),
+                    member_info: member.clone(),
+                });
+                self.collect_unique_types(&nested_type, &mut nested_types, &mut unique_representations);
+            }
+        }
+
+        (member_defs, nested_types)
+    }
+
+    fn traverse_type_for_mapping(&self, type_name: &str) -> Option<NestedType> {
+        if let Some(ty) = self.types.get(type_name) {
+            match ty {
+                MemberType::Mapping { key, value, .. } => {
+                    let key_type = match self.traverse_type_for_mapping(key) {
+                        Some(NestedType::Primitive) => Some(NestedType::Primitive),
+                        Some(NestedType::Bytes) => Some(NestedType::Bytes),
+                        _ => panic!("Key type must be Primitive or Bytes"),
+                    };
+
+                    let value_type = self.traverse_type_for_mapping(value);
+
+                    if let Some(valid_key_type) = key_type {
+                        if let Some(valid_value_type) = value_type {
+                            Some(NestedType::Mapping(Box::new(valid_key_type), Box::new(valid_value_type)))
+                        } else {
+                            panic!("Value type could not be resolved for type: {}", value);
+                        }
+                    } else {
+                        None
+                    }
+                },
+                MemberType::Bytes { .. } => Some(NestedType::Bytes),
+                MemberType::Primitive { .. } => Some(NestedType::Primitive),
+                _ => None,
+            }
+        } else {
+            None
+        }
+    }
+
+    fn collect_unique_types(&self, nested_type: &NestedType, nested_types: &mut Vec<NestedType>, unique_representations: &mut HashSet<String>) {
+        let repr = nested_type.to_string();
+        if unique_representations.insert(repr.clone()) {
+            nested_types.push(nested_type.clone());
+        }
+
+        if let NestedType::Mapping(key, value) = nested_type {
+            self.collect_unique_types(key, nested_types, unique_representations);
+            self.collect_unique_types(value, nested_types, unique_representations);
+        }
+    }
 }
