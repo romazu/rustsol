@@ -23,4 +23,7 @@ fn main() {
     println!("{:#?}", contract.myMapping2.get_item("0u64"));
     println!("{:#?}", contract.dynamicArray.get_item(10).slot());
     println!("{:#?}", contract.dynamicArrayStruct.get_item(10).slot());
+    println!("{:#?}", contract.dynamicArrayStruct.get_item(11).slot());
+    println!("{:#?}", contract.dynamicArraySmall.get_item(10).slot());
+    println!("{:#?}", contract.dynamicArraySmall.get_item(11).slot());
 }

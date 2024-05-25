@@ -11,11 +11,16 @@ contract MyContract {
         address myAddress;
         MyStruct myStruct;
     }
+    struct MyStructSmall {
+        uint32 smallInt1;
+        uint32 smallInt2;
+    }
     MyStructNested public myStructNested;
 
     uint112[10] public staticArray;
     uint256[] public dynamicArray;
     MyStructNested[] public dynamicArrayStruct;
+    MyStructSmall[] public dynamicArraySmall;
 
     mapping(uint256 => uint256) public myMapping1;
     mapping(string => uint256) public myMapping2;

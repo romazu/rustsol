@@ -12,6 +12,7 @@ pub struct Contract {
     pub myStructNested: MyContractMyStructNested,
     pub dynamicArray: DynamicArray<Primitive<32>>,
     pub dynamicArrayStruct: DynamicArray<MyContractMyStructNested>,
+    pub dynamicArraySmall: DynamicArray<MyContractMyStructSmall>,
     pub myMapping1: Mapping<PrimitiveKey, Primitive<32>>,
     pub myMapping2: Mapping<BytesKey, Primitive<32>>,
     pub myNestedMapping: Mapping<PrimitiveKey, Mapping<PrimitiveKey, Primitive<32>>>,
@@ -26,9 +27,10 @@ impl Contract {
             myStructNested: MyContractMyStructNested::from_position(slot + 2u64, 0u8),
             dynamicArray: DynamicArray::from_position(slot + 10u64, 0u8),
             dynamicArrayStruct: DynamicArray::from_position(slot + 11u64, 0u8),
-            myMapping1: Mapping::from_position(slot + 12u64, 0u8),
-            myMapping2: Mapping::from_position(slot + 13u64, 0u8),
-            myNestedMapping: Mapping::from_position(slot + 14u64, 0u8),
+            dynamicArraySmall: DynamicArray::from_position(slot + 12u64, 0u8),
+            myMapping1: Mapping::from_position(slot + 13u64, 0u8),
+            myMapping2: Mapping::from_position(slot + 14u64, 0u8),
+            myNestedMapping: Mapping::from_position(slot + 15u64, 0u8),
         }
     }
     pub fn slot(&self) -> U256 {
@@ -95,5 +97,32 @@ impl Position for MyContractMyStruct {
     }
     fn size() -> u64 {
         64u64
+    }
+}
+#[derive(Debug)]
+#[allow(non_snake_case)]
+pub struct MyContractMyStructSmall {
+    __slot: U256,
+    pub smallInt1: Primitive<4>,
+    pub smallInt2: Primitive<4>,
+}
+impl MyContractMyStructSmall {
+    pub fn new_from_position(slot: U256, offset: u8) -> Self {
+        Self {
+            __slot: slot,
+            smallInt1: Primitive::from_position(slot + 0u64, 0u8),
+            smallInt2: Primitive::from_position(slot + 0u64, 4u8),
+        }
+    }
+    pub fn slot(&self) -> U256 {
+        self.__slot
+    }
+}
+impl Position for MyContractMyStructSmall {
+    fn from_position(slot: U256, offset: u8) -> Self {
+        Self::new_from_position(slot, offset)
+    }
+    fn size() -> u64 {
+        32u64
     }
 }

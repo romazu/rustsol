@@ -271,5 +271,8 @@ impl StorageLayout {
                 self.collect_unique_types(&member.type_def, nested_types, unique_representations);
             }
         }
+        if let NestedType::DynamicArray { value } = nested_type {
+            self.collect_unique_types(value, nested_types, unique_representations);
+        }
     }
 }
