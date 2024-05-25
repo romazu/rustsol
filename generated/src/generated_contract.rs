@@ -1,56 +1,78 @@
-use rustsol::types::{Primitive, Bytes, Mapping, PrimitiveKey, BytesKey};
-#[derive(Default)]
+use rustsol::types::{Primitive, Bytes, Mapping, PrimitiveKey, BytesKey, FromPosition};
+use primitive_types::U256;
+#[derive(Debug)]
 #[allow(non_snake_case)]
 pub struct Contract {
-    __slot: [u8; 32],
-    pub slot0: UniswapV3PoolSlot0,
-    pub feeGrowthGlobal0X128: Primitive,
-    pub feeGrowthGlobal1X128: Primitive,
-    pub protocolFees: UniswapV3PoolProtocolFees,
-    pub liquidity: Primitive,
-    pub ticks: Mapping<PrimitiveKey, TickInfo>,
-    pub tickBitmap: Mapping<PrimitiveKey, Primitive>,
-    pub positions: Mapping<PrimitiveKey, PositionInfo>,
+    __slot: U256,
+    pub plainUint112: Primitive,
+    pub plainUint32: Primitive,
+    pub plainString: Bytes,
+    pub myStructNested: MyContractMyStructNested,
+    pub myMapping1: Mapping<PrimitiveKey, Primitive>,
+    pub myMapping2: Mapping<BytesKey, Primitive>,
+    pub myNestedMapping: Mapping<PrimitiveKey, Mapping<PrimitiveKey, Primitive>>,
 }
-#[derive(Default)]
-#[allow(non_snake_case)]
-pub struct UniswapV3PoolSlot0 {
-    __slot: [u8; 32],
-    pub sqrtPriceX96: Primitive,
-    pub tick: Primitive,
-    pub observationIndex: Primitive,
-    pub observationCardinality: Primitive,
-    pub observationCardinalityNext: Primitive,
-    pub feeProtocol: Primitive,
-    pub unlocked: Primitive,
+impl Contract {
+    pub fn new_from_position(slot: U256, offset: U256) -> Self {
+        Self {
+            __slot: slot,
+            plainUint112: Primitive::from_position(slot + 0u64, U256::from(0u64)),
+            plainUint32: Primitive::from_position(slot + 0u64, U256::from(14u64)),
+            plainString: Bytes::from_position(slot + 1u64, U256::from(0u64)),
+            myStructNested: MyContractMyStructNested::from_position(
+                slot + 2u64,
+                U256::from(0u64),
+            ),
+            myMapping1: Mapping::from_position(slot + 11u64, U256::from(0u64)),
+            myMapping2: Mapping::from_position(slot + 12u64, U256::from(0u64)),
+            myNestedMapping: Mapping::from_position(slot + 13u64, U256::from(0u64)),
+        }
+    }
 }
-#[derive(Default)]
-#[allow(non_snake_case)]
-pub struct UniswapV3PoolProtocolFees {
-    __slot: [u8; 32],
-    pub token0: Primitive,
-    pub token1: Primitive,
+impl FromPosition for Contract {
+    fn from_position(slot: U256, offset: U256) -> Self {
+        Self::new_from_position(slot, offset)
+    }
 }
-#[derive(Default)]
+#[derive(Debug)]
 #[allow(non_snake_case)]
-pub struct TickInfo {
-    __slot: [u8; 32],
-    pub liquidityGross: Primitive,
-    pub liquidityNet: Primitive,
-    pub feeGrowthOutside0X128: Primitive,
-    pub feeGrowthOutside1X128: Primitive,
-    pub tickCumulativeOutside: Primitive,
-    pub secondsPerLiquidityOutsideX128: Primitive,
-    pub secondsOutside: Primitive,
-    pub initialized: Primitive,
+pub struct MyContractMyStructNested {
+    __slot: U256,
+    pub myAddress: Primitive,
+    pub myStruct: MyContractMyStruct,
 }
-#[derive(Default)]
+impl MyContractMyStructNested {
+    pub fn new_from_position(slot: U256, offset: U256) -> Self {
+        Self {
+            __slot: slot,
+            myAddress: Primitive::from_position(slot + 0u64, U256::from(0u64)),
+            myStruct: MyContractMyStruct::from_position(slot + 1u64, U256::from(0u64)),
+        }
+    }
+}
+impl FromPosition for MyContractMyStructNested {
+    fn from_position(slot: U256, offset: U256) -> Self {
+        Self::new_from_position(slot, offset)
+    }
+}
+#[derive(Debug)]
 #[allow(non_snake_case)]
-pub struct PositionInfo {
-    __slot: [u8; 32],
-    pub liquidity: Primitive,
-    pub feeGrowthInside0LastX128: Primitive,
-    pub feeGrowthInside1LastX128: Primitive,
-    pub tokensOwed0: Primitive,
-    pub tokensOwed1: Primitive,
+pub struct MyContractMyStruct {
+    __slot: U256,
+    pub myAddress: Primitive,
+    pub myUint: Primitive,
+}
+impl MyContractMyStruct {
+    pub fn new_from_position(slot: U256, offset: U256) -> Self {
+        Self {
+            __slot: slot,
+            myAddress: Primitive::from_position(slot + 0u64, U256::from(0u64)),
+            myUint: Primitive::from_position(slot + 1u64, U256::from(0u64)),
+        }
+    }
+}
+impl FromPosition for MyContractMyStruct {
+    fn from_position(slot: U256, offset: U256) -> Self {
+        Self::new_from_position(slot, offset)
+    }
 }

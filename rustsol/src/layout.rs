@@ -237,14 +237,17 @@ impl StorageLayout {
         let repr = nested_type.to_string();
         if unique_representations.insert(repr.clone()) {
             nested_types.push(nested_type.clone());
+        } else {
+            return;
         }
         if let NestedType::Mapping{key, value} = nested_type {
             self.collect_unique_types(key, nested_types, unique_representations);
             self.collect_unique_types(value, nested_types, unique_representations);
         }
-        // if let NestedType::Struct{label, members} = nested_type {
-        //     self.collect_unique_types(key, nested_types, unique_representations);
-        //     self.collect_unique_types(value, nested_types, unique_representations);
-        // }
+        if let NestedType::Struct{label, members} = nested_type {
+            for member in members {
+                self.collect_unique_types(&member.type_def, nested_types, unique_representations);
+            }
+        }
     }
 }

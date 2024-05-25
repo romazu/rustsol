@@ -21,12 +21,39 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                     }
                 }).collect();
 
+                let default_fields: Vec<TokenStream> = members.iter().map(|member_def| {
+                    let field_name = Ident::new(&member_def.member_info.label, proc_macro2::Span::call_site());
+                    let field_type = get_type_name(&member_def.type_def);
+                    let member_slot = member_def.member_info.slot;
+                    let member_offset = member_def.member_info.offset;
+                    quote! {
+                        // #field_name: #field_type
+                        #field_name: #field_type::from_position(slot + #member_slot, U256::from(#member_offset))
+                        // #field_name: Default::default()
+                    }
+                }).collect();
+
+                println!("{}", default_fields[0].to_string());
+
                 let struct_definition = quote! {
-                    #[derive(Default)]
+                    #[derive(Debug)]
                     #[allow(non_snake_case)]
                     pub struct #struct_name {
-                        __slot: [u8; 32],
+                        __slot: U256,
                         #(#fields),*
+                    }
+                    impl #struct_name {
+                        pub fn new_from_position(slot: U256, offset: U256) -> Self {
+                            Self {
+                                __slot: slot,
+                                #(#default_fields),*
+                            }
+                        }
+                    }
+                    impl FromPosition for #struct_name {
+                        fn from_position(slot: U256, offset: U256) -> Self {
+                            Self::new_from_position(slot, offset)
+                        }
                     }
                 };
                 nested_struct_definitions.push(struct_definition)
@@ -37,7 +64,8 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
     }
 
     let imports_definition_items: Vec<Item> = vec![
-        parse_str("use rustsol::types::{Primitive, Bytes, Mapping, PrimitiveKey, BytesKey};").expect("Failed to parse"),
+        parse_str("use rustsol::types::{Primitive, Bytes, Mapping, PrimitiveKey, BytesKey, FromPosition};").expect("Failed to parse"),
+        parse_str("use primitive_types::{U256};").expect("Failed to parse"),
     ];
     let imports_definition: TokenStream = imports_definition_items.into_iter().map(|item| item.into_token_stream()).collect();
 
@@ -47,6 +75,17 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
     };
 
     generated_tokens
+}
+
+fn get_type_name(nested_type: &NestedType) -> TokenStream {
+    let type_name = match nested_type {
+        NestedType::Bytes => {"Bytes"}
+        NestedType::Primitive => {"Primitive"}
+        NestedType::Mapping { .. } => {"Mapping"}
+        NestedType::Struct { label, .. } => {label}
+    };
+    let ident = syn::Ident::new(type_name, proc_macro2::Span::call_site());
+    quote! { #ident }
 }
 
 fn get_nested_type(nested_type: &NestedType) -> TokenStream {
@@ -70,3 +109,32 @@ fn get_nested_type(nested_type: &NestedType) -> TokenStream {
         }
     }
 }
+
+
+// fn get_nested_type(nested_type: &NestedType) -> TokenStream {
+//     let type_name = get_nested_type_string(nested_type);
+//     let ident = syn::Ident::new(type_name, proc_macro2::Span::call_site());
+//     quote! {#ident}
+// }
+//
+// fn get_nested_type_string(nested_type: &NestedType) -> &str {
+//     match nested_type {
+//         NestedType::Primitive => "Primitive",
+//         NestedType::Bytes => "Bytes",
+//         NestedType::Mapping { key, value } => {
+//             let key_type = get_nested_type_string(key);
+//             let value_type = get_nested_type_string(value);
+//             let key_type_for_mapping = match key.as_ref() {
+//                 NestedType::Primitive => "PrimitiveKey",
+//                 NestedType::Bytes => "BytesKey",
+//                 _ => panic!("Bad key type")
+//             };
+//
+//             // quote! { Mapping<#key_type_for_mapping, #value_type> }
+//             quote! { Mapping<#key_type_for_mapping, #value_type> }
+//         }
+//         NestedType::Struct { label, members } => {
+//             label
+//         }
+//     }
+// }
