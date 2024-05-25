@@ -1,5 +1,6 @@
 use proc_macro2::{Ident, TokenStream};
-use quote::quote;
+use quote::{quote, ToTokens};
+use syn::{Item, parse_str};
 use crate::generate;
 use crate::layout::{MemberDef, NestedType};
 
@@ -30,11 +31,18 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                 };
                 nested_struct_definitions.push(struct_definition)
             }
+            // All other types are general and are predefined in separate files, see imports_definition.
             _ => {}
         }
     }
 
+    let imports_definition_items: Vec<Item> = vec![
+        parse_str("use rustsol::types::{Primitive, Bytes, Mapping, PrimitiveKey, BytesKey};").expect("Failed to parse"),
+    ];
+    let imports_definition: TokenStream = imports_definition_items.into_iter().map(|item| item.into_token_stream()).collect();
+
     let generated_tokens = quote! {
+        #imports_definition
         #(#nested_struct_definitions)*
     };
 

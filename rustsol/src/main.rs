@@ -119,15 +119,7 @@ fn main() {
     //     #main_struct_definition
     // };
 
-    let imports_definition_items: Vec<Item> = vec![
-        parse_str("use rustsol::types::{Primitive, Bytes, Mapping, PrimitiveKey, BytesKey};").expect("Failed to parse"),
-    ];
-    let imports_definition: TokenStream = imports_definition_items.into_iter().map(|item| item.into_token_stream()).collect();
-    let generated_tokens = quote! {
-        #imports_definition
-        #main_struct_definition
-        // #(#nested_struct_definitions)*
-    };
+    let generated_tokens = main_struct_definition;
 
 
     // Convert TokenStream to a pretty-printed string
