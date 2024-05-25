@@ -127,7 +127,11 @@ fn string_to_u64<'de, D>(deserializer: D) -> Result<u64, D::Error>
 pub enum NestedType {
     Bytes,
     Primitive,
-    Mapping(Box<NestedType>, Box<NestedType>), // Box is needed to avoid problems with recursive definition of NestedType
+    Mapping {
+        // Box is needed to avoid problems with recursive definition of NestedType
+        key: Box<NestedType>,
+        value: Box<NestedType>,
+    },
     Struct {
         label: String,
         members: Vec<MemberDef>,
@@ -139,7 +143,7 @@ impl NestedType {
         match self {
             NestedType::Bytes => "Bytes".to_string(),
             NestedType::Primitive => "Primitive".to_string(),
-            NestedType::Mapping(key, value) => {
+            NestedType::Mapping{key, value } => {
                 format!("Mapping<{}, {}>", key.to_string(), value.to_string())
             }
             NestedType::Struct { label, members } => {
@@ -199,7 +203,10 @@ impl StorageLayout {
 
                     if let Some(valid_key_type) = key_type {
                         if let Some(valid_value_type) = value_type {
-                            Some(NestedType::Mapping(Box::new(valid_key_type), Box::new(valid_value_type)))
+                            Some(NestedType::Mapping{
+                                key: Box::new(valid_key_type),
+                                value: Box::new(valid_value_type),
+                            })
                         } else {
                             // panic!("Value type could not be resolved for type: {}", value);
                             println!("Value type could not be resolved for type: {}", value);
@@ -211,7 +218,7 @@ impl StorageLayout {
                 }
                 MemberType::Struct { label, members, .. } => {
                     let struct_name = get_struct_name(label);
-                    let (member_defs, _ ) = self.traverse_members(members);
+                    let (member_defs, _) = self.traverse_members(members);
                     Some(NestedType::Struct {
                         label: struct_name,
                         members: member_defs,
@@ -229,7 +236,7 @@ impl StorageLayout {
         if unique_representations.insert(repr.clone()) {
             nested_types.push(nested_type.clone());
         }
-        if let NestedType::Mapping(key, value) = nested_type {
+        if let NestedType::Mapping{key, value} = nested_type {
             self.collect_unique_types(key, nested_types, unique_representations);
             self.collect_unique_types(value, nested_types, unique_representations);
         }

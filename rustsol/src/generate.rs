@@ -48,7 +48,7 @@ fn get_nested_type(nested_type: &NestedType) -> TokenStream {
     match nested_type {
         NestedType::Primitive => quote! { Primitive },
         NestedType::Bytes => quote! { Bytes },
-        NestedType::Mapping(key, value) => {
+        NestedType::Mapping { key, value } => {
             let key_type = get_nested_type(key);
             let value_type = get_nested_type(value);
             let key_type_for_mapping = match key.as_ref() {
