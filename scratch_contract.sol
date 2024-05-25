@@ -7,7 +7,11 @@ contract MyContract {
         address myAddress;
         uint256 myUint;
     }
-    MyStruct public myStruct;
+    struct MyStructNested {
+        address myAddress;
+        MyStruct myStruct;
+    }
+    MyStructNested public myStructNested;
 
     uint112[10] public staticArray;
     uint256[] public dynamicArray;

@@ -97,17 +97,17 @@ fn main() {
         println!("{:?}", nested_type);
     }
 
-    let main_struct_definition = generate::generate_struct_from_member_defs("MyContract", member_defs);
+    let main_struct_definition = generate::generate_struct_from_member_defs("MyContract", &member_defs);
     // println!("{}", main_struct_definition);
 
-    // let nested_struct_definitions: Vec<TokenStream>;
+    // let mut nested_struct_definitions: Vec<TokenStream> = Vec::new();
     // for nested_type in nested_types {
     //     match nested_type {
-    //         NestedType::Struct => {
-    //             let nested_struct_definition = generate::generate_struct_from_member_defs(nested_type., member_defs);
-    //             nested_struct_definitions.append()
-    //         },
-    //         _ => {},
+    //         NestedType::Struct { label, members } => {
+    //             let nested_struct_definition = generate::generate_struct_from_member_defs(&label, members);
+    //             nested_struct_definitions.push(nested_struct_definition)
+    //         }
+    //         _ => {}
     //     }
     // }
 
@@ -130,15 +130,15 @@ fn main() {
     let generated_tokens = quote! {
         #imports_definition
         #main_struct_definition
+        // #(#nested_struct_definitions)*
     };
 
 
     // Convert TokenStream to a pretty-printed string
-    let syntax_tree  = syn::parse_file(&generated_tokens.to_string()).expect("Failed to parse TokenStream");
+    let syntax_tree = syn::parse_file(&generated_tokens.to_string()).expect("Failed to parse TokenStream");
     let formatted_code = prettyplease::unparse(&syntax_tree);
 
     let file_path = "generated/src/generated_contract.rs";
     let mut file = File::create(file_path).expect("Unable to create file");
     file.write_all(formatted_code.as_bytes()).expect("Unable to write data");
-
 }

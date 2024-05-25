@@ -25,51 +25,51 @@
       "type": "t_string_storage"
     },
     {
-      "astId": 14,
+      "astId": 20,
       "contract": "<stdin>:MyContract",
-      "label": "myStruct",
+      "label": "myStructNested",
       "offset": 0,
       "slot": "2",
-      "type": "t_struct(MyStruct)11_storage"
+      "type": "t_struct(MyStructNested)17_storage"
     },
     {
-      "astId": 18,
+      "astId": 24,
       "contract": "<stdin>:MyContract",
       "label": "staticArray",
       "offset": 0,
-      "slot": "4",
+      "slot": "5",
       "type": "t_array(t_uint112)10_storage"
     },
     {
-      "astId": 21,
+      "astId": 27,
       "contract": "<stdin>:MyContract",
       "label": "dynamicArray",
       "offset": 0,
-      "slot": "9",
+      "slot": "10",
       "type": "t_array(t_uint256)dyn_storage"
     },
     {
-      "astId": 25,
+      "astId": 31,
       "contract": "<stdin>:MyContract",
       "label": "myMapping1",
       "offset": 0,
-      "slot": "10",
-      "type": "t_mapping(t_uint256,t_uint256)"
-    },
-    {
-      "astId": 29,
-      "contract": "<stdin>:MyContract",
-      "label": "myMapping2",
-      "offset": 0,
       "slot": "11",
-      "type": "t_mapping(t_string_memory_ptr,t_uint256)"
+      "type": "t_mapping(t_uint256,t_uint256)"
     },
     {
       "astId": 35,
       "contract": "<stdin>:MyContract",
-      "label": "myNestedMapping",
+      "label": "myMapping2",
       "offset": 0,
       "slot": "12",
+      "type": "t_mapping(t_string_memory_ptr,t_uint256)"
+    },
+    {
+      "astId": 41,
+      "contract": "<stdin>:MyContract",
+      "label": "myNestedMapping",
+      "offset": 0,
+      "slot": "13",
       "type": "t_mapping(t_uint256,t_mapping(t_uint256,t_uint256))"
     }
   ],
@@ -144,6 +144,29 @@
         }
       ],
       "numberOfBytes": "64"
+    },
+    "t_struct(MyStructNested)17_storage": {
+      "encoding": "inplace",
+      "label": "struct MyContract.MyStructNested",
+      "members": [
+        {
+          "astId": 13,
+          "contract": "<stdin>:MyContract",
+          "label": "myAddress",
+          "offset": 0,
+          "slot": "0",
+          "type": "t_address"
+        },
+        {
+          "astId": 16,
+          "contract": "<stdin>:MyContract",
+          "label": "myStruct",
+          "offset": 0,
+          "slot": "1",
+          "type": "t_struct(MyStruct)11_storage"
+        }
+      ],
+      "numberOfBytes": "96"
     },
     "t_uint112": {
       "encoding": "inplace",
