@@ -39,9 +39,9 @@ fn main() {
     // println!("{:#?}", ftype);
 
     let nested_types = storage_layout.traverse();
-    for nested_type in &nested_types {
-        println!("{:?}", nested_type);
-    }
+    // for nested_type in &nested_types {
+    //     println!("{:?}", nested_type);
+    // }
 
     let main_struct_definition = generate::generate_structs(nested_types);
     // println!("{}", main_struct_definition);

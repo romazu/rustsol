@@ -43,11 +43,30 @@ impl FromPosition for Bytes {
 
 #[derive(Debug, Default)]
 pub struct PrimitiveKey([u8; 32]);
-impl From<u64> for PrimitiveKey {
-    fn from(value: u64) -> Self {
-        let mut key_bytes = [0u8; 32];
-        key_bytes[24..].copy_from_slice(&value.to_be_bytes());
-        PrimitiveKey(key_bytes)
+
+macro_rules! impl_from_for_primitive_key {
+    ($($type:ty),+) => {
+        $(
+            impl From<$type> for PrimitiveKey {
+                fn from(value: $type) -> Self {
+                    let mut bytes = [0u8; 32];
+                    let be_bytes = value.to_be_bytes();
+                    let start = 32 - be_bytes.len();
+                    bytes[start..].copy_from_slice(&be_bytes);
+                    PrimitiveKey(bytes)
+                }
+            }
+        )+
+    };
+}
+
+impl_from_for_primitive_key!(u8, u16, u32, u64, u128, i8, i16, i32, i64, i128);
+
+impl From<U256> for PrimitiveKey {
+    fn from(value: U256) -> Self {
+        let mut bytes = [0u8; 32];
+        value.to_big_endian(&mut bytes);
+        PrimitiveKey(bytes)
     }
 }
 

@@ -49,6 +49,9 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                                 #(#default_fields),*
                             }
                         }
+                        pub fn slot(&self) -> U256 {
+                            self.__slot
+                        }
                     }
                     impl FromPosition for #struct_name {
                         fn from_position(slot: U256, offset: U256) -> Self {
