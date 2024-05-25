@@ -14,26 +14,17 @@ pub struct Contract {
     pub positions: Mapping<PrimitiveKey, PositionInfo>,
 }
 impl Contract {
-    pub fn new_from_position(slot: U256, offset: U256) -> Self {
+    pub fn new_from_position(slot: U256, offset: u8) -> Self {
         Self {
             __slot: slot,
-            slot0: UniswapV3PoolSlot0::from_position(slot + 0u64, U256::from(0u64)),
-            feeGrowthGlobal0X128: Primitive::from_position(
-                slot + 1u64,
-                U256::from(0u64),
-            ),
-            feeGrowthGlobal1X128: Primitive::from_position(
-                slot + 2u64,
-                U256::from(0u64),
-            ),
-            protocolFees: UniswapV3PoolProtocolFees::from_position(
-                slot + 3u64,
-                U256::from(0u64),
-            ),
-            liquidity: Primitive::from_position(slot + 4u64, U256::from(0u64)),
-            ticks: Mapping::from_position(slot + 5u64, U256::from(0u64)),
-            tickBitmap: Mapping::from_position(slot + 6u64, U256::from(0u64)),
-            positions: Mapping::from_position(slot + 7u64, U256::from(0u64)),
+            slot0: UniswapV3PoolSlot0::from_position(slot + 0u64, 0u8),
+            feeGrowthGlobal0X128: Primitive::from_position(slot + 1u64, 0u8),
+            feeGrowthGlobal1X128: Primitive::from_position(slot + 2u64, 0u8),
+            protocolFees: UniswapV3PoolProtocolFees::from_position(slot + 3u64, 0u8),
+            liquidity: Primitive::from_position(slot + 4u64, 0u8),
+            ticks: Mapping::from_position(slot + 5u64, 0u8),
+            tickBitmap: Mapping::from_position(slot + 6u64, 0u8),
+            positions: Mapping::from_position(slot + 7u64, 0u8),
         }
     }
     pub fn slot(&self) -> U256 {
@@ -41,7 +32,7 @@ impl Contract {
     }
 }
 impl FromPosition for Contract {
-    fn from_position(slot: U256, offset: U256) -> Self {
+    fn from_position(slot: U256, offset: u8) -> Self {
         Self::new_from_position(slot, offset)
     }
 }
@@ -58,22 +49,16 @@ pub struct UniswapV3PoolSlot0 {
     pub unlocked: Primitive,
 }
 impl UniswapV3PoolSlot0 {
-    pub fn new_from_position(slot: U256, offset: U256) -> Self {
+    pub fn new_from_position(slot: U256, offset: u8) -> Self {
         Self {
             __slot: slot,
-            sqrtPriceX96: Primitive::from_position(slot + 0u64, U256::from(0u64)),
-            tick: Primitive::from_position(slot + 0u64, U256::from(20u64)),
-            observationIndex: Primitive::from_position(slot + 0u64, U256::from(23u64)),
-            observationCardinality: Primitive::from_position(
-                slot + 0u64,
-                U256::from(25u64),
-            ),
-            observationCardinalityNext: Primitive::from_position(
-                slot + 0u64,
-                U256::from(27u64),
-            ),
-            feeProtocol: Primitive::from_position(slot + 0u64, U256::from(29u64)),
-            unlocked: Primitive::from_position(slot + 0u64, U256::from(30u64)),
+            sqrtPriceX96: Primitive::from_position(slot + 0u64, 0u8),
+            tick: Primitive::from_position(slot + 0u64, 20u8),
+            observationIndex: Primitive::from_position(slot + 0u64, 23u8),
+            observationCardinality: Primitive::from_position(slot + 0u64, 25u8),
+            observationCardinalityNext: Primitive::from_position(slot + 0u64, 27u8),
+            feeProtocol: Primitive::from_position(slot + 0u64, 29u8),
+            unlocked: Primitive::from_position(slot + 0u64, 30u8),
         }
     }
     pub fn slot(&self) -> U256 {
@@ -81,7 +66,7 @@ impl UniswapV3PoolSlot0 {
     }
 }
 impl FromPosition for UniswapV3PoolSlot0 {
-    fn from_position(slot: U256, offset: U256) -> Self {
+    fn from_position(slot: U256, offset: u8) -> Self {
         Self::new_from_position(slot, offset)
     }
 }
@@ -93,11 +78,11 @@ pub struct UniswapV3PoolProtocolFees {
     pub token1: Primitive,
 }
 impl UniswapV3PoolProtocolFees {
-    pub fn new_from_position(slot: U256, offset: U256) -> Self {
+    pub fn new_from_position(slot: U256, offset: u8) -> Self {
         Self {
             __slot: slot,
-            token0: Primitive::from_position(slot + 0u64, U256::from(0u64)),
-            token1: Primitive::from_position(slot + 0u64, U256::from(16u64)),
+            token0: Primitive::from_position(slot + 0u64, 0u8),
+            token1: Primitive::from_position(slot + 0u64, 16u8),
         }
     }
     pub fn slot(&self) -> U256 {
@@ -105,7 +90,7 @@ impl UniswapV3PoolProtocolFees {
     }
 }
 impl FromPosition for UniswapV3PoolProtocolFees {
-    fn from_position(slot: U256, offset: U256) -> Self {
+    fn from_position(slot: U256, offset: u8) -> Self {
         Self::new_from_position(slot, offset)
     }
 }
@@ -123,29 +108,17 @@ pub struct TickInfo {
     pub initialized: Primitive,
 }
 impl TickInfo {
-    pub fn new_from_position(slot: U256, offset: U256) -> Self {
+    pub fn new_from_position(slot: U256, offset: u8) -> Self {
         Self {
             __slot: slot,
-            liquidityGross: Primitive::from_position(slot + 0u64, U256::from(0u64)),
-            liquidityNet: Primitive::from_position(slot + 0u64, U256::from(16u64)),
-            feeGrowthOutside0X128: Primitive::from_position(
-                slot + 1u64,
-                U256::from(0u64),
-            ),
-            feeGrowthOutside1X128: Primitive::from_position(
-                slot + 2u64,
-                U256::from(0u64),
-            ),
-            tickCumulativeOutside: Primitive::from_position(
-                slot + 3u64,
-                U256::from(0u64),
-            ),
-            secondsPerLiquidityOutsideX128: Primitive::from_position(
-                slot + 3u64,
-                U256::from(7u64),
-            ),
-            secondsOutside: Primitive::from_position(slot + 3u64, U256::from(27u64)),
-            initialized: Primitive::from_position(slot + 3u64, U256::from(31u64)),
+            liquidityGross: Primitive::from_position(slot + 0u64, 0u8),
+            liquidityNet: Primitive::from_position(slot + 0u64, 16u8),
+            feeGrowthOutside0X128: Primitive::from_position(slot + 1u64, 0u8),
+            feeGrowthOutside1X128: Primitive::from_position(slot + 2u64, 0u8),
+            tickCumulativeOutside: Primitive::from_position(slot + 3u64, 0u8),
+            secondsPerLiquidityOutsideX128: Primitive::from_position(slot + 3u64, 7u8),
+            secondsOutside: Primitive::from_position(slot + 3u64, 27u8),
+            initialized: Primitive::from_position(slot + 3u64, 31u8),
         }
     }
     pub fn slot(&self) -> U256 {
@@ -153,7 +126,7 @@ impl TickInfo {
     }
 }
 impl FromPosition for TickInfo {
-    fn from_position(slot: U256, offset: U256) -> Self {
+    fn from_position(slot: U256, offset: u8) -> Self {
         Self::new_from_position(slot, offset)
     }
 }
@@ -168,20 +141,14 @@ pub struct PositionInfo {
     pub tokensOwed1: Primitive,
 }
 impl PositionInfo {
-    pub fn new_from_position(slot: U256, offset: U256) -> Self {
+    pub fn new_from_position(slot: U256, offset: u8) -> Self {
         Self {
             __slot: slot,
-            liquidity: Primitive::from_position(slot + 0u64, U256::from(0u64)),
-            feeGrowthInside0LastX128: Primitive::from_position(
-                slot + 1u64,
-                U256::from(0u64),
-            ),
-            feeGrowthInside1LastX128: Primitive::from_position(
-                slot + 2u64,
-                U256::from(0u64),
-            ),
-            tokensOwed0: Primitive::from_position(slot + 3u64, U256::from(0u64)),
-            tokensOwed1: Primitive::from_position(slot + 3u64, U256::from(16u64)),
+            liquidity: Primitive::from_position(slot + 0u64, 0u8),
+            feeGrowthInside0LastX128: Primitive::from_position(slot + 1u64, 0u8),
+            feeGrowthInside1LastX128: Primitive::from_position(slot + 2u64, 0u8),
+            tokensOwed0: Primitive::from_position(slot + 3u64, 0u8),
+            tokensOwed1: Primitive::from_position(slot + 3u64, 16u8),
         }
     }
     pub fn slot(&self) -> U256 {
@@ -189,7 +156,7 @@ impl PositionInfo {
     }
 }
 impl FromPosition for PositionInfo {
-    fn from_position(slot: U256, offset: U256) -> Self {
+    fn from_position(slot: U256, offset: u8) -> Self {
         Self::new_from_position(slot, offset)
     }
 }

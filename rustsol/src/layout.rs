@@ -7,7 +7,7 @@ pub struct Member {
     pub ast_id: u64,
     pub contract: String,
     pub label: String,
-    pub offset: u64,
+    pub offset: u8,
     #[serde(deserialize_with = "string_to_u64")]
     pub slot: u64,
     #[serde(rename = "type")]

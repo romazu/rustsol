@@ -28,7 +28,7 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                     let member_offset = member_def.member_info.offset;
                     quote! {
                         // #field_name: #field_type
-                        #field_name: #field_type::from_position(slot + #member_slot, U256::from(#member_offset))
+                        #field_name: #field_type::from_position(slot + #member_slot, #member_offset)
                         // #field_name: Default::default()
                     }
                 }).collect();
@@ -43,7 +43,7 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                         #(#fields),*
                     }
                     impl #struct_name {
-                        pub fn new_from_position(slot: U256, offset: U256) -> Self {
+                        pub fn new_from_position(slot: U256, offset: u8) -> Self {
                             Self {
                                 __slot: slot,
                                 #(#default_fields),*
@@ -54,7 +54,7 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                         }
                     }
                     impl FromPosition for #struct_name {
-                        fn from_position(slot: U256, offset: U256) -> Self {
+                        fn from_position(slot: U256, offset: u8) -> Self {
                             Self::new_from_position(slot, offset)
                         }
                     }

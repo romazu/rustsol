@@ -6,7 +6,8 @@ use crate::keccak::{bytes32_to_u256, keccak256_concat, u256_to_bytes32};
 #[derive(Debug, Default)]
 pub struct Primitive {
     __slot: U256,
-    __offset: U256,
+    __offset: u8,
+    // __size: u8,
 }
 
 impl Primitive {
@@ -14,12 +15,16 @@ impl Primitive {
         self.__slot
     }
 
-    pub fn offset(&self) -> U256 {
+    pub fn offset(&self) -> u8 {
         self.__offset
     }
+
+    // pub fn size(&self) -> u8 {
+    //     self.__size
+    // }
 }
 impl FromPosition for Primitive {
-    fn from_position(slot: U256, offset: U256) -> Self {
+    fn from_position(slot: U256, offset: u8) -> Self {
         Primitive { __slot: slot, __offset: offset }  // Use the conversion from U256 to u64
     }
 }
@@ -36,7 +41,7 @@ impl Bytes {
 }
 
 impl FromPosition for Bytes {
-    fn from_position(slot: U256, offset: U256) -> Self {
+    fn from_position(slot: U256, offset: u8) -> Self {
         Bytes { __slot: slot }
     }
 }
@@ -64,9 +69,7 @@ impl_from_for_primitive_key!(u8, u16, u32, u64, u128, i8, i16, i32, i64, i128);
 
 impl From<U256> for PrimitiveKey {
     fn from(value: U256) -> Self {
-        let mut bytes = [0u8; 32];
-        value.to_big_endian(&mut bytes);
-        PrimitiveKey(bytes)
+        PrimitiveKey(u256_to_bytes32(value))
     }
 }
 
@@ -84,7 +87,7 @@ impl From<&str> for BytesKey {
 }
 
 pub trait FromPosition {
-    fn from_position(slot: U256, offset: U256) -> Self;
+    fn from_position(slot: U256, offset: u8) -> Self;
 }
 
 #[derive(Debug)]
@@ -103,12 +106,12 @@ impl<KeyType, Value> Mapping<KeyType, Value> {
         Value: FromPosition,
     {
         let value_slot_bytes = keccak256_concat(key, u256_to_bytes32(self.__slot));
-        Value::from_position(bytes32_to_u256(value_slot_bytes), U256::zero())
+        Value::from_position(bytes32_to_u256(value_slot_bytes), 0)
     }
 }
 
 impl<KeyType, Value> FromPosition for Mapping<KeyType, Value> {
-    fn from_position(slot: U256, offset: U256) -> Self {
+    fn from_position(slot: U256, offset: u8) -> Self {
         Mapping::<KeyType, Value> { __slot: slot, __marker: PhantomData }
     }
 }
