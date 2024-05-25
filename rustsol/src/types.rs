@@ -53,10 +53,16 @@ macro_rules! impl_from_for_primitive_key {
         $(
             impl From<$type> for PrimitiveKey {
                 fn from(value: $type) -> Self {
-                    let mut bytes = [0u8; 32];
+                    let mut bytes = if value < 0 {
+                        [0xFF; 32]
+                    } else {
+                        [0u8; 32]
+                    };
+
                     let be_bytes = value.to_be_bytes();
                     let start = 32 - be_bytes.len();
                     bytes[start..].copy_from_slice(&be_bytes);
+
                     PrimitiveKey(bytes)
                 }
             }
