@@ -4,13 +4,16 @@ use primitive_types::U256;
 use crate::keccak::{bytes32_to_u256, keccak256_concat, u256_to_bytes32};
 
 #[derive(Debug, Default)]
-pub struct Primitive {
+pub struct Primitive<const BYTES: u64> {
     __slot: U256,
     __offset: u8,
-    // __size: u8,
 }
 
-impl Primitive {
+impl<const BYTES: u64> Primitive<BYTES> {
+    pub fn size(&self) -> u64 {
+        BYTES
+    }
+
     pub fn slot(&self) -> U256 {
         self.__slot
     }
@@ -18,12 +21,8 @@ impl Primitive {
     pub fn offset(&self) -> u8 {
         self.__offset
     }
-
-    // pub fn size(&self) -> u8 {
-    //     self.__size
-    // }
 }
-impl FromPosition for Primitive {
+impl<const BYTES: u64> FromPosition for Primitive<BYTES> {
     fn from_position(slot: U256, offset: u8) -> Self {
         Primitive { __slot: slot, __offset: offset }  // Use the conversion from U256 to u64
     }

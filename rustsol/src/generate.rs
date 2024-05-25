@@ -83,7 +83,7 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
 fn get_type_name(nested_type: &NestedType) -> TokenStream {
     let type_name = match nested_type {
         NestedType::Bytes => {"Bytes"}
-        NestedType::Primitive => {"Primitive"}
+        NestedType::Primitive {..} => {"Primitive"}
         NestedType::Mapping { .. } => {"Mapping"}
         NestedType::Struct { label, .. } => {label}
     };
@@ -93,13 +93,17 @@ fn get_type_name(nested_type: &NestedType) -> TokenStream {
 
 fn get_nested_type(nested_type: &NestedType) -> TokenStream {
     match nested_type {
-        NestedType::Primitive => quote! { Primitive },
+        NestedType::Primitive {number_of_bytes} => {
+            // Avoid verbose definitions like Primitive<32u64>.
+            let number_of_bytes_literal = syn::LitInt::new(&number_of_bytes.to_string(), proc_macro2::Span::call_site());
+            quote! { Primitive<#number_of_bytes_literal> }
+        },
         NestedType::Bytes => quote! { Bytes },
         NestedType::Mapping { key, value } => {
             let key_type = get_nested_type(key);
             let value_type = get_nested_type(value);
             let key_type_for_mapping = match key.as_ref() {
-                NestedType::Primitive => quote! { PrimitiveKey },
+                NestedType::Primitive {..} => quote! { PrimitiveKey },
                 NestedType::Bytes => quote! { BytesKey },
                 _ => panic!("Bad key type")
             };

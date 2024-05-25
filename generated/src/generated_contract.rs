@@ -5,12 +5,12 @@ use primitive_types::U256;
 pub struct Contract {
     __slot: U256,
     pub slot0: UniswapV3PoolSlot0,
-    pub feeGrowthGlobal0X128: Primitive,
-    pub feeGrowthGlobal1X128: Primitive,
+    pub feeGrowthGlobal0X128: Primitive<32>,
+    pub feeGrowthGlobal1X128: Primitive<32>,
     pub protocolFees: UniswapV3PoolProtocolFees,
-    pub liquidity: Primitive,
+    pub liquidity: Primitive<16>,
     pub ticks: Mapping<PrimitiveKey, TickInfo>,
-    pub tickBitmap: Mapping<PrimitiveKey, Primitive>,
+    pub tickBitmap: Mapping<PrimitiveKey, Primitive<32>>,
     pub positions: Mapping<PrimitiveKey, PositionInfo>,
 }
 impl Contract {
@@ -40,13 +40,13 @@ impl FromPosition for Contract {
 #[allow(non_snake_case)]
 pub struct UniswapV3PoolSlot0 {
     __slot: U256,
-    pub sqrtPriceX96: Primitive,
-    pub tick: Primitive,
-    pub observationIndex: Primitive,
-    pub observationCardinality: Primitive,
-    pub observationCardinalityNext: Primitive,
-    pub feeProtocol: Primitive,
-    pub unlocked: Primitive,
+    pub sqrtPriceX96: Primitive<20>,
+    pub tick: Primitive<3>,
+    pub observationIndex: Primitive<2>,
+    pub observationCardinality: Primitive<2>,
+    pub observationCardinalityNext: Primitive<2>,
+    pub feeProtocol: Primitive<1>,
+    pub unlocked: Primitive<1>,
 }
 impl UniswapV3PoolSlot0 {
     pub fn new_from_position(slot: U256, offset: u8) -> Self {
@@ -74,8 +74,8 @@ impl FromPosition for UniswapV3PoolSlot0 {
 #[allow(non_snake_case)]
 pub struct UniswapV3PoolProtocolFees {
     __slot: U256,
-    pub token0: Primitive,
-    pub token1: Primitive,
+    pub token0: Primitive<16>,
+    pub token1: Primitive<16>,
 }
 impl UniswapV3PoolProtocolFees {
     pub fn new_from_position(slot: U256, offset: u8) -> Self {
@@ -98,14 +98,14 @@ impl FromPosition for UniswapV3PoolProtocolFees {
 #[allow(non_snake_case)]
 pub struct TickInfo {
     __slot: U256,
-    pub liquidityGross: Primitive,
-    pub liquidityNet: Primitive,
-    pub feeGrowthOutside0X128: Primitive,
-    pub feeGrowthOutside1X128: Primitive,
-    pub tickCumulativeOutside: Primitive,
-    pub secondsPerLiquidityOutsideX128: Primitive,
-    pub secondsOutside: Primitive,
-    pub initialized: Primitive,
+    pub liquidityGross: Primitive<16>,
+    pub liquidityNet: Primitive<16>,
+    pub feeGrowthOutside0X128: Primitive<32>,
+    pub feeGrowthOutside1X128: Primitive<32>,
+    pub tickCumulativeOutside: Primitive<7>,
+    pub secondsPerLiquidityOutsideX128: Primitive<20>,
+    pub secondsOutside: Primitive<4>,
+    pub initialized: Primitive<1>,
 }
 impl TickInfo {
     pub fn new_from_position(slot: U256, offset: u8) -> Self {
@@ -134,11 +134,11 @@ impl FromPosition for TickInfo {
 #[allow(non_snake_case)]
 pub struct PositionInfo {
     __slot: U256,
-    pub liquidity: Primitive,
-    pub feeGrowthInside0LastX128: Primitive,
-    pub feeGrowthInside1LastX128: Primitive,
-    pub tokensOwed0: Primitive,
-    pub tokensOwed1: Primitive,
+    pub liquidity: Primitive<16>,
+    pub feeGrowthInside0LastX128: Primitive<32>,
+    pub feeGrowthInside1LastX128: Primitive<32>,
+    pub tokensOwed0: Primitive<16>,
+    pub tokensOwed1: Primitive<16>,
 }
 impl PositionInfo {
     pub fn new_from_position(slot: U256, offset: u8) -> Self {

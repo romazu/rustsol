@@ -14,6 +14,9 @@ fn main() {
     println!("{:#?}", contract.ticks.get_item(42u8).slot());
     println!("{:#?}", contract.ticks.get_item(42i64).slot());
     println!("{:#?}", contract.ticks.get_item(-42).slot());
+    println!("{:#?}", contract.slot0.observationIndex.slot());
+    println!("{:#?}", contract.slot0.observationIndex.offset());
+    println!("{:#?}", contract.slot0.observationIndex.size());
 
     // println!("{:#?}", contract.myNestedMapping.get_item(0u64));
     // println!("{:#?}", contract.myNestedMapping.get_item(0u64).get_item(1u64));

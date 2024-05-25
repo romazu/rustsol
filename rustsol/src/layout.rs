@@ -126,7 +126,9 @@ fn string_to_u64<'de, D>(deserializer: D) -> Result<u64, D::Error>
 #[derive(Debug, Clone)]
 pub enum NestedType {
     Bytes,
-    Primitive,
+    Primitive {
+        number_of_bytes: u64,
+    },
     Mapping {
         // Box is needed to avoid problems with recursive definition of NestedType
         key: Box<NestedType>,
@@ -142,7 +144,7 @@ impl NestedType {
     fn to_string(&self) -> String {
         match self {
             NestedType::Bytes => "Bytes".to_string(),
-            NestedType::Primitive => "Primitive".to_string(),
+            NestedType::Primitive {..} => "Primitive".to_string(),
             NestedType::Mapping{key, value } => {
                 format!("Mapping<{}, {}>", key.to_string(), value.to_string())
             }
@@ -196,10 +198,10 @@ impl StorageLayout {
         if let Some(ty) = self.types.get(type_name) {
             match ty {
                 MemberType::Bytes { .. } => Some(NestedType::Bytes),
-                MemberType::Primitive { .. } => Some(NestedType::Primitive),
+                MemberType::Primitive { label, number_of_bytes } => Some(NestedType::Primitive{number_of_bytes: *number_of_bytes}),
                 MemberType::Mapping { key, value, .. } => {
                     let key_type = match self.traverse_type(key) {
-                        Some(NestedType::Primitive) => Some(NestedType::Primitive),
+                        Some(NestedType::Primitive {number_of_bytes}) => Some(NestedType::Primitive {number_of_bytes}),
                         Some(NestedType::Bytes) => Some(NestedType::Bytes),
                         _ => panic!("Key type must be Primitive or Bytes"),
                     };
