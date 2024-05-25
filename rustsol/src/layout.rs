@@ -161,16 +161,16 @@ pub struct MemberDef {
 
 fn get_struct_name(s: &str) -> String {
     let result = s.replace("struct ", "");
-    let result = result.replace(".", "_");
+    let result = result.replace(".", "");
     result
 }
 
 impl StorageLayout {
-    pub fn traverse(&self) -> (Vec<MemberDef>, Vec<NestedType>) {
-        self.traverse_members(&self.members)
+    pub fn traverse(&self) -> Vec<NestedType> {
+        self.traverse_struct("Contract".into(), &self.members)
     }
 
-    fn traverse_members(&self, members: &Vec<Member>) -> (Vec<MemberDef>, Vec<NestedType>) {
+    fn traverse_struct(&self, label: String, members: &Vec<Member>) -> Vec<NestedType> {
         let mut member_defs = Vec::new();
         let mut nested_types = Vec::new();
         let mut unique_representations = HashSet::new();
@@ -184,7 +184,12 @@ impl StorageLayout {
                 self.collect_unique_types(&nested_type, &mut nested_types, &mut unique_representations);
             }
         }
-        (member_defs, nested_types)
+        let main_struct = NestedType::Struct {
+            label: label,
+            members: member_defs,
+        };
+        nested_types.insert(0, main_struct);
+        nested_types
     }
 
     fn traverse_type(&self, type_name: &str) -> Option<NestedType> {
@@ -218,11 +223,8 @@ impl StorageLayout {
                 }
                 MemberType::Struct { label, members, .. } => {
                     let struct_name = get_struct_name(label);
-                    let (member_defs, _) = self.traverse_members(members);
-                    Some(NestedType::Struct {
-                        label: struct_name,
-                        members: member_defs,
-                    })
+                    let nested_types = self.traverse_struct(struct_name, members);
+                    Some(nested_types[0].clone())
                 }
                 _ => None,
             }

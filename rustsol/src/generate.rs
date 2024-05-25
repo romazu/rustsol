@@ -3,41 +3,38 @@ use quote::quote;
 use crate::generate;
 use crate::layout::{MemberDef, NestedType};
 
-pub fn generate_struct_from_member_defs(struct_name: &str, member_defs: &Vec<MemberDef>) -> TokenStream {
+
+pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
     let mut nested_struct_definitions: Vec<TokenStream> = Vec::new();
 
-    let struct_name = Ident::new(struct_name, proc_macro2::Span::call_site());
-
-    let fields: Vec<TokenStream> = member_defs.iter().map(|member_def| {
-        // Generate auxiliary nested types.
-        match &member_def.type_def {
+    for nested_type in nested_types {
+        match nested_type {
             NestedType::Struct { label, members } => {
-                let nested_struct_definition = generate_struct_from_member_defs(&label, members);
-                nested_struct_definitions.push(nested_struct_definition);
+                let struct_name = Ident::new(&label, proc_macro2::Span::call_site());
+
+                let fields: Vec<TokenStream> = members.iter().map(|member_def| {
+                    let field_name = Ident::new(&member_def.member_info.label, proc_macro2::Span::call_site());
+                    let field_type = get_nested_type(&member_def.type_def);
+                    quote! {
+                        pub #field_name: #field_type
+                    }
+                }).collect();
+
+                let struct_definition = quote! {
+                    #[derive(Default)]
+                    #[allow(non_snake_case)]
+                    pub struct #struct_name {
+                        __slot: [u8; 32],
+                        #(#fields),*
+                    }
+                };
+                nested_struct_definitions.push(struct_definition)
             }
             _ => {}
         }
-
-        // Generate main member field.
-        let field_name = Ident::new(&member_def.member_info.label, proc_macro2::Span::call_site());
-        let field_type = get_nested_type(&member_def.type_def);
-        quote! {
-            pub #field_name: #field_type
-        }
-    }).collect();
-
-
-    let struct_definition = quote! {
-        #[derive(Default)]
-        #[allow(non_snake_case)]
-        pub struct #struct_name {
-            __slot: [u8; 32],
-            #(#fields),*
-        }
-    };
+    }
 
     let generated_tokens = quote! {
-        #struct_definition
         #(#nested_struct_definitions)*
     };
 

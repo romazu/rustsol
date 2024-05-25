@@ -88,16 +88,12 @@ fn main() {
     // println!("{:#?}", member);
     // println!("{:#?}", ftype);
 
-    let (member_defs, nested_types) = storage_layout.traverse();
-
-    for member_def in &member_defs {
-        println!("{:?}", member_def);
-    }
+    let nested_types = storage_layout.traverse();
     for nested_type in &nested_types {
         println!("{:?}", nested_type);
     }
 
-    let main_struct_definition = generate::generate_struct_from_member_defs("MyContract", &member_defs);
+    let main_struct_definition = generate::generate_structs(nested_types);
     // println!("{}", main_struct_definition);
 
     // let mut nested_struct_definitions: Vec<TokenStream> = Vec::new();
