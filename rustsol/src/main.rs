@@ -20,6 +20,7 @@ mod types;
 mod generate;
 
 use types::{Primitive, Mapping};
+use crate::layout::NestedType;
 
 //
 // #[derive(Debug)]
@@ -63,7 +64,7 @@ fn main() {
     //         myUint1: Primitive {
     //             __slot: U256::from(3),
     //             __offset: U256::from(0),
-    //         },
+    //         },2
     //     },
     // };
     // println!("{:#?}", contract.plainUint32.slot());
@@ -87,7 +88,7 @@ fn main() {
     // println!("{:#?}", member);
     // println!("{:#?}", ftype);
 
-    let (member_defs, nested_types) = storage_layout.traverse_mappings();
+    let (member_defs, nested_types) = storage_layout.traverse();
 
     for member_def in &member_defs {
         println!("{:?}", member_def);
@@ -96,10 +97,21 @@ fn main() {
         println!("{:?}", nested_type);
     }
 
-    let struct_definition = generate::generate_struct_from_member_defs("MyContract", member_defs);
-    // println!("{}", struct_definition);
+    let main_struct_definition = generate::generate_struct_from_member_defs("MyContract", member_defs);
+    // println!("{}", main_struct_definition);
 
-    // let generated_tokens = struct_definition;
+    // let nested_struct_definitions: Vec<TokenStream>;
+    // for nested_type in nested_types {
+    //     match nested_type {
+    //         NestedType::Struct => {
+    //             let nested_struct_definition = generate::generate_struct_from_member_defs(nested_type., member_defs);
+    //             nested_struct_definitions.append()
+    //         },
+    //         _ => {},
+    //     }
+    // }
+
+    // let generated_tokens = main_struct_definition;
 
     // let predefined_structs_content = fs::read_to_string("src/types.rs").expect("Unable to read file");
     // let syntax_tree1 = syn::parse_file(&predefined_structs_content).expect("Unable to parse file");
@@ -108,18 +120,16 @@ fn main() {
     // // Combine predefined structures with generated struct
     // let generated_tokens = quote! {
     //     #predefined_structs_tokens
-    //     #struct_definition
+    //     #main_struct_definition
     // };
 
-    let predefined_structs: Vec<Item> = vec![
+    let imports_definition_items: Vec<Item> = vec![
         parse_str("use rustsol::types::{Primitive, Bytes, Mapping, PrimitiveKey, BytesKey};").expect("Failed to parse"),
-        // parse_str("pub struct Bytes;").expect("Failed to parse"),
-        // parse_str("pub struct Mapping<K, V> { pub key: K, pub value: V, }").expect("Failed to parse"),
     ];
-    let predefined_structs_tokens: TokenStream = predefined_structs.into_iter().map(|item| item.into_token_stream()).collect();
+    let imports_definition: TokenStream = imports_definition_items.into_iter().map(|item| item.into_token_stream()).collect();
     let generated_tokens = quote! {
-        #predefined_structs_tokens
-        #struct_definition
+        #imports_definition
+        #main_struct_definition
     };
 
 

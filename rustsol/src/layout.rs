@@ -1,8 +1,5 @@
 use serde::{Deserialize, Deserializer};
 use std::collections::{HashMap, HashSet};
-use proc_macro2::{TokenStream};
-use quote::quote;
-use syn::Ident;
 
 #[derive(Debug, Clone, Deserialize, Default)]
 #[serde(rename_all = "camelCase")]
@@ -131,6 +128,10 @@ pub enum NestedType {
     Bytes,
     Primitive,
     Mapping(Box<NestedType>, Box<NestedType>), // Box is needed to avoid problems with recursive definition of NestedType
+    Struct {
+        label: String,
+        members: Vec<MemberDef>,
+    },
 }
 
 impl NestedType {
@@ -140,6 +141,9 @@ impl NestedType {
             NestedType::Primitive => "Primitive".to_string(),
             NestedType::Mapping(key, value) => {
                 format!("Mapping<{}, {}>", key.to_string(), value.to_string())
+            }
+            NestedType::Struct { label, members } => {
+                format!("Struct {}", label)
             }
         }
     }
@@ -151,14 +155,24 @@ pub struct MemberDef {
     pub member_info: Member,
 }
 
+fn get_struct_name(s: &str) -> String {
+    let result = s.replace("struct ", "");
+    let result = result.replace(".", "_");
+    result
+}
+
 impl StorageLayout {
-    pub fn traverse_mappings(&self) -> (Vec<MemberDef>, Vec<NestedType>) {
+    pub fn traverse(&self) -> (Vec<MemberDef>, Vec<NestedType>) {
+        self.traverse_members(&self.members)
+    }
+
+    fn traverse_members(&self, members: &Vec<Member>) -> (Vec<MemberDef>, Vec<NestedType>) {
         let mut member_defs = Vec::new();
         let mut nested_types = Vec::new();
         let mut unique_representations = HashSet::new();
 
-        for member in &self.members {
-            if let Some(nested_type) = self.traverse_type_for_mapping(&member.type_name) {
+        for member in members {
+            if let Some(nested_type) = self.traverse_type(&member.type_name) {
                 member_defs.push(MemberDef {
                     type_def: nested_type.clone(),
                     member_info: member.clone(),
@@ -166,34 +180,43 @@ impl StorageLayout {
                 self.collect_unique_types(&nested_type, &mut nested_types, &mut unique_representations);
             }
         }
-
         (member_defs, nested_types)
     }
 
-    fn traverse_type_for_mapping(&self, type_name: &str) -> Option<NestedType> {
+    fn traverse_type(&self, type_name: &str) -> Option<NestedType> {
         if let Some(ty) = self.types.get(type_name) {
             match ty {
+                MemberType::Bytes { .. } => Some(NestedType::Bytes),
+                MemberType::Primitive { .. } => Some(NestedType::Primitive),
                 MemberType::Mapping { key, value, .. } => {
-                    let key_type = match self.traverse_type_for_mapping(key) {
+                    let key_type = match self.traverse_type(key) {
                         Some(NestedType::Primitive) => Some(NestedType::Primitive),
                         Some(NestedType::Bytes) => Some(NestedType::Bytes),
                         _ => panic!("Key type must be Primitive or Bytes"),
                     };
 
-                    let value_type = self.traverse_type_for_mapping(value);
+                    let value_type = self.traverse_type(value);
 
                     if let Some(valid_key_type) = key_type {
                         if let Some(valid_value_type) = value_type {
                             Some(NestedType::Mapping(Box::new(valid_key_type), Box::new(valid_value_type)))
                         } else {
-                            panic!("Value type could not be resolved for type: {}", value);
+                            // panic!("Value type could not be resolved for type: {}", value);
+                            println!("Value type could not be resolved for type: {}", value);
+                            None
                         }
                     } else {
                         None
                     }
                 }
-                MemberType::Bytes { .. } => Some(NestedType::Bytes),
-                MemberType::Primitive { .. } => Some(NestedType::Primitive),
+                MemberType::Struct { label, members, .. } => {
+                    let struct_name = get_struct_name(label);
+                    let (member_defs, _ ) = self.traverse_members(members);
+                    Some(NestedType::Struct {
+                        label: struct_name,
+                        members: member_defs,
+                    })
+                }
                 _ => None,
             }
         } else {
@@ -206,10 +229,13 @@ impl StorageLayout {
         if unique_representations.insert(repr.clone()) {
             nested_types.push(nested_type.clone());
         }
-
         if let NestedType::Mapping(key, value) = nested_type {
             self.collect_unique_types(key, nested_types, unique_representations);
             self.collect_unique_types(value, nested_types, unique_representations);
         }
+        // if let NestedType::Struct{label, members} = nested_type {
+        //     self.collect_unique_types(key, nested_types, unique_representations);
+        //     self.collect_unique_types(value, nested_types, unique_representations);
+        // }
     }
 }

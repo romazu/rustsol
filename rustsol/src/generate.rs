@@ -17,6 +17,7 @@ pub fn generate_struct_from_member_defs(struct_name: &str, member_defs: Vec<Memb
         #[derive(Default)]
         #[allow(non_snake_case)]
         pub struct #struct_name {
+            __slot: [u8; 32],
             #(#fields),*
         }
     };
@@ -38,6 +39,10 @@ fn get_nested_type(nested_type: &NestedType) -> TokenStream {
             };
 
             quote! { Mapping<#key_type_for_mapping, #value_type> }
+        }
+        NestedType::Struct { label, members } => {
+            let label_ident = syn::Ident::new(label, proc_macro2::Span::call_site());
+            quote! { #label_ident }
         }
     }
 }
