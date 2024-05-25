@@ -53,9 +53,12 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                             self.__slot
                         }
                     }
-                    impl FromPosition for #struct_name {
+                    impl Position for #struct_name {
                         fn from_position(slot: U256, offset: u8) -> Self {
                             Self::new_from_position(slot, offset)
+                        }
+                        fn size() -> u64 {
+                            todo!()
                         }
                     }
                 };
@@ -67,7 +70,7 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
     }
 
     let imports_definition_items: Vec<Item> = vec![
-        parse_str("use rustsol::types::{Primitive, Bytes, Mapping, PrimitiveKey, BytesKey, FromPosition};").expect("Failed to parse"),
+        parse_str("use rustsol::types::{Primitive, Bytes, Mapping, DynamicArray, PrimitiveKey, BytesKey, Position};").expect("Failed to parse"),
         parse_str("use primitive_types::{U256};").expect("Failed to parse"),
     ];
     let imports_definition: TokenStream = imports_definition_items.into_iter().map(|item| item.into_token_stream()).collect();
@@ -82,10 +85,11 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
 
 fn get_type_name(nested_type: &NestedType) -> TokenStream {
     let type_name = match nested_type {
-        NestedType::Bytes => {"Bytes"}
-        NestedType::Primitive {..} => {"Primitive"}
-        NestedType::Mapping { .. } => {"Mapping"}
-        NestedType::Struct { label, .. } => {label}
+        NestedType::Bytes => "Bytes",
+        NestedType::Primitive {..} => "Primitive",
+        NestedType::Mapping { .. } => "Mapping",
+        NestedType::Struct { label, .. } => label,
+        NestedType::DynamicArray { value, .. } => "DynamicArray",
     };
     let ident = syn::Ident::new(type_name, proc_macro2::Span::call_site());
     quote! { #ident }
@@ -113,6 +117,10 @@ fn get_nested_type(nested_type: &NestedType) -> TokenStream {
         NestedType::Struct { label, members } => {
             let label_ident = syn::Ident::new(label, proc_macro2::Span::call_site());
             quote! { #label_ident }
+        }
+        NestedType::DynamicArray {value} => {
+            let value_type = get_nested_type(value);
+            quote! { DynamicArray<#value_type> }
         }
     }
 }

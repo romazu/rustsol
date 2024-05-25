@@ -10,6 +10,12 @@ fn to_bytes32(num: u64) -> [u8; 32] {
 }
 
 /// Computes the keccak256 hash of the concatenation of two 32-byte arrays
+pub fn keccak256(v: [u8; 32]) -> [u8; 32] {
+    let mut hasher = Keccak256::new();
+    hasher.update(v);
+    hasher.finalize().as_slice().try_into().expect("Wrong length")
+}
+
 pub fn keccak256_concat(a: [u8; 32], b: [u8; 32]) -> [u8; 32] {
     let mut hasher = Keccak256::new();
     hasher.update(a);
@@ -17,7 +23,7 @@ pub fn keccak256_concat(a: [u8; 32], b: [u8; 32]) -> [u8; 32] {
     hasher.finalize().as_slice().try_into().expect("Wrong length")
 }
 
-fn ceil_div(a: u64, b: u64) -> u64 {
+pub fn ceil_div(a: u64, b: u64) -> u64 {
     (a + b - 1) / b
 }
 

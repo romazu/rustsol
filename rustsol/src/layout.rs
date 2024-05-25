@@ -138,18 +138,24 @@ pub enum NestedType {
         label: String,
         members: Vec<MemberDef>,
     },
+    DynamicArray {
+        value: Box<NestedType>,
+    },
 }
 
 impl NestedType {
     fn to_string(&self) -> String {
         match self {
             NestedType::Bytes => "Bytes".to_string(),
-            NestedType::Primitive {..} => "Primitive".to_string(),
-            NestedType::Mapping{key, value } => {
+            NestedType::Primitive { .. } => "Primitive".to_string(),
+            NestedType::Mapping { key, value } => {
                 format!("Mapping<{}, {}>", key.to_string(), value.to_string())
             }
             NestedType::Struct { label, members } => {
-                format!("Struct {}", label)
+                format!("Struct<{}>", label)
+            }
+            NestedType::DynamicArray { value } => {
+                format!("DynamicArray<{}>", value.to_string())
             }
         }
     }
@@ -198,10 +204,10 @@ impl StorageLayout {
         if let Some(ty) = self.types.get(type_name) {
             match ty {
                 MemberType::Bytes { .. } => Some(NestedType::Bytes),
-                MemberType::Primitive { label, number_of_bytes } => Some(NestedType::Primitive{number_of_bytes: *number_of_bytes}),
+                MemberType::Primitive { label, number_of_bytes } => Some(NestedType::Primitive { number_of_bytes: *number_of_bytes }),
                 MemberType::Mapping { key, value, .. } => {
                     let key_type = match self.traverse_type(key) {
-                        Some(NestedType::Primitive {number_of_bytes}) => Some(NestedType::Primitive {number_of_bytes}),
+                        Some(NestedType::Primitive { number_of_bytes }) => Some(NestedType::Primitive { number_of_bytes }),
                         Some(NestedType::Bytes) => Some(NestedType::Bytes),
                         _ => panic!("Key type must be Primitive or Bytes"),
                     };
@@ -210,7 +216,7 @@ impl StorageLayout {
 
                     if let Some(valid_key_type) = key_type {
                         if let Some(valid_value_type) = value_type {
-                            Some(NestedType::Mapping{
+                            Some(NestedType::Mapping {
                                 key: Box::new(valid_key_type),
                                 value: Box::new(valid_value_type),
                             })
@@ -228,6 +234,18 @@ impl StorageLayout {
                     let nested_types = self.traverse_struct(struct_name, members);
                     Some(nested_types[0].clone())
                 }
+                MemberType::DynamicArray { base, label, number_of_bytes } => {
+                    let value_type = self.traverse_type(base);
+                    if let Some(valid_value_type) = value_type {
+                        Some(NestedType::DynamicArray {
+                            value: Box::new(valid_value_type),
+                        })
+                    } else {
+                        // panic!("Value type could not be resolved for type: {}", value);
+                        println!("Value type could not be resolved for type: {}", base);
+                        None
+                    }
+                }
                 _ => None,
             }
         } else {
@@ -242,11 +260,11 @@ impl StorageLayout {
         } else {
             return;
         }
-        if let NestedType::Mapping{key, value} = nested_type {
+        if let NestedType::Mapping { key, value } = nested_type {
             self.collect_unique_types(key, nested_types, unique_representations);
             self.collect_unique_types(value, nested_types, unique_representations);
         }
-        if let NestedType::Struct{label, members} = nested_type {
+        if let NestedType::Struct { label, members } = nested_type {
             for member in members {
                 self.collect_unique_types(&member.type_def, nested_types, unique_representations);
             }

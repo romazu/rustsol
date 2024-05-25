@@ -15,6 +15,7 @@ contract MyContract {
 
     uint112[10] public staticArray;
     uint256[] public dynamicArray;
+    MyStructNested[] public dynamicArrayStruct;
 
     mapping(uint256 => uint256) public myMapping1;
     mapping(string => uint256) public myMapping2;
