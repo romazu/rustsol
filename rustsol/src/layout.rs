@@ -137,6 +137,7 @@ pub enum NestedType {
     Struct {
         label: String,
         members: Vec<MemberDef>,
+        number_of_bytes: u64,
     },
     DynamicArray {
         value: Box<NestedType>,
@@ -151,7 +152,7 @@ impl NestedType {
             NestedType::Mapping { key, value } => {
                 format!("Mapping<{}, {}>", key.to_string(), value.to_string())
             }
-            NestedType::Struct { label, members } => {
+            NestedType::Struct { label, members, number_of_bytes } => {
                 format!("Struct<{}>", label)
             }
             NestedType::DynamicArray { value } => {
@@ -175,10 +176,10 @@ fn get_struct_name(s: &str) -> String {
 
 impl StorageLayout {
     pub fn traverse(&self) -> Vec<NestedType> {
-        self.traverse_struct("Contract".into(), &self.members)
+        self.traverse_struct("Contract".into(), &self.members, 0)
     }
 
-    fn traverse_struct(&self, label: String, members: &Vec<Member>) -> Vec<NestedType> {
+    fn traverse_struct(&self, label: String, members: &Vec<Member>, size: u64) -> Vec<NestedType> {
         let mut member_defs = Vec::new();
         let mut nested_types = Vec::new();
         let mut unique_representations = HashSet::new();
@@ -195,6 +196,7 @@ impl StorageLayout {
         let main_struct = NestedType::Struct {
             label: label,
             members: member_defs,
+            number_of_bytes: size,
         };
         nested_types.insert(0, main_struct);
         nested_types
@@ -229,9 +231,9 @@ impl StorageLayout {
                         None
                     }
                 }
-                MemberType::Struct { label, members, .. } => {
+                MemberType::Struct { label, members, number_of_bytes } => {
                     let struct_name = get_struct_name(label);
-                    let nested_types = self.traverse_struct(struct_name, members);
+                    let nested_types = self.traverse_struct(struct_name, members, *number_of_bytes);
                     Some(nested_types[0].clone())
                 }
                 MemberType::DynamicArray { base, label, number_of_bytes } => {
@@ -264,7 +266,7 @@ impl StorageLayout {
             self.collect_unique_types(key, nested_types, unique_representations);
             self.collect_unique_types(value, nested_types, unique_representations);
         }
-        if let NestedType::Struct { label, members } = nested_type {
+        if let NestedType::Struct { label, members, number_of_bytes } = nested_type {
             for member in members {
                 self.collect_unique_types(&member.type_def, nested_types, unique_representations);
             }

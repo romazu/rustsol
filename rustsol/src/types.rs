@@ -50,7 +50,7 @@ impl Position for Bytes {
     }
 
     fn size() -> u64 {
-        todo!()
+        32
     }
 }
 
@@ -158,7 +158,7 @@ impl<KeyType, Value> Position for Mapping<KeyType, Value> {
     }
 
     fn size() -> u64 {
-        todo!()
+        32
     }
 }
 
@@ -213,7 +213,7 @@ impl<Value> Position for DynamicArray<Value> {
     }
 
     fn size() -> u64 {
-        todo!()
+        32
     }
 }
 

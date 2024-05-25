@@ -10,7 +10,7 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
 
     for nested_type in nested_types {
         match nested_type {
-            NestedType::Struct { label, members } => {
+            NestedType::Struct { label, members, number_of_bytes } => {
                 let struct_name = Ident::new(&label, proc_macro2::Span::call_site());
 
                 let fields: Vec<TokenStream> = members.iter().map(|member_def| {
@@ -58,7 +58,7 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                             Self::new_from_position(slot, offset)
                         }
                         fn size() -> u64 {
-                            todo!()
+                            #number_of_bytes
                         }
                     }
                 };
@@ -114,7 +114,7 @@ fn get_nested_type(nested_type: &NestedType) -> TokenStream {
 
             quote! { Mapping<#key_type_for_mapping, #value_type> }
         }
-        NestedType::Struct { label, members } => {
+        NestedType::Struct { label, members, number_of_bytes } => {
             let label_ident = syn::Ident::new(label, proc_macro2::Span::call_site());
             quote! { #label_ident }
         }

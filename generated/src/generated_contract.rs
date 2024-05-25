@@ -40,7 +40,7 @@ impl Position for Contract {
         Self::new_from_position(slot, offset)
     }
     fn size() -> u64 {
-        todo!()
+        0u64
     }
 }
 #[derive(Debug)]
@@ -67,7 +67,7 @@ impl Position for MyContractMyStructNested {
         Self::new_from_position(slot, offset)
     }
     fn size() -> u64 {
-        todo!()
+        96u64
     }
 }
 #[derive(Debug)]
@@ -94,6 +94,6 @@ impl Position for MyContractMyStruct {
         Self::new_from_position(slot, offset)
     }
     fn size() -> u64 {
-        todo!()
+        64u64
     }
 }
