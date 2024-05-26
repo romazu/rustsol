@@ -7,6 +7,7 @@ use crate::layout::{MemberDef, NestedType};
 
 pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
     let mut nested_struct_definitions: Vec<TokenStream> = Vec::new();
+    let mut nested_struct_implementations: Vec<TokenStream> = Vec::new();
 
     for nested_type in nested_types {
         match nested_type {
@@ -33,7 +34,7 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                     }
                 }).collect();
 
-                println!("{}", default_fields[0].to_string());
+                // println!("{}", default_fields[0].to_string());
 
                 let struct_definition = quote! {
                     #[derive(Debug)]
@@ -42,6 +43,9 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                         __slot: U256,
                         #(#fields),*
                     }
+                };
+
+                let struct_implementation = quote! {
                     impl #struct_name {
                         pub fn new_from_position(slot: U256, offset: u8) -> Self {
                             Self {
@@ -62,7 +66,8 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                         }
                     }
                 };
-                nested_struct_definitions.push(struct_definition)
+                nested_struct_definitions.push(struct_definition);
+                nested_struct_implementations.push(struct_implementation);
             }
             // All other types are general and are predefined in separate files, see imports_definition.
             _ => {}
@@ -78,6 +83,7 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
     let generated_tokens = quote! {
         #imports_definition
         #(#nested_struct_definitions)*
+        #(#nested_struct_implementations)*
     };
 
     generated_tokens
