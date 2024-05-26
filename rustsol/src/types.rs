@@ -66,10 +66,6 @@ impl Position for Bytes {
 
 }
 
-trait FromBytes {
-    fn from_bytes(bytes: [u8; 32]) -> Self;
-}
-
 #[derive(Debug, Default)]
 pub struct PrimitiveKey([u8; 32]);
 
@@ -110,10 +106,6 @@ impl From<U256> for PrimitiveKey {
 
 #[derive(Debug, Default)]
 pub struct BytesKey([u8; 32]);
-
-pub trait ToBytesKey {
-    fn into_bytes_key(self) -> BytesKey;
-}
 
 impl From<&str> for BytesKey {
     fn from(value: &str) -> Self {
