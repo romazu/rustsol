@@ -18,6 +18,7 @@ contract MyContract {
     MyStructNested public myStructNested;
 
     uint112[10] public staticArray;
+    MyStruct[2] public staticArrayLarge;
     uint8[2][4] public staticArrayNestedSmall;
     uint256[] public dynamicArray;
     MyStructNested[] public dynamicArrayStruct;

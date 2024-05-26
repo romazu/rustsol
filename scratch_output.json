@@ -41,59 +41,67 @@
       "type": "t_array(t_uint112)10_storage"
     },
     {
-      "astId": 35,
+      "astId": 34,
+      "contract": "<stdin>:MyContract",
+      "label": "staticArrayLarge",
+      "offset": 0,
+      "slot": "10",
+      "type": "t_array(t_struct(MyStruct)11_storage)2_storage"
+    },
+    {
+      "astId": 40,
       "contract": "<stdin>:MyContract",
       "label": "staticArrayNestedSmall",
       "offset": 0,
-      "slot": "10",
+      "slot": "14",
       "type": "t_array(t_array(t_uint8)2_storage)4_storage"
     },
     {
-      "astId": 38,
+      "astId": 43,
       "contract": "<stdin>:MyContract",
       "label": "dynamicArray",
       "offset": 0,
-      "slot": "14",
+      "slot": "18",
       "type": "t_array(t_uint256)dyn_storage"
     },
     {
-      "astId": 42,
+      "astId": 47,
       "contract": "<stdin>:MyContract",
       "label": "dynamicArrayStruct",
       "offset": 0,
-      "slot": "15",
+      "slot": "19",
       "type": "t_array(t_struct(MyStructNested)17_storage)dyn_storage"
     },
     {
-      "astId": 46,
+      "astId": 51,
       "contract": "<stdin>:MyContract",
       "label": "dynamicArraySmall",
       "offset": 0,
-      "slot": "16",
+      "slot": "20",
       "type": "t_array(t_struct(MyStructSmall)22_storage)dyn_storage"
     },
     {
-      "astId": 50,
+      "astId": 55,
       "contract": "<stdin>:MyContract",
       "label": "myMapping1",
       "offset": 0,
-      "slot": "17",
+      "slot": "21",
       "type": "t_mapping(t_uint256,t_uint256)"
     },
     {
-      "astId": 54,
+      "astId": 59,
       "contract": "<stdin>:MyContract",
       "label": "myMapping2",
       "offset": 0,
-      "slot": "18",
+      "slot": "22",
       "type": "t_mapping(t_string_memory_ptr,t_uint256)"
     },
     {
-      "astId": 60,
+      "astId": 65,
       "contract": "<stdin>:MyContract",
       "label": "myNestedMapping",
       "offset": 0,
-      "slot": "19",
+      "slot": "23",
       "type": "t_mapping(t_uint256,t_mapping(t_uint256,t_uint256))"
     }
   ],
@@ -107,6 +115,12 @@
       "base": "t_array(t_uint8)2_storage",
       "encoding": "inplace",
       "label": "uint8[2][4]",
+      "numberOfBytes": "128"
+    },
+    "t_array(t_struct(MyStruct)11_storage)2_storage": {
+      "base": "t_struct(MyStruct)11_storage",
+      "encoding": "inplace",
+      "label": "struct MyContract.MyStruct[2]",
       "numberOfBytes": "128"
     },
     "t_array(t_struct(MyStructNested)17_storage)dyn_storage": {

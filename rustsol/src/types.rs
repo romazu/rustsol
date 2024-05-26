@@ -260,7 +260,7 @@ impl<const BYTES: u64, Value> StaticArray<BYTES, Value> {
         let value_size = Value::size();
         let (packing_n, packing_d) = packing_ratio(value_size);
         let capacity = BYTES / 32 * packing_d / packing_n;
-        if index > capacity as usize {
+        if index >= capacity as usize {
             panic!("Index is outside array capacity: {} vs {}", index, capacity)
         }
         let slot = self.__slot + index as u64 * packing_n / packing_d;
