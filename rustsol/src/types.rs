@@ -194,17 +194,6 @@ impl<Value> DynamicArray<Value> {
     pub fn slot(&self) -> U256 {
         self.__slot
     }
-
-    fn get_value(&self, key: usize) -> Value
-        where
-            Value: Position,
-    {
-        let base_slot_bytes = keccak256(u256_to_bytes32(self.__slot));
-        let base_slot = bytes32_to_u256(base_slot_bytes);
-        let value_len = ceil_div(Value::size(), 32); // How many slots value occupies.
-        let value_slot = base_slot + value_len * key as u64;
-        Value::from_position(value_slot, 0)
-    }
 }
 
 impl<Value> Position for DynamicArray<Value> {
@@ -218,11 +207,15 @@ impl<Value> Position for DynamicArray<Value> {
 }
 
 impl<Value> DynamicArray<Value> {
-    pub fn get_item(&self, key: usize) -> Value
+    pub fn get_item(&self, index: usize) -> Value
         where
             Value: Position,
     {
-        self.get_value(key)
+        let base_slot_bytes = keccak256(u256_to_bytes32(self.__slot));
+        let base_slot = bytes32_to_u256(base_slot_bytes);
+        let value_len = ceil_div(Value::size(), 32); // How many slots value occupies.
+        let value_slot = base_slot + value_len * index as u64;
+        Value::from_position(value_slot, 0)
     }
 }
 
@@ -237,8 +230,20 @@ impl<const BYTES: u64, Value> StaticArray<BYTES, Value> {
     pub fn slot(&self) -> U256 {
         self.__slot
     }
+}
 
-    fn get_value(&self, index: usize) -> Value
+impl<const BYTES: u64, Value> Position for StaticArray<BYTES, Value> {
+    fn from_position(slot: U256, offset: u8) -> Self {
+        StaticArray::<BYTES, Value> { __slot: slot, __marker: PhantomData }
+    }
+
+    fn size() -> u64 {
+        BYTES
+    }
+}
+
+impl<const BYTES: u64, Value> StaticArray<BYTES, Value> {
+    pub fn get_item(&self, index: usize) -> Value
         where
             Value: Position,
     {
@@ -263,24 +268,5 @@ impl<const BYTES: u64, Value> StaticArray<BYTES, Value> {
             let offset = ((index as u64 % elements_per_slot) * value_size) as u8; // guaranteed to fit in u8
             Value::from_position(value_slot, offset)
         }
-    }
-}
-
-impl<const BYTES: u64, Value> Position for StaticArray<BYTES, Value> {
-    fn from_position(slot: U256, offset: u8) -> Self {
-        StaticArray::<BYTES, Value> { __slot: slot, __marker: PhantomData }
-    }
-
-    fn size() -> u64 {
-        BYTES
-    }
-}
-
-impl<const BYTES: u64, Value> StaticArray<BYTES, Value> {
-    pub fn get_item(&self, key: usize) -> Value
-        where
-            Value: Position,
-    {
-        self.get_value(key)
     }
 }
