@@ -219,6 +219,16 @@ impl<Value> DynamicArray<Value> {
     }
 }
 
+// Return the packing ratio: (n, d).
+// This means that packing is "n slot per d elements"
+// In the current solidity implementation one element of the pair is always one.
+fn packing_ratio(element_size: u64) -> (u64, u64) {
+    if element_size > 32 {
+        (ceil_div(element_size, 32), 1)
+    } else {
+        (1, 32 / element_size)
+    }
+}
 
 #[derive(Debug)]
 pub struct StaticArray<const BYTES: u64, Value> {
@@ -247,26 +257,14 @@ impl<const BYTES: u64, Value> StaticArray<BYTES, Value> {
         where
             Value: Position,
     {
-        let base_slot = self.__slot;
         let value_size = Value::size();
-        let capacity_slots = BYTES / 32;
-        if value_size > 32 {
-            // Elements larger than 32 bytes, each element starts at a new slot
-            let slots_per_element = ceil_div(value_size, 32);
-            let value_slot = base_slot + slots_per_element * index as u64;
-            if index as u64 > capacity_slots / slots_per_element {
-                panic!("Index is outside array capacity: {} vs {}", index, capacity_slots / slots_per_element)
-            }
-            Value::from_position(value_slot, 0)
-        } else {
-            // Elements smaller than or equal to 32 bytes, packed within slots
-            let elements_per_slot = 32 / value_size;
-            let value_slot = base_slot + index as u64 / elements_per_slot;
-            if index as u64 > capacity_slots * elements_per_slot {
-                panic!("Index is outside array capacity: {} vs {}", index, capacity_slots * elements_per_slot)
-            }
-            let offset = ((index as u64 % elements_per_slot) * value_size) as u8; // guaranteed to fit in u8
-            Value::from_position(value_slot, offset)
+        let (packing_n, packing_d) = packing_ratio(value_size);
+        let capacity = BYTES / 32 * packing_d / packing_n;
+        if index > capacity as usize {
+            panic!("Index is outside array capacity: {} vs {}", index, capacity)
         }
+        let slot = self.__slot + index as u64 * packing_n / packing_d;
+        let offset = (index as u64 * 32 * packing_n / packing_d % 32) as u8;  // guaranteed to fit in u8
+        Value::from_position(slot, offset)
     }
 }

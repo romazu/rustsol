@@ -7,80 +7,56 @@ use primitive_types::U256;
 #[allow(non_snake_case)]
 pub struct Contract {
     __slot: U256,
-    pub slot0: UniswapV3PoolSlot0,
-    pub feeGrowthGlobal0X128: Primitive<32>,
-    pub feeGrowthGlobal1X128: Primitive<32>,
-    pub protocolFees: UniswapV3PoolProtocolFees,
-    pub liquidity: Primitive<16>,
-    pub ticks: Mapping<PrimitiveKey, TickInfo>,
-    pub tickBitmap: Mapping<PrimitiveKey, Primitive<32>>,
-    pub positions: Mapping<PrimitiveKey, PositionInfo>,
-    pub observations: StaticArray<2097120, OracleObservation>,
+    pub plainUint112: Primitive<14>,
+    pub plainUint32: Primitive<4>,
+    pub plainString: Bytes,
+    pub myStructNested: MyContractMyStructNested,
+    pub staticArray: StaticArray<160, Primitive<14>>,
+    pub staticArrayNestedSmall: StaticArray<128, StaticArray<32, Primitive<1>>>,
+    pub dynamicArray: DynamicArray<Primitive<32>>,
+    pub dynamicArrayStruct: DynamicArray<MyContractMyStructNested>,
+    pub dynamicArraySmall: DynamicArray<MyContractMyStructSmall>,
+    pub myMapping1: Mapping<PrimitiveKey, Primitive<32>>,
+    pub myMapping2: Mapping<BytesKey, Primitive<32>>,
+    pub myNestedMapping: Mapping<PrimitiveKey, Mapping<PrimitiveKey, Primitive<32>>>,
 }
 #[derive(Debug)]
 #[allow(non_snake_case)]
-pub struct UniswapV3PoolSlot0 {
+pub struct MyContractMyStructNested {
     __slot: U256,
-    pub sqrtPriceX96: Primitive<20>,
-    pub tick: Primitive<3>,
-    pub observationIndex: Primitive<2>,
-    pub observationCardinality: Primitive<2>,
-    pub observationCardinalityNext: Primitive<2>,
-    pub feeProtocol: Primitive<1>,
-    pub unlocked: Primitive<1>,
+    pub myAddress: Primitive<20>,
+    pub myStruct: MyContractMyStruct,
 }
 #[derive(Debug)]
 #[allow(non_snake_case)]
-pub struct UniswapV3PoolProtocolFees {
+pub struct MyContractMyStruct {
     __slot: U256,
-    pub token0: Primitive<16>,
-    pub token1: Primitive<16>,
+    pub myAddress: Primitive<20>,
+    pub myUint: Primitive<32>,
 }
 #[derive(Debug)]
 #[allow(non_snake_case)]
-pub struct TickInfo {
+pub struct MyContractMyStructSmall {
     __slot: U256,
-    pub liquidityGross: Primitive<16>,
-    pub liquidityNet: Primitive<16>,
-    pub feeGrowthOutside0X128: Primitive<32>,
-    pub feeGrowthOutside1X128: Primitive<32>,
-    pub tickCumulativeOutside: Primitive<7>,
-    pub secondsPerLiquidityOutsideX128: Primitive<20>,
-    pub secondsOutside: Primitive<4>,
-    pub initialized: Primitive<1>,
-}
-#[derive(Debug)]
-#[allow(non_snake_case)]
-pub struct PositionInfo {
-    __slot: U256,
-    pub liquidity: Primitive<16>,
-    pub feeGrowthInside0LastX128: Primitive<32>,
-    pub feeGrowthInside1LastX128: Primitive<32>,
-    pub tokensOwed0: Primitive<16>,
-    pub tokensOwed1: Primitive<16>,
-}
-#[derive(Debug)]
-#[allow(non_snake_case)]
-pub struct OracleObservation {
-    __slot: U256,
-    pub blockTimestamp: Primitive<4>,
-    pub tickCumulative: Primitive<7>,
-    pub secondsPerLiquidityCumulativeX128: Primitive<20>,
-    pub initialized: Primitive<1>,
+    pub smallInt1: Primitive<4>,
+    pub smallInt2: Primitive<4>,
 }
 impl Contract {
     pub fn new_from_position(slot: U256, offset: u8) -> Self {
         Self {
             __slot: slot,
-            slot0: UniswapV3PoolSlot0::from_position(slot + 0u64, 0u8),
-            feeGrowthGlobal0X128: Primitive::from_position(slot + 1u64, 0u8),
-            feeGrowthGlobal1X128: Primitive::from_position(slot + 2u64, 0u8),
-            protocolFees: UniswapV3PoolProtocolFees::from_position(slot + 3u64, 0u8),
-            liquidity: Primitive::from_position(slot + 4u64, 0u8),
-            ticks: Mapping::from_position(slot + 5u64, 0u8),
-            tickBitmap: Mapping::from_position(slot + 6u64, 0u8),
-            positions: Mapping::from_position(slot + 7u64, 0u8),
-            observations: StaticArray::from_position(slot + 8u64, 0u8),
+            plainUint112: Primitive::from_position(slot + 0u64, 0u8),
+            plainUint32: Primitive::from_position(slot + 0u64, 14u8),
+            plainString: Bytes::from_position(slot + 1u64, 0u8),
+            myStructNested: MyContractMyStructNested::from_position(slot + 2u64, 0u8),
+            staticArray: StaticArray::from_position(slot + 5u64, 0u8),
+            staticArrayNestedSmall: StaticArray::from_position(slot + 10u64, 0u8),
+            dynamicArray: DynamicArray::from_position(slot + 14u64, 0u8),
+            dynamicArrayStruct: DynamicArray::from_position(slot + 15u64, 0u8),
+            dynamicArraySmall: DynamicArray::from_position(slot + 16u64, 0u8),
+            myMapping1: Mapping::from_position(slot + 17u64, 0u8),
+            myMapping2: Mapping::from_position(slot + 18u64, 0u8),
+            myNestedMapping: Mapping::from_position(slot + 19u64, 0u8),
         }
     }
     pub fn slot(&self) -> U256 {
@@ -95,118 +71,59 @@ impl Position for Contract {
         0u64
     }
 }
-impl UniswapV3PoolSlot0 {
+impl MyContractMyStructNested {
     pub fn new_from_position(slot: U256, offset: u8) -> Self {
         Self {
             __slot: slot,
-            sqrtPriceX96: Primitive::from_position(slot + 0u64, 0u8),
-            tick: Primitive::from_position(slot + 0u64, 20u8),
-            observationIndex: Primitive::from_position(slot + 0u64, 23u8),
-            observationCardinality: Primitive::from_position(slot + 0u64, 25u8),
-            observationCardinalityNext: Primitive::from_position(slot + 0u64, 27u8),
-            feeProtocol: Primitive::from_position(slot + 0u64, 29u8),
-            unlocked: Primitive::from_position(slot + 0u64, 30u8),
+            myAddress: Primitive::from_position(slot + 0u64, 0u8),
+            myStruct: MyContractMyStruct::from_position(slot + 1u64, 0u8),
         }
     }
     pub fn slot(&self) -> U256 {
         self.__slot
     }
 }
-impl Position for UniswapV3PoolSlot0 {
+impl Position for MyContractMyStructNested {
     fn from_position(slot: U256, offset: u8) -> Self {
         Self::new_from_position(slot, offset)
     }
     fn size() -> u64 {
-        32u64
+        96u64
     }
 }
-impl UniswapV3PoolProtocolFees {
+impl MyContractMyStruct {
     pub fn new_from_position(slot: U256, offset: u8) -> Self {
         Self {
             __slot: slot,
-            token0: Primitive::from_position(slot + 0u64, 0u8),
-            token1: Primitive::from_position(slot + 0u64, 16u8),
+            myAddress: Primitive::from_position(slot + 0u64, 0u8),
+            myUint: Primitive::from_position(slot + 1u64, 0u8),
         }
     }
     pub fn slot(&self) -> U256 {
         self.__slot
     }
 }
-impl Position for UniswapV3PoolProtocolFees {
+impl Position for MyContractMyStruct {
     fn from_position(slot: U256, offset: u8) -> Self {
         Self::new_from_position(slot, offset)
     }
     fn size() -> u64 {
-        32u64
+        64u64
     }
 }
-impl TickInfo {
+impl MyContractMyStructSmall {
     pub fn new_from_position(slot: U256, offset: u8) -> Self {
         Self {
             __slot: slot,
-            liquidityGross: Primitive::from_position(slot + 0u64, 0u8),
-            liquidityNet: Primitive::from_position(slot + 0u64, 16u8),
-            feeGrowthOutside0X128: Primitive::from_position(slot + 1u64, 0u8),
-            feeGrowthOutside1X128: Primitive::from_position(slot + 2u64, 0u8),
-            tickCumulativeOutside: Primitive::from_position(slot + 3u64, 0u8),
-            secondsPerLiquidityOutsideX128: Primitive::from_position(slot + 3u64, 7u8),
-            secondsOutside: Primitive::from_position(slot + 3u64, 27u8),
-            initialized: Primitive::from_position(slot + 3u64, 31u8),
+            smallInt1: Primitive::from_position(slot + 0u64, 0u8),
+            smallInt2: Primitive::from_position(slot + 0u64, 4u8),
         }
     }
     pub fn slot(&self) -> U256 {
         self.__slot
     }
 }
-impl Position for TickInfo {
-    fn from_position(slot: U256, offset: u8) -> Self {
-        Self::new_from_position(slot, offset)
-    }
-    fn size() -> u64 {
-        128u64
-    }
-}
-impl PositionInfo {
-    pub fn new_from_position(slot: U256, offset: u8) -> Self {
-        Self {
-            __slot: slot,
-            liquidity: Primitive::from_position(slot + 0u64, 0u8),
-            feeGrowthInside0LastX128: Primitive::from_position(slot + 1u64, 0u8),
-            feeGrowthInside1LastX128: Primitive::from_position(slot + 2u64, 0u8),
-            tokensOwed0: Primitive::from_position(slot + 3u64, 0u8),
-            tokensOwed1: Primitive::from_position(slot + 3u64, 16u8),
-        }
-    }
-    pub fn slot(&self) -> U256 {
-        self.__slot
-    }
-}
-impl Position for PositionInfo {
-    fn from_position(slot: U256, offset: u8) -> Self {
-        Self::new_from_position(slot, offset)
-    }
-    fn size() -> u64 {
-        128u64
-    }
-}
-impl OracleObservation {
-    pub fn new_from_position(slot: U256, offset: u8) -> Self {
-        Self {
-            __slot: slot,
-            blockTimestamp: Primitive::from_position(slot + 0u64, 0u8),
-            tickCumulative: Primitive::from_position(slot + 0u64, 4u8),
-            secondsPerLiquidityCumulativeX128: Primitive::from_position(
-                slot + 0u64,
-                11u8,
-            ),
-            initialized: Primitive::from_position(slot + 0u64, 31u8),
-        }
-    }
-    pub fn slot(&self) -> U256 {
-        self.__slot
-    }
-}
-impl Position for OracleObservation {
+impl Position for MyContractMyStructSmall {
     fn from_position(slot: U256, offset: u8) -> Self {
         Self::new_from_position(slot, offset)
     }
