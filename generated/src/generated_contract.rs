@@ -78,9 +78,6 @@ impl Position for Contract {
     fn size() -> u64 {
         Self::size()
     }
-    fn position(&self) -> (U256, u8, u64) {
-        self.position()
-    }
 }
 impl MyContractMyStructNested {
     pub fn new_from_position(slot: U256, offset: u8) -> Self {
@@ -106,9 +103,6 @@ impl Position for MyContractMyStructNested {
     }
     fn size() -> u64 {
         Self::size()
-    }
-    fn position(&self) -> (U256, u8, u64) {
-        self.position()
     }
 }
 impl MyContractMyStruct {
@@ -136,9 +130,6 @@ impl Position for MyContractMyStruct {
     fn size() -> u64 {
         Self::size()
     }
-    fn position(&self) -> (U256, u8, u64) {
-        self.position()
-    }
 }
 impl MyContractMyStructSmall {
     pub fn new_from_position(slot: U256, offset: u8) -> Self {
@@ -164,8 +155,5 @@ impl Position for MyContractMyStructSmall {
     }
     fn size() -> u64 {
         Self::size()
-    }
-    fn position(&self) -> (U256, u8, u64) {
-        self.position()
     }
 }

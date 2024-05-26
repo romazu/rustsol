@@ -70,9 +70,6 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                         fn size() -> u64 {
                             Self::size()
                         }
-                        fn position(&self) -> (U256, u8, u64) {
-                            self.position()
-                        }
                     }
                 };
                 nested_struct_definitions.push(struct_definition);

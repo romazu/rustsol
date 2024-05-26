@@ -1,7 +1,11 @@
 use std::marker::PhantomData;
-use std::ops::Index;
 use primitive_types::U256;
 use crate::keccak::{bytes32_to_u256, ceil_div, keccak256, keccak256_concat, u256_to_bytes32};
+
+pub trait Position {
+    fn from_position(slot: U256, offset: u8) -> Self;
+    fn size() -> u64;
+}
 
 #[derive(Debug, Default)]
 pub struct Primitive<const BYTES: u64> {
@@ -35,11 +39,6 @@ impl<const BYTES: u64> Position for Primitive<BYTES> {
     fn size() -> u64 {
         BYTES
     }
-
-    fn position(&self) -> (U256, u8, u64) {
-        self.position()
-    }
-
 }
 
 #[derive(Debug, Default)]
@@ -63,10 +62,6 @@ impl Position for Bytes {
 
     fn size() -> u64 {
         32
-    }
-
-    fn position(&self) -> (U256, u8, u64) {
-        self.position()
     }
 
 }
@@ -127,29 +122,6 @@ impl From<&str> for BytesKey {
     }
 }
 
-// #[derive(Debug, Default)]
-// pub struct IntegerKey([u8; 32]);
-//
-// impl IntegerKey {
-//     fn new(bytes: [u8; 32]) -> Self {
-//         IntegerKey(bytes)
-//     }
-// }
-//
-// impl_from_for!(IntegerKey, u8, u16, u32, u64, u128);
-// impl From<U256> for IntegerKey {
-//     fn from(value: U256) -> Self {
-//         IntegerKey(u256_to_bytes32(value))
-//     }
-// }
-
-
-pub trait Position {
-    fn from_position(slot: U256, offset: u8) -> Self;
-    fn size() -> u64;
-    fn position(&self) -> (U256, u8, u64);
-}
-
 #[derive(Debug)]
 pub struct Mapping<KeyType, Value> {
     __slot: U256,
@@ -182,11 +154,6 @@ impl<KeyType, Value> Position for Mapping<KeyType, Value> {
     fn size() -> u64 {
         32
     }
-
-    fn position(&self) -> (U256, u8, u64) {
-        self.position()
-    }
-
 }
 
 
@@ -234,10 +201,6 @@ impl<Value> Position for DynamicArray<Value> {
 
     fn size() -> u64 {
         32
-    }
-
-    fn position(&self) -> (U256, u8, u64) {
-        self.position()
     }
 }
 
@@ -295,10 +258,6 @@ impl<const BYTES: u64, Value> Position for StaticArray<BYTES, Value> {
 
     fn size() -> u64 {
         BYTES
-    }
-
-    fn position(&self) -> (U256, u8, u64) {
-        self.position()
     }
 }
 
