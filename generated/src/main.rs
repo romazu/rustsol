@@ -26,4 +26,9 @@ fn main() {
     println!("{:#?}", contract.dynamicArrayStruct.get_item(11).slot());
     println!("{:#?}", contract.dynamicArraySmall.get_item(10).slot());
     println!("{:#?}", contract.dynamicArraySmall.get_item(11).slot());
+    println!("{:#?}", contract.staticArrayNestedSmall.slot());
+    println!("{:#?}", contract.staticArrayNestedSmall.get_item(0).slot());
+    println!("{:#?}", contract.staticArrayNestedSmall.get_item(1).slot());
+    println!("({:#?}, {:#?})", contract.staticArrayNestedSmall.get_item(0).get_item(0).slot(), contract.staticArrayNestedSmall.get_item(0).get_item(0).offset());
+    println!("({:#?}, {:#?})", contract.staticArrayNestedSmall.get_item(0).get_item(32).slot(), contract.staticArrayNestedSmall.get_item(0).get_item(32).offset());
 }

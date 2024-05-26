@@ -70,7 +70,7 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
     }
 
     let imports_definition_items: Vec<Item> = vec![
-        parse_str("use rustsol::types::{Primitive, Bytes, Mapping, DynamicArray, PrimitiveKey, BytesKey, Position};").expect("Failed to parse"),
+        parse_str("use rustsol::types::{Primitive, Bytes, Mapping, DynamicArray, StaticArray, PrimitiveKey, BytesKey, Position};").expect("Failed to parse"),
         parse_str("use primitive_types::{U256};").expect("Failed to parse"),
     ];
     let imports_definition: TokenStream = imports_definition_items.into_iter().map(|item| item.into_token_stream()).collect();
@@ -85,11 +85,12 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
 
 fn get_type_name(nested_type: &NestedType) -> TokenStream {
     let type_name = match nested_type {
+        NestedType::Primitive { .. } => "Primitive",
         NestedType::Bytes => "Bytes",
-        NestedType::Primitive {..} => "Primitive",
         NestedType::Mapping { .. } => "Mapping",
         NestedType::Struct { label, .. } => label,
-        NestedType::DynamicArray { value, .. } => "DynamicArray",
+        NestedType::DynamicArray { .. } => "DynamicArray",
+        NestedType::StaticArray { .. } => "StaticArray",
     };
     let ident = syn::Ident::new(type_name, proc_macro2::Span::call_site());
     quote! { #ident }
@@ -97,17 +98,17 @@ fn get_type_name(nested_type: &NestedType) -> TokenStream {
 
 fn get_nested_type(nested_type: &NestedType) -> TokenStream {
     match nested_type {
-        NestedType::Primitive {number_of_bytes} => {
+        NestedType::Primitive { number_of_bytes } => {
             // Avoid verbose definitions like Primitive<32u64>.
             let number_of_bytes_literal = syn::LitInt::new(&number_of_bytes.to_string(), proc_macro2::Span::call_site());
             quote! { Primitive<#number_of_bytes_literal> }
-        },
+        }
         NestedType::Bytes => quote! { Bytes },
         NestedType::Mapping { key, value } => {
             let key_type = get_nested_type(key);
             let value_type = get_nested_type(value);
             let key_type_for_mapping = match key.as_ref() {
-                NestedType::Primitive {..} => quote! { PrimitiveKey },
+                NestedType::Primitive { .. } => quote! { PrimitiveKey },
                 NestedType::Bytes => quote! { BytesKey },
                 _ => panic!("Bad key type")
             };
@@ -118,9 +119,14 @@ fn get_nested_type(nested_type: &NestedType) -> TokenStream {
             let label_ident = syn::Ident::new(label, proc_macro2::Span::call_site());
             quote! { #label_ident }
         }
-        NestedType::DynamicArray {value} => {
+        NestedType::DynamicArray { value } => {
             let value_type = get_nested_type(value);
             quote! { DynamicArray<#value_type> }
+        }
+        NestedType::StaticArray { value, number_of_bytes } => {
+            let value_type = get_nested_type(value);
+            let number_of_bytes_literal = syn::LitInt::new(&number_of_bytes.to_string(), proc_macro2::Span::call_site());
+            quote! { StaticArray<#number_of_bytes_literal, #value_type> }
         }
     }
 }

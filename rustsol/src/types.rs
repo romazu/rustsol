@@ -217,8 +217,66 @@ impl<Value> Position for DynamicArray<Value> {
     }
 }
 
-
 impl<Value> DynamicArray<Value> {
+    pub fn get_item(&self, key: usize) -> Value
+        where
+            Value: Position,
+    {
+        self.get_value(key)
+    }
+}
+
+
+#[derive(Debug)]
+pub struct StaticArray<const BYTES: u64, Value> {
+    __slot: U256,
+    __marker: PhantomData<Value>,
+}
+
+impl<const BYTES: u64, Value> StaticArray<BYTES, Value> {
+    pub fn slot(&self) -> U256 {
+        self.__slot
+    }
+
+    fn get_value(&self, index: usize) -> Value
+        where
+            Value: Position,
+    {
+        let base_slot = self.__slot;
+        let value_size = Value::size();
+        let capacity_slots = BYTES / 32;
+        if value_size > 32 {
+            // Elements larger than 32 bytes, each element starts at a new slot
+            let slots_per_element = ceil_div(value_size, 32);
+            let value_slot = base_slot + slots_per_element * index as u64;
+            if index as u64 > capacity_slots / slots_per_element {
+                panic!("Index is outside array capacity: {} vs {}", index, capacity_slots / slots_per_element)
+            }
+            Value::from_position(value_slot, 0)
+        } else {
+            // Elements smaller than or equal to 32 bytes, packed within slots
+            let elements_per_slot = 32 / value_size;
+            let value_slot = base_slot + index as u64 / elements_per_slot;
+            if index as u64 > capacity_slots * elements_per_slot {
+                panic!("Index is outside array capacity: {} vs {}", index, capacity_slots * elements_per_slot)
+            }
+            let offset = ((index as u64 % elements_per_slot) * value_size) as u8; // guaranteed to fit in u8
+            Value::from_position(value_slot, offset)
+        }
+    }
+}
+
+impl<const BYTES: u64, Value> Position for StaticArray<BYTES, Value> {
+    fn from_position(slot: U256, offset: u8) -> Self {
+        StaticArray::<BYTES, Value> { __slot: slot, __marker: PhantomData }
+    }
+
+    fn size() -> u64 {
+        BYTES
+    }
+}
+
+impl<const BYTES: u64, Value> StaticArray<BYTES, Value> {
     pub fn get_item(&self, key: usize) -> Value
         where
             Value: Position,

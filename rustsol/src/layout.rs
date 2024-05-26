@@ -125,10 +125,10 @@ fn string_to_u64<'de, D>(deserializer: D) -> Result<u64, D::Error>
 
 #[derive(Debug, Clone)]
 pub enum NestedType {
-    Bytes,
     Primitive {
         number_of_bytes: u64,
     },
+    Bytes,
     Mapping {
         // Box is needed to avoid problems with recursive definition of NestedType
         key: Box<NestedType>,
@@ -142,13 +142,19 @@ pub enum NestedType {
     DynamicArray {
         value: Box<NestedType>,
     },
+    StaticArray {
+        value: Box<NestedType>,
+        number_of_bytes: u64,
+    },
 }
 
 impl NestedType {
     fn to_string(&self) -> String {
         match self {
+            NestedType::Primitive { number_of_bytes } => {
+                format!("Primitive<{}>", number_of_bytes.to_string())
+            },
             NestedType::Bytes => "Bytes".to_string(),
-            NestedType::Primitive { .. } => "Primitive".to_string(),
             NestedType::Mapping { key, value } => {
                 format!("Mapping<{}, {}>", key.to_string(), value.to_string())
             }
@@ -157,6 +163,9 @@ impl NestedType {
             }
             NestedType::DynamicArray { value } => {
                 format!("DynamicArray<{}>", value.to_string())
+            }
+            NestedType::StaticArray { value, number_of_bytes } => {
+                format!("StaticArray<{}, {}>", number_of_bytes.to_string(), value.to_string())
             }
         }
     }
@@ -205,8 +214,8 @@ impl StorageLayout {
     fn traverse_type(&self, type_name: &str) -> Option<NestedType> {
         if let Some(ty) = self.types.get(type_name) {
             match ty {
-                MemberType::Bytes { .. } => Some(NestedType::Bytes),
                 MemberType::Primitive { label, number_of_bytes } => Some(NestedType::Primitive { number_of_bytes: *number_of_bytes }),
+                MemberType::Bytes { .. } => Some(NestedType::Bytes),
                 MemberType::Mapping { key, value, .. } => {
                     let key_type = match self.traverse_type(key) {
                         Some(NestedType::Primitive { number_of_bytes }) => Some(NestedType::Primitive { number_of_bytes }),
@@ -248,7 +257,19 @@ impl StorageLayout {
                         None
                     }
                 }
-                _ => None,
+                MemberType::StaticArray { base, label, number_of_bytes } => {
+                    let value_type = self.traverse_type(base);
+                    if let Some(valid_value_type) = value_type {
+                        Some(NestedType::StaticArray {
+                            value: Box::new(valid_value_type),
+                            number_of_bytes: *number_of_bytes,
+                        })
+                    } else {
+                        // panic!("Value type could not be resolved for type: {}", value);
+                        println!("Value type could not be resolved for type: {}", base);
+                        None
+                    }
+                }
             }
         } else {
             None
@@ -262,17 +283,28 @@ impl StorageLayout {
         } else {
             return;
         }
-        if let NestedType::Mapping { key, value } = nested_type {
-            self.collect_unique_types(key, nested_types, unique_representations);
-            self.collect_unique_types(value, nested_types, unique_representations);
-        }
-        if let NestedType::Struct { label, members, number_of_bytes } = nested_type {
-            for member in members {
-                self.collect_unique_types(&member.type_def, nested_types, unique_representations);
+        match nested_type {
+            NestedType::Primitive { .. } => {
+                // This is the leaf type. Do nothing.
             }
-        }
-        if let NestedType::DynamicArray { value } = nested_type {
-            self.collect_unique_types(value, nested_types, unique_representations);
+            NestedType::Bytes => {
+                // This is the leaf type. Do nothing.
+            }
+            NestedType::Mapping { key, value } => {
+                self.collect_unique_types(key, nested_types, unique_representations);
+                self.collect_unique_types(value, nested_types, unique_representations);
+            }
+            NestedType::Struct { label, members, number_of_bytes } => {
+                for member in members {
+                    self.collect_unique_types(&member.type_def, nested_types, unique_representations);
+                }
+            }
+            NestedType::DynamicArray { value } => {
+                self.collect_unique_types(value, nested_types, unique_representations);
+            }
+            NestedType::StaticArray { value, number_of_bytes } => {
+                self.collect_unique_types(value, nested_types, unique_representations);
+            }
         }
     }
 }

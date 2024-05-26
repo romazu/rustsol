@@ -41,51 +41,59 @@
       "type": "t_array(t_uint112)10_storage"
     },
     {
-      "astId": 32,
+      "astId": 35,
+      "contract": "<stdin>:MyContract",
+      "label": "staticArrayNestedSmall",
+      "offset": 0,
+      "slot": "10",
+      "type": "t_array(t_array(t_uint8)2_storage)4_storage"
+    },
+    {
+      "astId": 38,
       "contract": "<stdin>:MyContract",
       "label": "dynamicArray",
       "offset": 0,
-      "slot": "10",
+      "slot": "14",
       "type": "t_array(t_uint256)dyn_storage"
     },
     {
-      "astId": 36,
+      "astId": 42,
       "contract": "<stdin>:MyContract",
       "label": "dynamicArrayStruct",
       "offset": 0,
-      "slot": "11",
+      "slot": "15",
       "type": "t_array(t_struct(MyStructNested)17_storage)dyn_storage"
     },
     {
-      "astId": 40,
+      "astId": 46,
       "contract": "<stdin>:MyContract",
       "label": "dynamicArraySmall",
       "offset": 0,
-      "slot": "12",
+      "slot": "16",
       "type": "t_array(t_struct(MyStructSmall)22_storage)dyn_storage"
     },
     {
-      "astId": 44,
+      "astId": 50,
       "contract": "<stdin>:MyContract",
       "label": "myMapping1",
       "offset": 0,
-      "slot": "13",
+      "slot": "17",
       "type": "t_mapping(t_uint256,t_uint256)"
-    },
-    {
-      "astId": 48,
-      "contract": "<stdin>:MyContract",
-      "label": "myMapping2",
-      "offset": 0,
-      "slot": "14",
-      "type": "t_mapping(t_string_memory_ptr,t_uint256)"
     },
     {
       "astId": 54,
       "contract": "<stdin>:MyContract",
+      "label": "myMapping2",
+      "offset": 0,
+      "slot": "18",
+      "type": "t_mapping(t_string_memory_ptr,t_uint256)"
+    },
+    {
+      "astId": 60,
+      "contract": "<stdin>:MyContract",
       "label": "myNestedMapping",
       "offset": 0,
-      "slot": "15",
+      "slot": "19",
       "type": "t_mapping(t_uint256,t_mapping(t_uint256,t_uint256))"
     }
   ],
@@ -94,6 +102,12 @@
       "encoding": "inplace",
       "label": "address",
       "numberOfBytes": "20"
+    },
+    "t_array(t_array(t_uint8)2_storage)4_storage": {
+      "base": "t_array(t_uint8)2_storage",
+      "encoding": "inplace",
+      "label": "uint8[2][4]",
+      "numberOfBytes": "128"
     },
     "t_array(t_struct(MyStructNested)17_storage)dyn_storage": {
       "base": "t_struct(MyStructNested)17_storage",
@@ -117,6 +131,12 @@
       "base": "t_uint256",
       "encoding": "dynamic_array",
       "label": "uint256[]",
+      "numberOfBytes": "32"
+    },
+    "t_array(t_uint8)2_storage": {
+      "base": "t_uint8",
+      "encoding": "inplace",
+      "label": "uint8[2]",
       "numberOfBytes": "32"
     },
     "t_mapping(t_string_memory_ptr,t_uint256)": {
@@ -233,6 +253,11 @@
       "encoding": "inplace",
       "label": "uint32",
       "numberOfBytes": "4"
+    },
+    "t_uint8": {
+      "encoding": "inplace",
+      "label": "uint8",
+      "numberOfBytes": "1"
     }
   }
 }

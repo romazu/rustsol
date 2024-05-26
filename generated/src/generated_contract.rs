@@ -1,5 +1,6 @@
 use rustsol::types::{
-    Primitive, Bytes, Mapping, DynamicArray, PrimitiveKey, BytesKey, Position,
+    Primitive, Bytes, Mapping, DynamicArray, StaticArray, PrimitiveKey, BytesKey,
+    Position,
 };
 use primitive_types::U256;
 #[derive(Debug)]
@@ -10,6 +11,8 @@ pub struct Contract {
     pub plainUint32: Primitive<4>,
     pub plainString: Bytes,
     pub myStructNested: MyContractMyStructNested,
+    pub staticArray: StaticArray<160, Primitive<14>>,
+    pub staticArrayNestedSmall: StaticArray<128, StaticArray<32, Primitive<1>>>,
     pub dynamicArray: DynamicArray<Primitive<32>>,
     pub dynamicArrayStruct: DynamicArray<MyContractMyStructNested>,
     pub dynamicArraySmall: DynamicArray<MyContractMyStructSmall>,
@@ -25,12 +28,14 @@ impl Contract {
             plainUint32: Primitive::from_position(slot + 0u64, 14u8),
             plainString: Bytes::from_position(slot + 1u64, 0u8),
             myStructNested: MyContractMyStructNested::from_position(slot + 2u64, 0u8),
-            dynamicArray: DynamicArray::from_position(slot + 10u64, 0u8),
-            dynamicArrayStruct: DynamicArray::from_position(slot + 11u64, 0u8),
-            dynamicArraySmall: DynamicArray::from_position(slot + 12u64, 0u8),
-            myMapping1: Mapping::from_position(slot + 13u64, 0u8),
-            myMapping2: Mapping::from_position(slot + 14u64, 0u8),
-            myNestedMapping: Mapping::from_position(slot + 15u64, 0u8),
+            staticArray: StaticArray::from_position(slot + 5u64, 0u8),
+            staticArrayNestedSmall: StaticArray::from_position(slot + 10u64, 0u8),
+            dynamicArray: DynamicArray::from_position(slot + 14u64, 0u8),
+            dynamicArrayStruct: DynamicArray::from_position(slot + 15u64, 0u8),
+            dynamicArraySmall: DynamicArray::from_position(slot + 16u64, 0u8),
+            myMapping1: Mapping::from_position(slot + 17u64, 0u8),
+            myMapping2: Mapping::from_position(slot + 18u64, 0u8),
+            myNestedMapping: Mapping::from_position(slot + 19u64, 0u8),
         }
     }
     pub fn slot(&self) -> U256 {
