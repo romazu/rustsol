@@ -236,9 +236,16 @@ pub struct StaticArray<const BYTES: u64, Value> {
     __marker: PhantomData<Value>,
 }
 
-impl<const BYTES: u64, Value> StaticArray<BYTES, Value> {
+impl<const BYTES: u64, Value: Position> StaticArray<BYTES, Value> {
     pub fn slot(&self) -> U256 {
         self.__slot
+    }
+
+    pub fn capacity(&self) -> usize {
+        let value_size = Value::size();
+        let (packing_n, packing_d) = packing_ratio(value_size);
+        let capacity = BYTES / 32 * packing_d / packing_n;
+        capacity as usize
     }
 }
 

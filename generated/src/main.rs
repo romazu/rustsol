@@ -33,5 +33,6 @@ fn main() {
     println!("({:#?}, {:#?})", contract.staticArrayNestedSmall.get_item(0).get_item(31).slot(), contract.staticArrayNestedSmall.get_item(0).get_item(31).offset());
     println!("{:#?}", contract.staticArrayLarge.get_item(0).slot());
     println!("{:#?}", contract.staticArrayLarge.get_item(1).slot());
-    println!("{:#?}", contract.staticArrayLarge.get_item(2).slot());
+    println!("{:#?}", contract.staticArrayLarge.capacity());
+    // println!("{:#?}", contract.staticArrayLarge.get_item(2).slot()); // panic
 }
