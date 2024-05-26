@@ -64,13 +64,22 @@ impl Contract {
     pub fn slot(&self) -> U256 {
         self.__slot
     }
+    pub fn size() -> u64 {
+        0u64
+    }
+    fn position(&self) -> (U256, u8, u64) {
+        (self.__slot, 0, 0u64)
+    }
 }
 impl Position for Contract {
     fn from_position(slot: U256, offset: u8) -> Self {
         Self::new_from_position(slot, offset)
     }
     fn size() -> u64 {
-        0u64
+        Self::size()
+    }
+    fn position(&self) -> (U256, u8, u64) {
+        self.position()
     }
 }
 impl MyContractMyStructNested {
@@ -84,13 +93,22 @@ impl MyContractMyStructNested {
     pub fn slot(&self) -> U256 {
         self.__slot
     }
+    pub fn size() -> u64 {
+        96u64
+    }
+    fn position(&self) -> (U256, u8, u64) {
+        (self.__slot, 0, 96u64)
+    }
 }
 impl Position for MyContractMyStructNested {
     fn from_position(slot: U256, offset: u8) -> Self {
         Self::new_from_position(slot, offset)
     }
     fn size() -> u64 {
-        96u64
+        Self::size()
+    }
+    fn position(&self) -> (U256, u8, u64) {
+        self.position()
     }
 }
 impl MyContractMyStruct {
@@ -104,13 +122,22 @@ impl MyContractMyStruct {
     pub fn slot(&self) -> U256 {
         self.__slot
     }
+    pub fn size() -> u64 {
+        64u64
+    }
+    fn position(&self) -> (U256, u8, u64) {
+        (self.__slot, 0, 64u64)
+    }
 }
 impl Position for MyContractMyStruct {
     fn from_position(slot: U256, offset: u8) -> Self {
         Self::new_from_position(slot, offset)
     }
     fn size() -> u64 {
-        64u64
+        Self::size()
+    }
+    fn position(&self) -> (U256, u8, u64) {
+        self.position()
     }
 }
 impl MyContractMyStructSmall {
@@ -124,12 +151,21 @@ impl MyContractMyStructSmall {
     pub fn slot(&self) -> U256 {
         self.__slot
     }
+    pub fn size() -> u64 {
+        32u64
+    }
+    fn position(&self) -> (U256, u8, u64) {
+        (self.__slot, 0, 32u64)
+    }
 }
 impl Position for MyContractMyStructSmall {
     fn from_position(slot: U256, offset: u8) -> Self {
         Self::new_from_position(slot, offset)
     }
     fn size() -> u64 {
-        32u64
+        Self::size()
+    }
+    fn position(&self) -> (U256, u8, u64) {
+        self.position()
     }
 }

@@ -21,6 +21,10 @@ impl<const BYTES: u64> Primitive<BYTES> {
     pub fn offset(&self) -> u8 {
         self.__offset
     }
+
+    pub fn position(&self) -> (U256, u8, u64) {
+        (self.__slot, self.__offset, BYTES)
+    }
 }
 
 impl<const BYTES: u64> Position for Primitive<BYTES> {
@@ -31,6 +35,11 @@ impl<const BYTES: u64> Position for Primitive<BYTES> {
     fn size() -> u64 {
         BYTES
     }
+
+    fn position(&self) -> (U256, u8, u64) {
+        self.position()
+    }
+
 }
 
 #[derive(Debug, Default)]
@@ -39,8 +48,11 @@ pub struct Bytes {
 }
 
 impl Bytes {
-    fn slot(&self) -> U256 {
+    pub fn slot(&self) -> U256 {
         self.__slot
+    }
+    pub fn position(&self) -> (U256, u8, u64) {
+        (self.__slot, 0, 32)
     }
 }
 
@@ -52,6 +64,11 @@ impl Position for Bytes {
     fn size() -> u64 {
         32
     }
+
+    fn position(&self) -> (U256, u8, u64) {
+        self.position()
+    }
+
 }
 
 trait FromBytes {
@@ -130,6 +147,7 @@ impl From<&str> for BytesKey {
 pub trait Position {
     fn from_position(slot: U256, offset: u8) -> Self;
     fn size() -> u64;
+    fn position(&self) -> (U256, u8, u64);
 }
 
 #[derive(Debug)]
@@ -141,6 +159,10 @@ pub struct Mapping<KeyType, Value> {
 impl<KeyType, Value> Mapping<KeyType, Value> {
     pub fn slot(&self) -> U256 {
         self.__slot
+    }
+
+    pub fn position(&self) -> (U256, u8, u64) {
+        (self.__slot, 0, 32)
     }
 
     fn get_value(&self, key: [u8; 32]) -> Value
@@ -160,6 +182,11 @@ impl<KeyType, Value> Position for Mapping<KeyType, Value> {
     fn size() -> u64 {
         32
     }
+
+    fn position(&self) -> (U256, u8, u64) {
+        self.position()
+    }
+
 }
 
 
@@ -194,6 +221,10 @@ impl<Value> DynamicArray<Value> {
     pub fn slot(&self) -> U256 {
         self.__slot
     }
+
+    pub fn position(&self) -> (U256, u8, u64) {
+        (self.__slot, 0, 32)
+    }
 }
 
 impl<Value> Position for DynamicArray<Value> {
@@ -203,6 +234,10 @@ impl<Value> Position for DynamicArray<Value> {
 
     fn size() -> u64 {
         32
+    }
+
+    fn position(&self) -> (U256, u8, u64) {
+        self.position()
     }
 }
 
@@ -241,6 +276,10 @@ impl<const BYTES: u64, Value: Position> StaticArray<BYTES, Value> {
         self.__slot
     }
 
+    fn position(&self) -> (U256, u8, u64) {
+        (self.__slot, 0, BYTES)
+    }
+
     pub fn capacity(&self) -> usize {
         let value_size = Value::size();
         let (packing_n, packing_d) = packing_ratio(value_size);
@@ -256,6 +295,10 @@ impl<const BYTES: u64, Value> Position for StaticArray<BYTES, Value> {
 
     fn size() -> u64 {
         BYTES
+    }
+
+    fn position(&self) -> (U256, u8, u64) {
+        self.position()
     }
 }
 

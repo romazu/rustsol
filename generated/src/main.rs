@@ -1,4 +1,5 @@
 use primitive_types::U256;
+use rustsol::types::Position;
 
 mod generated_contract;
 
@@ -18,21 +19,22 @@ fn main() {
     // println!("{:#?}", contract.ticks.get_item(887270).slot());
     // println!("{:#?}", contract.ticks.get_item(-92110).slot());
 
-    println!("{:#?}", contract.myNestedMapping.get_item(0u64));
-    println!("{:#?}", contract.myNestedMapping.get_item(0u64).get_item(1u64));
-    println!("{:#?}", contract.myMapping2.get_item("0u64"));
-    println!("{:#?}", contract.dynamicArray.get_item(10).slot());
-    println!("{:#?}", contract.dynamicArrayStruct.get_item(10).slot());
-    println!("{:#?}", contract.dynamicArrayStruct.get_item(11).slot());
-    println!("{:#?}", contract.dynamicArraySmall.get_item(10).slot());
-    println!("{:#?}", contract.dynamicArraySmall.get_item(11).slot());
-    println!("{:#?}", contract.staticArrayNestedSmall.slot());
-    println!("{:#?}", contract.staticArrayNestedSmall.get_item(0).slot());
-    println!("{:#?}", contract.staticArrayNestedSmall.get_item(1).slot());
-    println!("({:#?}, {:#?})", contract.staticArrayNestedSmall.get_item(0).get_item(0).slot(), contract.staticArrayNestedSmall.get_item(0).get_item(0).offset());
-    println!("({:#?}, {:#?})", contract.staticArrayNestedSmall.get_item(0).get_item(31).slot(), contract.staticArrayNestedSmall.get_item(0).get_item(31).offset());
-    println!("{:#?}", contract.staticArrayLarge.get_item(0).slot());
-    println!("{:#?}", contract.staticArrayLarge.get_item(1).slot());
-    println!("{:#?}", contract.staticArrayLarge.capacity());
-    // println!("{:#?}", contract.staticArrayLarge.get_item(2).slot()); // panic
+    println!("{:?}", contract.myNestedMapping.get_item(0u64));
+    println!("{:?}", contract.myNestedMapping.get_item(0u64).get_item(1u64));
+    println!("{:?}", contract.myMapping2.get_item("0u64"));
+    println!("{:?}", contract.dynamicArray.get_item(10).slot());
+    println!("{:?}", contract.dynamicArrayStruct.get_item(10).slot());
+    println!("{:?}", contract.dynamicArrayStruct.get_item(11).slot());
+    println!("{:?}", contract.dynamicArraySmall.get_item(10).slot());
+    println!("{:?}", contract.dynamicArraySmall.get_item(11).slot());
+    println!("{:?}", contract.staticArrayNestedSmall.slot());
+    println!("{:?}", contract.staticArrayNestedSmall.get_item(0).slot());
+    println!("{:?}", contract.staticArrayNestedSmall.get_item(1).slot());
+    println!("{:?}", contract.staticArrayNestedSmall.get_item(0).get_item(0).position());
+    println!("{:?}", contract.staticArrayNestedSmall.get_item(0).get_item(31).position());
+    println!("{:?}", contract.staticArrayLarge.get_item(0).slot());
+    println!("{:?}", contract.staticArrayLarge.get_item(1).slot());
+    println!("{:?}", contract.staticArrayLarge.capacity());
+    println!("{:?}", contract.staticArrayLarge.capacity());
+    // println!("{:?}", contract.staticArrayLarge.get_item(2).slot()); // panic
 }
