@@ -53,7 +53,7 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                         pub fn slot(&self) -> U256 {
                             self.__slot
                         }
-                        fn position(&self) -> (U256, u8, u64) {
+                        pub fn position(&self) -> (U256, u8, u64) {
                             (self.__slot, 0, #number_of_bytes_literal)
                         }
                     }

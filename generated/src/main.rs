@@ -1,4 +1,6 @@
+use std::str::FromStr;
 use primitive_types::U256;
+use rustsol::keccak::u256_to_bytes32;
 use rustsol::types::Position;
 
 mod generated_contract;
@@ -11,7 +13,7 @@ fn main() {
     // // Example contract
     // println!("{:?}", contract.myNestedMapping.get_item(0u64));
     // println!("{:?}", contract.myNestedMapping.get_item(0u64).get_item(1u64));
-    // println!("{:?}", contract.myMapping2.get_item("0u64"));
+    // // println!("{:?}", contract.myMapping2.get_item("0u64")); // panic
     // println!("{:?}", contract.dynamicArray.get_item(10).slot());
     // println!("{:?}", contract.dynamicArrayStruct.get_item(10).slot());
     // println!("{:?}", contract.dynamicArrayStruct.get_item(11).slot());
@@ -57,11 +59,19 @@ fn main() {
     // println!("kLast {:?}", contract.kLast.position());
     // println!("unlocked {:?}", contract.unlocked.position());
 
-    // AccessControlledOffchainAggregator ETH / USD
-    println!("owner {:?}", contract.owner.position());
-    println!("s_description {:?}", contract.s_description.position());
-    println!("s_transmitters {:?}", contract.s_transmitters.position());
-    println!("s_transmitters[0] {:?}", contract.s_transmitters.get_item(0).position());
-    println!("s_transmitters[1] {:?}", contract.s_transmitters.get_item(1).position());
-    println!("s_signers[0] {:?}", contract.s_signers.get_item(0).position());
+    // // AccessControlledOffchainAggregator ETH / USD
+    // println!("owner {:?}", contract.owner.position());
+    // println!("s_description {:?}, {:?}", contract.s_description.position(), contract.s_description.storage());
+    // println!("s_transmitters {:?}", contract.s_transmitters.position());
+    // println!("s_transmitters[0] {:?}", contract.s_transmitters.get_item(0).position());
+    // println!("s_transmitters[1] {:?}", contract.s_transmitters.get_item(1).position());
+    // println!("s_signers[0] {:?}", contract.s_signers.get_item(0).position());
+
+    // Augur 2
+    let address = U256::from_str("0x51A18333479472D1250Ee5063910079fc0B9b801").unwrap();
+    println!("{:#x}", address);
+    println!("{:#?}", address);
+    println!("{:?}", u256_to_bytes32(address));
+    println!("marketCreationData {:?}", contract.marketCreationData.get_item(address).position());
+    println!("extraInfo {:?}, {:?}", contract.marketCreationData.get_item(address).extraInfo.position(), contract.marketCreationData.get_item(address).extraInfo.storage());
 }

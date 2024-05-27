@@ -1,172 +1,108 @@
 {
   "storage": [
     {
-      "astId": 3461,
-      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
-      "label": "owner",
+      "astId": 4029,
+      "contract": "Augur.sol:Augur",
+      "label": "markets",
       "offset": 0,
       "slot": "0",
-      "type": "t_address_payable"
+      "type": "t_mapping(t_address,t_bool)"
     },
     {
-      "astId": 3463,
-      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
-      "label": "pendingOwner",
+      "astId": 4033,
+      "contract": "Augur.sol:Augur",
+      "label": "universes",
       "offset": 0,
       "slot": "1",
+      "type": "t_mapping(t_address,t_bool)"
+    },
+    {
+      "astId": 4037,
+      "contract": "Augur.sol:Augur",
+      "label": "crowdsourcers",
+      "offset": 0,
+      "slot": "2",
+      "type": "t_mapping(t_address,t_bool)"
+    },
+    {
+      "astId": 4041,
+      "contract": "Augur.sol:Augur",
+      "label": "trustedSender",
+      "offset": 0,
+      "slot": "3",
+      "type": "t_mapping(t_address,t_bool)"
+    },
+    {
+      "astId": 4045,
+      "contract": "Augur.sol:Augur",
+      "label": "marketCreationData",
+      "offset": 0,
+      "slot": "4",
+      "type": "t_mapping(t_address,t_struct(MarketCreationData)651_storage)"
+    },
+    {
+      "astId": 4047,
+      "contract": "Augur.sol:Augur",
+      "label": "uploader",
+      "offset": 0,
+      "slot": "5",
       "type": "t_address"
     },
     {
-      "astId": 2071,
-      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
-      "label": "s_billing",
+      "astId": 4051,
+      "contract": "Augur.sol:Augur",
+      "label": "registry",
       "offset": 0,
-      "slot": "2",
-      "type": "t_struct(Billing)2069_storage"
+      "slot": "6",
+      "type": "t_mapping(t_bytes32,t_address)"
     },
     {
-      "astId": 2073,
-      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
-      "label": "s_linkToken",
-      "offset": 0,
-      "slot": "3",
-      "type": "t_contract(LinkTokenInterface)423"
-    },
-    {
-      "astId": 2075,
-      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
-      "label": "s_billingAccessController",
-      "offset": 0,
-      "slot": "4",
-      "type": "t_contract(AccessControllerInterface)209"
-    },
-    {
-      "astId": 2079,
-      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
-      "label": "s_oracleObservationsCounts",
-      "offset": 0,
-      "slot": "5",
-      "type": "t_array(t_uint16)31_storage"
-    },
-    {
-      "astId": 2083,
-      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
-      "label": "s_payees",
+      "astId": 4053,
+      "contract": "Augur.sol:Augur",
+      "label": "time",
       "offset": 0,
       "slot": "7",
-      "type": "t_mapping(t_address,t_address)"
+      "type": "t_contract(ITime)716"
     },
     {
-      "astId": 2087,
-      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
-      "label": "s_proposedPayees",
+      "astId": 4055,
+      "contract": "Augur.sol:Augur",
+      "label": "genesisUniverse",
       "offset": 0,
       "slot": "8",
-      "type": "t_mapping(t_address,t_address)"
+      "type": "t_contract(IUniverse)2276"
     },
     {
-      "astId": 2091,
-      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
-      "label": "s_gasReimbursementsLinkWei",
+      "astId": 4057,
+      "contract": "Augur.sol:Augur",
+      "label": "forkCounter",
       "offset": 0,
       "slot": "9",
-      "type": "t_array(t_uint256)31_storage"
+      "type": "t_uint256"
     },
     {
-      "astId": 2104,
-      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
-      "label": "s_oracles",
+      "astId": 4061,
+      "contract": "Augur.sol:Augur",
+      "label": "universeForkIndex",
       "offset": 0,
-      "slot": "40",
-      "type": "t_mapping(t_address,t_struct(Oracle)2100_storage)"
+      "slot": "10",
+      "type": "t_mapping(t_address,t_uint256)"
     },
     {
-      "astId": 2107,
-      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
-      "label": "s_signers",
+      "astId": 4066,
+      "contract": "Augur.sol:Augur",
+      "label": "upgradeTimestamp",
       "offset": 0,
-      "slot": "41",
-      "type": "t_array(t_address)dyn_storage"
+      "slot": "11",
+      "type": "t_uint256"
     },
     {
-      "astId": 2110,
-      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
-      "label": "s_transmitters",
+      "astId": 4096,
+      "contract": "Augur.sol:Augur",
+      "label": "cash",
       "offset": 0,
-      "slot": "42",
-      "type": "t_array(t_address)dyn_storage"
-    },
-    {
-      "astId": 460,
-      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
-      "label": "s_hotVars",
-      "offset": 0,
-      "slot": "43",
-      "type": "t_struct(HotVars)458_storage"
-    },
-    {
-      "astId": 469,
-      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
-      "label": "s_transmissions",
-      "offset": 0,
-      "slot": "44",
-      "type": "t_mapping(t_uint32,t_struct(Transmission)465_storage)"
-    },
-    {
-      "astId": 471,
-      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
-      "label": "s_configCount",
-      "offset": 0,
-      "slot": "45",
-      "type": "t_uint32"
-    },
-    {
-      "astId": 473,
-      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
-      "label": "s_latestConfigBlockNumber",
-      "offset": 4,
-      "slot": "45",
-      "type": "t_uint32"
-    },
-    {
-      "astId": 915,
-      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
-      "label": "s_validatorConfig",
-      "offset": 0,
-      "slot": "46",
-      "type": "t_struct(ValidatorConfig)913_storage"
-    },
-    {
-      "astId": 1071,
-      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
-      "label": "s_requesterAccessController",
-      "offset": 0,
-      "slot": "47",
-      "type": "t_contract(AccessControllerInterface)209"
-    },
-    {
-      "astId": 1952,
-      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
-      "label": "s_description",
-      "offset": 0,
-      "slot": "48",
-      "type": "t_string_storage"
-    },
-    {
-      "astId": 3592,
-      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
-      "label": "checkEnabled",
-      "offset": 0,
-      "slot": "49",
-      "type": "t_bool"
-    },
-    {
-      "astId": 3596,
-      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
-      "label": "accessList",
-      "offset": 0,
-      "slot": "50",
-      "type": "t_mapping(t_address,t_bool)"
+      "slot": "12",
+      "type": "t_contract(ICash)1162"
     }
   ],
   "types": {
@@ -175,70 +111,52 @@
       "label": "address",
       "numberOfBytes": "20"
     },
-    "t_address_payable": {
-      "encoding": "inplace",
-      "label": "address payable",
-      "numberOfBytes": "20"
-    },
-    "t_array(t_address)dyn_storage": {
-      "base": "t_address",
+    "t_array(t_bytes32)dyn_storage": {
+      "base": "t_bytes32",
       "encoding": "dynamic_array",
-      "label": "address[]",
+      "label": "bytes32[]",
       "numberOfBytes": "32"
     },
-    "t_array(t_uint16)31_storage": {
-      "base": "t_uint16",
-      "encoding": "inplace",
-      "label": "uint16[31]",
-      "numberOfBytes": "64"
-    },
-    "t_array(t_uint256)31_storage": {
-      "base": "t_uint256",
-      "encoding": "inplace",
-      "label": "uint256[31]",
-      "numberOfBytes": "992"
+    "t_array(t_int256)dyn_storage": {
+      "base": "t_int256",
+      "encoding": "dynamic_array",
+      "label": "int256[]",
+      "numberOfBytes": "32"
     },
     "t_bool": {
       "encoding": "inplace",
       "label": "bool",
       "numberOfBytes": "1"
     },
-    "t_bytes16": {
+    "t_bytes32": {
       "encoding": "inplace",
-      "label": "bytes16",
-      "numberOfBytes": "16"
+      "label": "bytes32",
+      "numberOfBytes": "32"
     },
-    "t_contract(AccessControllerInterface)209": {
+    "t_contract(ICash)1162": {
       "encoding": "inplace",
-      "label": "contract AccessControllerInterface",
+      "label": "contract ICash",
       "numberOfBytes": "20"
     },
-    "t_contract(AggregatorValidatorInterface)328": {
+    "t_contract(ITime)716": {
       "encoding": "inplace",
-      "label": "contract AggregatorValidatorInterface",
+      "label": "contract ITime",
       "numberOfBytes": "20"
     },
-    "t_contract(LinkTokenInterface)423": {
+    "t_contract(IUniverse)2276": {
       "encoding": "inplace",
-      "label": "contract LinkTokenInterface",
+      "label": "contract IUniverse",
       "numberOfBytes": "20"
     },
-    "t_enum(Role)2095": {
+    "t_enum(MarketType)1323": {
       "encoding": "inplace",
-      "label": "enum OffchainAggregatorBilling.Role",
+      "label": "enum IMarket.MarketType",
       "numberOfBytes": "1"
     },
-    "t_int192": {
+    "t_int256": {
       "encoding": "inplace",
-      "label": "int192",
-      "numberOfBytes": "24"
-    },
-    "t_mapping(t_address,t_address)": {
-      "encoding": "mapping",
-      "key": "t_address",
-      "label": "mapping(address => address)",
-      "numberOfBytes": "32",
-      "value": "t_address"
+      "label": "int256",
+      "numberOfBytes": "32"
     },
     "t_mapping(t_address,t_bool)": {
       "encoding": "mapping",
@@ -247,209 +165,91 @@
       "numberOfBytes": "32",
       "value": "t_bool"
     },
-    "t_mapping(t_address,t_struct(Oracle)2100_storage)": {
+    "t_mapping(t_address,t_struct(MarketCreationData)651_storage)": {
       "encoding": "mapping",
       "key": "t_address",
-      "label": "mapping(address => struct OffchainAggregatorBilling.Oracle)",
+      "label": "mapping(address => struct IAugurCreationDataGetter.MarketCreationData)",
       "numberOfBytes": "32",
-      "value": "t_struct(Oracle)2100_storage"
+      "value": "t_struct(MarketCreationData)651_storage"
     },
-    "t_mapping(t_uint32,t_struct(Transmission)465_storage)": {
+    "t_mapping(t_address,t_uint256)": {
       "encoding": "mapping",
-      "key": "t_uint32",
-      "label": "mapping(uint32 => struct OffchainAggregator.Transmission)",
+      "key": "t_address",
+      "label": "mapping(address => uint256)",
       "numberOfBytes": "32",
-      "value": "t_struct(Transmission)465_storage"
+      "value": "t_uint256"
+    },
+    "t_mapping(t_bytes32,t_address)": {
+      "encoding": "mapping",
+      "key": "t_bytes32",
+      "label": "mapping(bytes32 => address)",
+      "numberOfBytes": "32",
+      "value": "t_address"
     },
     "t_string_storage": {
       "encoding": "bytes",
       "label": "string",
       "numberOfBytes": "32"
     },
-    "t_struct(Billing)2069_storage": {
+    "t_struct(MarketCreationData)651_storage": {
       "encoding": "inplace",
-      "label": "struct OffchainAggregatorBilling.Billing",
+      "label": "struct IAugurCreationDataGetter.MarketCreationData",
       "members": [
         {
-          "astId": 2060,
-          "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
-          "label": "maximumGasPrice",
+          "astId": 638,
+          "contract": "Augur.sol:Augur",
+          "label": "extraInfo",
           "offset": 0,
           "slot": "0",
-          "type": "t_uint32"
+          "type": "t_string_storage"
         },
         {
-          "astId": 2062,
-          "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
-          "label": "reasonableGasPrice",
-          "offset": 4,
-          "slot": "0",
-          "type": "t_uint32"
-        },
-        {
-          "astId": 2064,
-          "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
-          "label": "microLinkPerEth",
-          "offset": 8,
-          "slot": "0",
-          "type": "t_uint32"
-        },
-        {
-          "astId": 2066,
-          "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
-          "label": "linkGweiPerObservation",
-          "offset": 12,
-          "slot": "0",
-          "type": "t_uint32"
-        },
-        {
-          "astId": 2068,
-          "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
-          "label": "linkGweiPerTransmission",
-          "offset": 16,
-          "slot": "0",
-          "type": "t_uint32"
-        }
-      ],
-      "numberOfBytes": "32"
-    },
-    "t_struct(HotVars)458_storage": {
-      "encoding": "inplace",
-      "label": "struct OffchainAggregator.HotVars",
-      "members": [
-        {
-          "astId": 451,
-          "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
-          "label": "latestConfigDigest",
+          "astId": 640,
+          "contract": "Augur.sol:Augur",
+          "label": "marketCreator",
           "offset": 0,
-          "slot": "0",
-          "type": "t_bytes16"
+          "slot": "1",
+          "type": "t_address"
         },
         {
-          "astId": 453,
-          "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
-          "label": "latestEpochAndRound",
-          "offset": 16,
-          "slot": "0",
-          "type": "t_uint40"
-        },
-        {
-          "astId": 455,
-          "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
-          "label": "threshold",
-          "offset": 21,
-          "slot": "0",
-          "type": "t_uint8"
-        },
-        {
-          "astId": 457,
-          "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
-          "label": "latestAggregatorRoundId",
-          "offset": 22,
-          "slot": "0",
-          "type": "t_uint32"
-        }
-      ],
-      "numberOfBytes": "32"
-    },
-    "t_struct(Oracle)2100_storage": {
-      "encoding": "inplace",
-      "label": "struct OffchainAggregatorBilling.Oracle",
-      "members": [
-        {
-          "astId": 2097,
-          "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
-          "label": "index",
+          "astId": 643,
+          "contract": "Augur.sol:Augur",
+          "label": "outcomes",
           "offset": 0,
-          "slot": "0",
-          "type": "t_uint8"
+          "slot": "2",
+          "type": "t_array(t_bytes32)dyn_storage"
         },
         {
-          "astId": 2099,
-          "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
-          "label": "role",
-          "offset": 1,
-          "slot": "0",
-          "type": "t_enum(Role)2095"
-        }
-      ],
-      "numberOfBytes": "32"
-    },
-    "t_struct(Transmission)465_storage": {
-      "encoding": "inplace",
-      "label": "struct OffchainAggregator.Transmission",
-      "members": [
-        {
-          "astId": 462,
-          "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
-          "label": "answer",
+          "astId": 646,
+          "contract": "Augur.sol:Augur",
+          "label": "displayPrices",
           "offset": 0,
-          "slot": "0",
-          "type": "t_int192"
+          "slot": "3",
+          "type": "t_array(t_int256)dyn_storage"
         },
         {
-          "astId": 464,
-          "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
-          "label": "timestamp",
-          "offset": 24,
-          "slot": "0",
-          "type": "t_uint64"
-        }
-      ],
-      "numberOfBytes": "32"
-    },
-    "t_struct(ValidatorConfig)913_storage": {
-      "encoding": "inplace",
-      "label": "struct OffchainAggregator.ValidatorConfig",
-      "members": [
-        {
-          "astId": 910,
-          "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
-          "label": "validator",
+          "astId": 648,
+          "contract": "Augur.sol:Augur",
+          "label": "marketType",
           "offset": 0,
-          "slot": "0",
-          "type": "t_contract(AggregatorValidatorInterface)328"
+          "slot": "4",
+          "type": "t_enum(MarketType)1323"
         },
         {
-          "astId": 912,
-          "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
-          "label": "gasLimit",
-          "offset": 20,
-          "slot": "0",
-          "type": "t_uint32"
+          "astId": 650,
+          "contract": "Augur.sol:Augur",
+          "label": "recommendedTradeInterval",
+          "offset": 0,
+          "slot": "5",
+          "type": "t_uint256"
         }
       ],
-      "numberOfBytes": "32"
-    },
-    "t_uint16": {
-      "encoding": "inplace",
-      "label": "uint16",
-      "numberOfBytes": "2"
+      "numberOfBytes": "192"
     },
     "t_uint256": {
       "encoding": "inplace",
       "label": "uint256",
       "numberOfBytes": "32"
-    },
-    "t_uint32": {
-      "encoding": "inplace",
-      "label": "uint32",
-      "numberOfBytes": "4"
-    },
-    "t_uint40": {
-      "encoding": "inplace",
-      "label": "uint40",
-      "numberOfBytes": "5"
-    },
-    "t_uint64": {
-      "encoding": "inplace",
-      "label": "uint64",
-      "numberOfBytes": "8"
-    },
-    "t_uint8": {
-      "encoding": "inplace",
-      "label": "uint8",
-      "numberOfBytes": "1"
     }
   }
 }
