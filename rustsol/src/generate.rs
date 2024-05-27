@@ -13,6 +13,7 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
         match nested_type {
             NestedType::Struct { label, members, number_of_bytes } => {
                 let struct_name = Ident::new(&label, proc_macro2::Span::call_site());
+                let number_of_bytes_literal = syn::LitInt::new(&number_of_bytes.to_string(), proc_macro2::Span::call_site());
 
                 let fields: Vec<TokenStream> = members.iter().map(|member_def| {
                     let field_name = Ident::new(&member_def.member_info.label, proc_macro2::Span::call_site());
@@ -25,25 +26,21 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                 let default_fields: Vec<TokenStream> = members.iter().map(|member_def| {
                     let field_name = Ident::new(&member_def.member_info.label, proc_macro2::Span::call_site());
                     let field_type = get_type_name(&member_def.type_def);
-                    let member_slot = member_def.member_info.slot;
-                    let member_offset = member_def.member_info.offset;
+                    let member_slot_literal = syn::LitInt::new(&member_def.member_info.slot.to_string(), proc_macro2::Span::call_site());
+                    let member_offset_literal = syn::LitInt::new(&member_def.member_info.offset.to_string(), proc_macro2::Span::call_site());
                     quote! {
-                        // #field_name: #field_type
-                        #field_name: #field_type::from_position(slot + #member_slot, #member_offset)
-                        // #field_name: Default::default()
+                        #field_name: #field_type::from_position(slot + #member_slot_literal, #member_offset_literal)
                     }
                 }).collect();
 
-                // println!("{}", default_fields[0].to_string());
-
                 let struct_definition = quote! {
                     #[derive(Debug)]
-                    #[allow(non_snake_case)]
                     pub struct #struct_name {
                         __slot: U256,
                         #(#fields),*
                     }
                 };
+                nested_struct_definitions.push(struct_definition);
 
                 let struct_implementation = quote! {
                     impl #struct_name {
@@ -56,11 +53,8 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                         pub fn slot(&self) -> U256 {
                             self.__slot
                         }
-                        pub fn size() -> u64 {
-                            #number_of_bytes
-                        }
                         fn position(&self) -> (U256, u8, u64) {
-                            (self.__slot, 0, #number_of_bytes)
+                            (self.__slot, 0, #number_of_bytes_literal)
                         }
                     }
                     impl Position for #struct_name {
@@ -68,11 +62,10 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                             Self::new_from_position(slot, offset)
                         }
                         fn size() -> u64 {
-                            Self::size()
+                            #number_of_bytes_literal
                         }
                     }
                 };
-                nested_struct_definitions.push(struct_definition);
                 nested_struct_implementations.push(struct_implementation);
             }
             // All other types are general and are predefined in separate files, see imports_definition.
@@ -80,6 +73,9 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
         }
     }
 
+    let global_attribites = quote! {
+        #![allow(non_snake_case, unused, dead_code, unused_imports)]
+    };
     let imports_definition_items: Vec<Item> = vec![
         parse_str("use rustsol::types::{Primitive, Bytes, Mapping, DynamicArray, StaticArray, PrimitiveKey, BytesKey, Position};").expect("Failed to parse"),
         parse_str("use primitive_types::{U256};").expect("Failed to parse"),
@@ -87,6 +83,7 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
     let imports_definition: TokenStream = imports_definition_items.into_iter().map(|item| item.into_token_stream()).collect();
 
     let generated_tokens = quote! {
+        #global_attribites
         #imports_definition
         #(#nested_struct_definitions)*
         #(#nested_struct_implementations)*
