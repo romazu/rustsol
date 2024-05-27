@@ -1,124 +1,172 @@
 {
   "storage": [
     {
-      "astId": 449,
-      "contract": "UniswapV2Pair.sol:UniswapV2Pair",
-      "label": "totalSupply",
+      "astId": 3461,
+      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
+      "label": "owner",
       "offset": 0,
       "slot": "0",
-      "type": "t_uint256"
+      "type": "t_address_payable"
     },
     {
-      "astId": 453,
-      "contract": "UniswapV2Pair.sol:UniswapV2Pair",
-      "label": "balanceOf",
+      "astId": 3463,
+      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
+      "label": "pendingOwner",
       "offset": 0,
       "slot": "1",
-      "type": "t_mapping(t_address,t_uint256)"
+      "type": "t_address"
     },
     {
-      "astId": 459,
-      "contract": "UniswapV2Pair.sol:UniswapV2Pair",
-      "label": "allowance",
+      "astId": 2071,
+      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
+      "label": "s_billing",
       "offset": 0,
       "slot": "2",
-      "type": "t_mapping(t_address,t_mapping(t_address,t_uint256))"
+      "type": "t_struct(Billing)2069_storage"
     },
     {
-      "astId": 461,
-      "contract": "UniswapV2Pair.sol:UniswapV2Pair",
-      "label": "DOMAIN_SEPARATOR",
+      "astId": 2073,
+      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
+      "label": "s_linkToken",
       "offset": 0,
       "slot": "3",
-      "type": "t_bytes32"
+      "type": "t_contract(LinkTokenInterface)423"
     },
     {
-      "astId": 468,
-      "contract": "UniswapV2Pair.sol:UniswapV2Pair",
-      "label": "nonces",
+      "astId": 2075,
+      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
+      "label": "s_billingAccessController",
       "offset": 0,
       "slot": "4",
-      "type": "t_mapping(t_address,t_uint256)"
+      "type": "t_contract(AccessControllerInterface)209"
     },
     {
-      "astId": 1115,
-      "contract": "UniswapV2Pair.sol:UniswapV2Pair",
-      "label": "factory",
+      "astId": 2079,
+      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
+      "label": "s_oracleObservationsCounts",
       "offset": 0,
       "slot": "5",
-      "type": "t_address"
+      "type": "t_array(t_uint16)31_storage"
     },
     {
-      "astId": 1117,
-      "contract": "UniswapV2Pair.sol:UniswapV2Pair",
-      "label": "token0",
-      "offset": 0,
-      "slot": "6",
-      "type": "t_address"
-    },
-    {
-      "astId": 1119,
-      "contract": "UniswapV2Pair.sol:UniswapV2Pair",
-      "label": "token1",
+      "astId": 2083,
+      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
+      "label": "s_payees",
       "offset": 0,
       "slot": "7",
-      "type": "t_address"
+      "type": "t_mapping(t_address,t_address)"
     },
     {
-      "astId": 1121,
-      "contract": "UniswapV2Pair.sol:UniswapV2Pair",
-      "label": "reserve0",
+      "astId": 2087,
+      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
+      "label": "s_proposedPayees",
       "offset": 0,
       "slot": "8",
-      "type": "t_uint112"
+      "type": "t_mapping(t_address,t_address)"
     },
     {
-      "astId": 1123,
-      "contract": "UniswapV2Pair.sol:UniswapV2Pair",
-      "label": "reserve1",
-      "offset": 14,
-      "slot": "8",
-      "type": "t_uint112"
+      "astId": 2091,
+      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
+      "label": "s_gasReimbursementsLinkWei",
+      "offset": 0,
+      "slot": "9",
+      "type": "t_array(t_uint256)31_storage"
     },
     {
-      "astId": 1125,
-      "contract": "UniswapV2Pair.sol:UniswapV2Pair",
-      "label": "blockTimestampLast",
-      "offset": 28,
-      "slot": "8",
+      "astId": 2104,
+      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
+      "label": "s_oracles",
+      "offset": 0,
+      "slot": "40",
+      "type": "t_mapping(t_address,t_struct(Oracle)2100_storage)"
+    },
+    {
+      "astId": 2107,
+      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
+      "label": "s_signers",
+      "offset": 0,
+      "slot": "41",
+      "type": "t_array(t_address)dyn_storage"
+    },
+    {
+      "astId": 2110,
+      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
+      "label": "s_transmitters",
+      "offset": 0,
+      "slot": "42",
+      "type": "t_array(t_address)dyn_storage"
+    },
+    {
+      "astId": 460,
+      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
+      "label": "s_hotVars",
+      "offset": 0,
+      "slot": "43",
+      "type": "t_struct(HotVars)458_storage"
+    },
+    {
+      "astId": 469,
+      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
+      "label": "s_transmissions",
+      "offset": 0,
+      "slot": "44",
+      "type": "t_mapping(t_uint32,t_struct(Transmission)465_storage)"
+    },
+    {
+      "astId": 471,
+      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
+      "label": "s_configCount",
+      "offset": 0,
+      "slot": "45",
       "type": "t_uint32"
     },
     {
-      "astId": 1127,
-      "contract": "UniswapV2Pair.sol:UniswapV2Pair",
-      "label": "price0CumulativeLast",
-      "offset": 0,
-      "slot": "9",
-      "type": "t_uint256"
+      "astId": 473,
+      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
+      "label": "s_latestConfigBlockNumber",
+      "offset": 4,
+      "slot": "45",
+      "type": "t_uint32"
     },
     {
-      "astId": 1129,
-      "contract": "UniswapV2Pair.sol:UniswapV2Pair",
-      "label": "price1CumulativeLast",
+      "astId": 915,
+      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
+      "label": "s_validatorConfig",
       "offset": 0,
-      "slot": "10",
-      "type": "t_uint256"
+      "slot": "46",
+      "type": "t_struct(ValidatorConfig)913_storage"
     },
     {
-      "astId": 1131,
-      "contract": "UniswapV2Pair.sol:UniswapV2Pair",
-      "label": "kLast",
+      "astId": 1071,
+      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
+      "label": "s_requesterAccessController",
       "offset": 0,
-      "slot": "11",
-      "type": "t_uint256"
+      "slot": "47",
+      "type": "t_contract(AccessControllerInterface)209"
     },
     {
-      "astId": 1134,
-      "contract": "UniswapV2Pair.sol:UniswapV2Pair",
-      "label": "unlocked",
+      "astId": 1952,
+      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
+      "label": "s_description",
       "offset": 0,
-      "slot": "12",
-      "type": "t_uint256"
+      "slot": "48",
+      "type": "t_string_storage"
+    },
+    {
+      "astId": 3592,
+      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
+      "label": "checkEnabled",
+      "offset": 0,
+      "slot": "49",
+      "type": "t_bool"
+    },
+    {
+      "astId": 3596,
+      "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
+      "label": "accessList",
+      "offset": 0,
+      "slot": "50",
+      "type": "t_mapping(t_address,t_bool)"
     }
   ],
   "types": {
@@ -127,29 +175,256 @@
       "label": "address",
       "numberOfBytes": "20"
     },
-    "t_bytes32": {
+    "t_address_payable": {
       "encoding": "inplace",
-      "label": "bytes32",
+      "label": "address payable",
+      "numberOfBytes": "20"
+    },
+    "t_array(t_address)dyn_storage": {
+      "base": "t_address",
+      "encoding": "dynamic_array",
+      "label": "address[]",
       "numberOfBytes": "32"
     },
-    "t_mapping(t_address,t_mapping(t_address,t_uint256))": {
-      "encoding": "mapping",
-      "key": "t_address",
-      "label": "mapping(address => mapping(address => uint256))",
-      "numberOfBytes": "32",
-      "value": "t_mapping(t_address,t_uint256)"
-    },
-    "t_mapping(t_address,t_uint256)": {
-      "encoding": "mapping",
-      "key": "t_address",
-      "label": "mapping(address => uint256)",
-      "numberOfBytes": "32",
-      "value": "t_uint256"
-    },
-    "t_uint112": {
+    "t_array(t_uint16)31_storage": {
+      "base": "t_uint16",
       "encoding": "inplace",
-      "label": "uint112",
-      "numberOfBytes": "14"
+      "label": "uint16[31]",
+      "numberOfBytes": "64"
+    },
+    "t_array(t_uint256)31_storage": {
+      "base": "t_uint256",
+      "encoding": "inplace",
+      "label": "uint256[31]",
+      "numberOfBytes": "992"
+    },
+    "t_bool": {
+      "encoding": "inplace",
+      "label": "bool",
+      "numberOfBytes": "1"
+    },
+    "t_bytes16": {
+      "encoding": "inplace",
+      "label": "bytes16",
+      "numberOfBytes": "16"
+    },
+    "t_contract(AccessControllerInterface)209": {
+      "encoding": "inplace",
+      "label": "contract AccessControllerInterface",
+      "numberOfBytes": "20"
+    },
+    "t_contract(AggregatorValidatorInterface)328": {
+      "encoding": "inplace",
+      "label": "contract AggregatorValidatorInterface",
+      "numberOfBytes": "20"
+    },
+    "t_contract(LinkTokenInterface)423": {
+      "encoding": "inplace",
+      "label": "contract LinkTokenInterface",
+      "numberOfBytes": "20"
+    },
+    "t_enum(Role)2095": {
+      "encoding": "inplace",
+      "label": "enum OffchainAggregatorBilling.Role",
+      "numberOfBytes": "1"
+    },
+    "t_int192": {
+      "encoding": "inplace",
+      "label": "int192",
+      "numberOfBytes": "24"
+    },
+    "t_mapping(t_address,t_address)": {
+      "encoding": "mapping",
+      "key": "t_address",
+      "label": "mapping(address => address)",
+      "numberOfBytes": "32",
+      "value": "t_address"
+    },
+    "t_mapping(t_address,t_bool)": {
+      "encoding": "mapping",
+      "key": "t_address",
+      "label": "mapping(address => bool)",
+      "numberOfBytes": "32",
+      "value": "t_bool"
+    },
+    "t_mapping(t_address,t_struct(Oracle)2100_storage)": {
+      "encoding": "mapping",
+      "key": "t_address",
+      "label": "mapping(address => struct OffchainAggregatorBilling.Oracle)",
+      "numberOfBytes": "32",
+      "value": "t_struct(Oracle)2100_storage"
+    },
+    "t_mapping(t_uint32,t_struct(Transmission)465_storage)": {
+      "encoding": "mapping",
+      "key": "t_uint32",
+      "label": "mapping(uint32 => struct OffchainAggregator.Transmission)",
+      "numberOfBytes": "32",
+      "value": "t_struct(Transmission)465_storage"
+    },
+    "t_string_storage": {
+      "encoding": "bytes",
+      "label": "string",
+      "numberOfBytes": "32"
+    },
+    "t_struct(Billing)2069_storage": {
+      "encoding": "inplace",
+      "label": "struct OffchainAggregatorBilling.Billing",
+      "members": [
+        {
+          "astId": 2060,
+          "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
+          "label": "maximumGasPrice",
+          "offset": 0,
+          "slot": "0",
+          "type": "t_uint32"
+        },
+        {
+          "astId": 2062,
+          "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
+          "label": "reasonableGasPrice",
+          "offset": 4,
+          "slot": "0",
+          "type": "t_uint32"
+        },
+        {
+          "astId": 2064,
+          "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
+          "label": "microLinkPerEth",
+          "offset": 8,
+          "slot": "0",
+          "type": "t_uint32"
+        },
+        {
+          "astId": 2066,
+          "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
+          "label": "linkGweiPerObservation",
+          "offset": 12,
+          "slot": "0",
+          "type": "t_uint32"
+        },
+        {
+          "astId": 2068,
+          "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
+          "label": "linkGweiPerTransmission",
+          "offset": 16,
+          "slot": "0",
+          "type": "t_uint32"
+        }
+      ],
+      "numberOfBytes": "32"
+    },
+    "t_struct(HotVars)458_storage": {
+      "encoding": "inplace",
+      "label": "struct OffchainAggregator.HotVars",
+      "members": [
+        {
+          "astId": 451,
+          "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
+          "label": "latestConfigDigest",
+          "offset": 0,
+          "slot": "0",
+          "type": "t_bytes16"
+        },
+        {
+          "astId": 453,
+          "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
+          "label": "latestEpochAndRound",
+          "offset": 16,
+          "slot": "0",
+          "type": "t_uint40"
+        },
+        {
+          "astId": 455,
+          "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
+          "label": "threshold",
+          "offset": 21,
+          "slot": "0",
+          "type": "t_uint8"
+        },
+        {
+          "astId": 457,
+          "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
+          "label": "latestAggregatorRoundId",
+          "offset": 22,
+          "slot": "0",
+          "type": "t_uint32"
+        }
+      ],
+      "numberOfBytes": "32"
+    },
+    "t_struct(Oracle)2100_storage": {
+      "encoding": "inplace",
+      "label": "struct OffchainAggregatorBilling.Oracle",
+      "members": [
+        {
+          "astId": 2097,
+          "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
+          "label": "index",
+          "offset": 0,
+          "slot": "0",
+          "type": "t_uint8"
+        },
+        {
+          "astId": 2099,
+          "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
+          "label": "role",
+          "offset": 1,
+          "slot": "0",
+          "type": "t_enum(Role)2095"
+        }
+      ],
+      "numberOfBytes": "32"
+    },
+    "t_struct(Transmission)465_storage": {
+      "encoding": "inplace",
+      "label": "struct OffchainAggregator.Transmission",
+      "members": [
+        {
+          "astId": 462,
+          "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
+          "label": "answer",
+          "offset": 0,
+          "slot": "0",
+          "type": "t_int192"
+        },
+        {
+          "astId": 464,
+          "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
+          "label": "timestamp",
+          "offset": 24,
+          "slot": "0",
+          "type": "t_uint64"
+        }
+      ],
+      "numberOfBytes": "32"
+    },
+    "t_struct(ValidatorConfig)913_storage": {
+      "encoding": "inplace",
+      "label": "struct OffchainAggregator.ValidatorConfig",
+      "members": [
+        {
+          "astId": 910,
+          "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
+          "label": "validator",
+          "offset": 0,
+          "slot": "0",
+          "type": "t_contract(AggregatorValidatorInterface)328"
+        },
+        {
+          "astId": 912,
+          "contract": "contract/AccessControlledOffchainAggregator.sol:AccessControlledOffchainAggregator",
+          "label": "gasLimit",
+          "offset": 20,
+          "slot": "0",
+          "type": "t_uint32"
+        }
+      ],
+      "numberOfBytes": "32"
+    },
+    "t_uint16": {
+      "encoding": "inplace",
+      "label": "uint16",
+      "numberOfBytes": "2"
     },
     "t_uint256": {
       "encoding": "inplace",
@@ -160,6 +435,21 @@
       "encoding": "inplace",
       "label": "uint32",
       "numberOfBytes": "4"
+    },
+    "t_uint40": {
+      "encoding": "inplace",
+      "label": "uint40",
+      "numberOfBytes": "5"
+    },
+    "t_uint64": {
+      "encoding": "inplace",
+      "label": "uint64",
+      "numberOfBytes": "8"
+    },
+    "t_uint8": {
+      "encoding": "inplace",
+      "label": "uint8",
+      "numberOfBytes": "1"
     }
   }
 }
