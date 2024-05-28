@@ -9,13 +9,22 @@ pub struct DynamicArray<Value> {
     __marker: PhantomData<Value>,
 }
 
-impl<Value> DynamicArray<Value> {
+impl<Value: Position> DynamicArray<Value> {
     pub fn slot(&self) -> U256 {
         self.__slot
     }
 
     pub fn position(&self) -> (U256, u8, u64) {
         (self.__slot, 0, 32)
+    }
+
+    pub fn storage(&self) -> U256 {
+        bytes32_to_u256(keccak256(u256_to_bytes32(self.__slot)))
+    }
+
+    // Return packing ration as (n, d) tuple: n slots per d elements.
+    pub fn packing_ratio(&self) -> (u64, u64) {
+        (ceil_div(Value::size(), 32), 1)
     }
 }
 
@@ -34,10 +43,9 @@ impl<Value> DynamicArray<Value> {
         where
             Value: Position,
     {
-        let base_slot_bytes = keccak256(u256_to_bytes32(self.__slot));
-        let base_slot = bytes32_to_u256(base_slot_bytes);
-        let value_len = ceil_div(Value::size(), 32); // How many slots value occupies.
-        let value_slot = base_slot + value_len * index as u64;
+        let storage_slot = self.storage();
+        let (packing_n, packing_d) = self.packing_ratio(); // Currently in solidity always ratio_d == 1.
+        let value_slot = storage_slot + packing_n * index as u64 / packing_d;
         Value::from_position(value_slot, 0)
     }
 }
