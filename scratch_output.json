@@ -1,108 +1,108 @@
 {
   "storage": [
     {
-      "astId": 4029,
-      "contract": "Augur.sol:Augur",
-      "label": "markets",
+      "astId": 2,
+      "contract": "<stdin>:MyContract",
+      "label": "plainUint112",
       "offset": 0,
       "slot": "0",
-      "type": "t_mapping(t_address,t_bool)"
+      "type": "t_uint112"
     },
     {
-      "astId": 4033,
-      "contract": "Augur.sol:Augur",
-      "label": "universes",
+      "astId": 4,
+      "contract": "<stdin>:MyContract",
+      "label": "plainUint32",
+      "offset": 14,
+      "slot": "0",
+      "type": "t_uint32"
+    },
+    {
+      "astId": 6,
+      "contract": "<stdin>:MyContract",
+      "label": "plainString",
       "offset": 0,
       "slot": "1",
-      "type": "t_mapping(t_address,t_bool)"
+      "type": "t_string_storage"
     },
     {
-      "astId": 4037,
-      "contract": "Augur.sol:Augur",
-      "label": "crowdsourcers",
+      "astId": 25,
+      "contract": "<stdin>:MyContract",
+      "label": "myStructNested",
       "offset": 0,
       "slot": "2",
-      "type": "t_mapping(t_address,t_bool)"
+      "type": "t_struct(MyStructNested)17_storage"
     },
     {
-      "astId": 4041,
-      "contract": "Augur.sol:Augur",
-      "label": "trustedSender",
-      "offset": 0,
-      "slot": "3",
-      "type": "t_mapping(t_address,t_bool)"
-    },
-    {
-      "astId": 4045,
-      "contract": "Augur.sol:Augur",
-      "label": "marketCreationData",
-      "offset": 0,
-      "slot": "4",
-      "type": "t_mapping(t_address,t_struct(MarketCreationData)651_storage)"
-    },
-    {
-      "astId": 4047,
-      "contract": "Augur.sol:Augur",
-      "label": "uploader",
+      "astId": 29,
+      "contract": "<stdin>:MyContract",
+      "label": "staticArray",
       "offset": 0,
       "slot": "5",
-      "type": "t_address"
+      "type": "t_array(t_uint112)10_storage"
     },
     {
-      "astId": 4051,
-      "contract": "Augur.sol:Augur",
-      "label": "registry",
-      "offset": 0,
-      "slot": "6",
-      "type": "t_mapping(t_bytes32,t_address)"
-    },
-    {
-      "astId": 4053,
-      "contract": "Augur.sol:Augur",
-      "label": "time",
-      "offset": 0,
-      "slot": "7",
-      "type": "t_contract(ITime)716"
-    },
-    {
-      "astId": 4055,
-      "contract": "Augur.sol:Augur",
-      "label": "genesisUniverse",
-      "offset": 0,
-      "slot": "8",
-      "type": "t_contract(IUniverse)2276"
-    },
-    {
-      "astId": 4057,
-      "contract": "Augur.sol:Augur",
-      "label": "forkCounter",
-      "offset": 0,
-      "slot": "9",
-      "type": "t_uint256"
-    },
-    {
-      "astId": 4061,
-      "contract": "Augur.sol:Augur",
-      "label": "universeForkIndex",
+      "astId": 34,
+      "contract": "<stdin>:MyContract",
+      "label": "staticArrayLarge",
       "offset": 0,
       "slot": "10",
-      "type": "t_mapping(t_address,t_uint256)"
+      "type": "t_array(t_struct(MyStruct)11_storage)2_storage"
     },
     {
-      "astId": 4066,
-      "contract": "Augur.sol:Augur",
-      "label": "upgradeTimestamp",
+      "astId": 40,
+      "contract": "<stdin>:MyContract",
+      "label": "staticArrayNestedSmall",
       "offset": 0,
-      "slot": "11",
-      "type": "t_uint256"
+      "slot": "14",
+      "type": "t_array(t_array(t_uint8)2_storage)4_storage"
     },
     {
-      "astId": 4096,
-      "contract": "Augur.sol:Augur",
-      "label": "cash",
+      "astId": 43,
+      "contract": "<stdin>:MyContract",
+      "label": "dynamicArray",
       "offset": 0,
-      "slot": "12",
-      "type": "t_contract(ICash)1162"
+      "slot": "18",
+      "type": "t_array(t_uint256)dyn_storage"
+    },
+    {
+      "astId": 47,
+      "contract": "<stdin>:MyContract",
+      "label": "dynamicArrayStruct",
+      "offset": 0,
+      "slot": "19",
+      "type": "t_array(t_struct(MyStructNested)17_storage)dyn_storage"
+    },
+    {
+      "astId": 51,
+      "contract": "<stdin>:MyContract",
+      "label": "dynamicArraySmall",
+      "offset": 0,
+      "slot": "20",
+      "type": "t_array(t_struct(MyStructSmall)22_storage)dyn_storage"
+    },
+    {
+      "astId": 55,
+      "contract": "<stdin>:MyContract",
+      "label": "myMapping1",
+      "offset": 0,
+      "slot": "21",
+      "type": "t_mapping(t_uint256,t_uint256)"
+    },
+    {
+      "astId": 59,
+      "contract": "<stdin>:MyContract",
+      "label": "myMapping2",
+      "offset": 0,
+      "slot": "22",
+      "type": "t_mapping(t_string_memory_ptr,t_uint256)"
+    },
+    {
+      "astId": 65,
+      "contract": "<stdin>:MyContract",
+      "label": "myNestedMapping",
+      "offset": 0,
+      "slot": "23",
+      "type": "t_mapping(t_uint256,t_mapping(t_uint256,t_uint256))"
     }
   ],
   "types": {
@@ -111,145 +111,167 @@
       "label": "address",
       "numberOfBytes": "20"
     },
-    "t_array(t_bytes32)dyn_storage": {
-      "base": "t_bytes32",
+    "t_array(t_array(t_uint8)2_storage)4_storage": {
+      "base": "t_array(t_uint8)2_storage",
+      "encoding": "inplace",
+      "label": "uint8[2][4]",
+      "numberOfBytes": "128"
+    },
+    "t_array(t_struct(MyStruct)11_storage)2_storage": {
+      "base": "t_struct(MyStruct)11_storage",
+      "encoding": "inplace",
+      "label": "struct MyContract.MyStruct[2]",
+      "numberOfBytes": "128"
+    },
+    "t_array(t_struct(MyStructNested)17_storage)dyn_storage": {
+      "base": "t_struct(MyStructNested)17_storage",
       "encoding": "dynamic_array",
-      "label": "bytes32[]",
+      "label": "struct MyContract.MyStructNested[]",
       "numberOfBytes": "32"
     },
-    "t_array(t_int256)dyn_storage": {
-      "base": "t_int256",
+    "t_array(t_struct(MyStructSmall)22_storage)dyn_storage": {
+      "base": "t_struct(MyStructSmall)22_storage",
       "encoding": "dynamic_array",
-      "label": "int256[]",
+      "label": "struct MyContract.MyStructSmall[]",
       "numberOfBytes": "32"
     },
-    "t_bool": {
+    "t_array(t_uint112)10_storage": {
+      "base": "t_uint112",
       "encoding": "inplace",
-      "label": "bool",
-      "numberOfBytes": "1"
+      "label": "uint112[10]",
+      "numberOfBytes": "160"
     },
-    "t_bytes32": {
-      "encoding": "inplace",
-      "label": "bytes32",
+    "t_array(t_uint256)dyn_storage": {
+      "base": "t_uint256",
+      "encoding": "dynamic_array",
+      "label": "uint256[]",
       "numberOfBytes": "32"
     },
-    "t_contract(ICash)1162": {
+    "t_array(t_uint8)2_storage": {
+      "base": "t_uint8",
       "encoding": "inplace",
-      "label": "contract ICash",
-      "numberOfBytes": "20"
-    },
-    "t_contract(ITime)716": {
-      "encoding": "inplace",
-      "label": "contract ITime",
-      "numberOfBytes": "20"
-    },
-    "t_contract(IUniverse)2276": {
-      "encoding": "inplace",
-      "label": "contract IUniverse",
-      "numberOfBytes": "20"
-    },
-    "t_enum(MarketType)1323": {
-      "encoding": "inplace",
-      "label": "enum IMarket.MarketType",
-      "numberOfBytes": "1"
-    },
-    "t_int256": {
-      "encoding": "inplace",
-      "label": "int256",
+      "label": "uint8[2]",
       "numberOfBytes": "32"
     },
-    "t_mapping(t_address,t_bool)": {
+    "t_mapping(t_string_memory_ptr,t_uint256)": {
       "encoding": "mapping",
-      "key": "t_address",
-      "label": "mapping(address => bool)",
-      "numberOfBytes": "32",
-      "value": "t_bool"
-    },
-    "t_mapping(t_address,t_struct(MarketCreationData)651_storage)": {
-      "encoding": "mapping",
-      "key": "t_address",
-      "label": "mapping(address => struct IAugurCreationDataGetter.MarketCreationData)",
-      "numberOfBytes": "32",
-      "value": "t_struct(MarketCreationData)651_storage"
-    },
-    "t_mapping(t_address,t_uint256)": {
-      "encoding": "mapping",
-      "key": "t_address",
-      "label": "mapping(address => uint256)",
+      "key": "t_string_memory_ptr",
+      "label": "mapping(string => uint256)",
       "numberOfBytes": "32",
       "value": "t_uint256"
     },
-    "t_mapping(t_bytes32,t_address)": {
+    "t_mapping(t_uint256,t_mapping(t_uint256,t_uint256))": {
       "encoding": "mapping",
-      "key": "t_bytes32",
-      "label": "mapping(bytes32 => address)",
+      "key": "t_uint256",
+      "label": "mapping(uint256 => mapping(uint256 => uint256))",
       "numberOfBytes": "32",
-      "value": "t_address"
+      "value": "t_mapping(t_uint256,t_uint256)"
+    },
+    "t_mapping(t_uint256,t_uint256)": {
+      "encoding": "mapping",
+      "key": "t_uint256",
+      "label": "mapping(uint256 => uint256)",
+      "numberOfBytes": "32",
+      "value": "t_uint256"
+    },
+    "t_string_memory_ptr": {
+      "encoding": "bytes",
+      "label": "string",
+      "numberOfBytes": "32"
     },
     "t_string_storage": {
       "encoding": "bytes",
       "label": "string",
       "numberOfBytes": "32"
     },
-    "t_struct(MarketCreationData)651_storage": {
+    "t_struct(MyStruct)11_storage": {
       "encoding": "inplace",
-      "label": "struct IAugurCreationDataGetter.MarketCreationData",
+      "label": "struct MyContract.MyStruct",
       "members": [
         {
-          "astId": 638,
-          "contract": "Augur.sol:Augur",
-          "label": "extraInfo",
+          "astId": 8,
+          "contract": "<stdin>:MyContract",
+          "label": "myAddress",
           "offset": 0,
           "slot": "0",
-          "type": "t_string_storage"
-        },
-        {
-          "astId": 640,
-          "contract": "Augur.sol:Augur",
-          "label": "marketCreator",
-          "offset": 0,
-          "slot": "1",
           "type": "t_address"
         },
         {
-          "astId": 643,
-          "contract": "Augur.sol:Augur",
-          "label": "outcomes",
+          "astId": 10,
+          "contract": "<stdin>:MyContract",
+          "label": "myUint",
           "offset": 0,
-          "slot": "2",
-          "type": "t_array(t_bytes32)dyn_storage"
-        },
-        {
-          "astId": 646,
-          "contract": "Augur.sol:Augur",
-          "label": "displayPrices",
-          "offset": 0,
-          "slot": "3",
-          "type": "t_array(t_int256)dyn_storage"
-        },
-        {
-          "astId": 648,
-          "contract": "Augur.sol:Augur",
-          "label": "marketType",
-          "offset": 0,
-          "slot": "4",
-          "type": "t_enum(MarketType)1323"
-        },
-        {
-          "astId": 650,
-          "contract": "Augur.sol:Augur",
-          "label": "recommendedTradeInterval",
-          "offset": 0,
-          "slot": "5",
+          "slot": "1",
           "type": "t_uint256"
         }
       ],
-      "numberOfBytes": "192"
+      "numberOfBytes": "64"
+    },
+    "t_struct(MyStructNested)17_storage": {
+      "encoding": "inplace",
+      "label": "struct MyContract.MyStructNested",
+      "members": [
+        {
+          "astId": 13,
+          "contract": "<stdin>:MyContract",
+          "label": "myAddress",
+          "offset": 0,
+          "slot": "0",
+          "type": "t_address"
+        },
+        {
+          "astId": 16,
+          "contract": "<stdin>:MyContract",
+          "label": "myStruct",
+          "offset": 0,
+          "slot": "1",
+          "type": "t_struct(MyStruct)11_storage"
+        }
+      ],
+      "numberOfBytes": "96"
+    },
+    "t_struct(MyStructSmall)22_storage": {
+      "encoding": "inplace",
+      "label": "struct MyContract.MyStructSmall",
+      "members": [
+        {
+          "astId": 19,
+          "contract": "<stdin>:MyContract",
+          "label": "smallInt1",
+          "offset": 0,
+          "slot": "0",
+          "type": "t_uint32"
+        },
+        {
+          "astId": 21,
+          "contract": "<stdin>:MyContract",
+          "label": "smallInt2",
+          "offset": 4,
+          "slot": "0",
+          "type": "t_uint32"
+        }
+      ],
+      "numberOfBytes": "32"
+    },
+    "t_uint112": {
+      "encoding": "inplace",
+      "label": "uint112",
+      "numberOfBytes": "14"
     },
     "t_uint256": {
       "encoding": "inplace",
       "label": "uint256",
       "numberOfBytes": "32"
+    },
+    "t_uint32": {
+      "encoding": "inplace",
+      "label": "uint32",
+      "numberOfBytes": "4"
+    },
+    "t_uint8": {
+      "encoding": "inplace",
+      "label": "uint8",
+      "numberOfBytes": "1"
     }
   }
 }

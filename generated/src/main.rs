@@ -10,37 +10,38 @@ mod generated_contract;
 fn main() {
     let contract = generated_contract::Contract::new_from_position(U256::zero(), 0);
 
-    // // Example contract
-    // println!("{:?}", contract.myNestedMapping.get_item(0u64));
-    // println!("{:?}", contract.myNestedMapping.get_item(0u64).get_item(1u64));
-    // // println!("{:?}", contract.myMapping2.get_item("0u64")); // panic
-    // println!("{:?}", contract.dynamicArray.get_item(10).slot());
-    // println!("{:?}", contract.dynamicArrayStruct.get_item(10).slot());
-    // println!("{:?}", contract.dynamicArrayStruct.get_item(11).slot());
-    // println!("{:?}", contract.dynamicArraySmall.get_item(10).slot());
-    // println!("{:?}", contract.dynamicArraySmall.get_item(11).slot());
-    // println!("{:?}", contract.staticArrayNestedSmall.slot());
-    // println!("{:?}", contract.staticArrayNestedSmall.get_item(0).slot());
-    // println!("{:?}", contract.staticArrayNestedSmall.get_item(1).slot());
-    // println!("{:?}", contract.staticArrayNestedSmall.get_item(0).get_item(0).position());
-    // println!("{:?}", contract.staticArrayNestedSmall.get_item(0).get_item(31).position());
-    // println!("{:?}", contract.staticArrayLarge.get_item(0).slot());
-    // println!("{:?}", contract.staticArrayLarge.get_item(1).slot());
-    // println!("{:?}", contract.staticArrayLarge.capacity());
-    // println!("{:?}", contract.staticArrayLarge.capacity());
-    // // println!("{:?}", contract.staticArrayLarge.get_item(2).slot()); // panic
+    // Example contract
+    println!("{:?}", contract.myNestedMapping.get_item(0u64));
+    println!("{:?}", contract.myNestedMapping.get_item(0u64).get_item(1u64).position());
+    println!("myMapping2[\"some\"] {:?}", contract.myMapping2.get_item("some").position());
+    println!("myMapping2[vec]    {:?}", contract.myMapping2.get_item(vec![0x73, 0x6F, 0x6D, 0x65]).position());
+    println!("{:?}", contract.dynamicArray.get_item(10).position());
+    println!("{:?}", contract.dynamicArrayStruct.get_item(10).position());
+    println!("{:?}", contract.dynamicArrayStruct.get_item(11).position());
+    println!("{:?}", contract.dynamicArraySmall.get_item(10).position());
+    println!("{:?}", contract.dynamicArraySmall.get_item(11).position());
+    println!("{:?}", contract.staticArrayNestedSmall.position());
+    println!("{:?}", contract.staticArrayNestedSmall.get_item(0).position());
+    println!("{:?}", contract.staticArrayNestedSmall.get_item(1).position());
+    println!("{:?}", contract.staticArrayNestedSmall.get_item(0).get_item(0).position());
+    println!("{:?}", contract.staticArrayNestedSmall.get_item(0).get_item(31).position());
+    println!("{:?}", contract.staticArrayLarge.get_item(0).position());
+    println!("{:?}", contract.staticArrayLarge.get_item(1).position());
+    println!("{:?}", contract.staticArrayLarge.capacity());
+    println!("{:?}", contract.staticArrayLarge.capacity());
+    // println!("{:?}", contract.staticArrayLarge.get_item(2).position()); // panic
 
     // // Uniswap V3
     // println!("{:?}", contract.slot0);
     // println!("{:?}", contract.ticks);
-    // println!("{:?}", contract.ticks.get_item(42u64).initialized.slot());
-    // println!("{:?}", contract.slot0.observationIndex.slot());
+    // println!("{:?}", contract.ticks.get_item(42u64).initialized.position());
+    // println!("{:?}", contract.slot0.observationIndex.position());
     // println!("{:?}", contract.slot0.observationIndex.offset());
     // println!("{:?}", contract.slot0.observationIndex.size());
-    // println!("{:?}", contract.ticks.get_item(0).slot());
-    // println!("{:?}", contract.ticks.get_item(149150).slot());
-    // println!("{:?}", contract.ticks.get_item(887270).slot());
-    // println!("{:?}", contract.ticks.get_item(-92110).slot());
+    // println!("{:?}", contract.ticks.get_item(0).position());
+    // println!("{:?}", contract.ticks.get_item(149150).position());
+    // println!("{:?}", contract.ticks.get_item(887270).position());
+    // println!("{:?}", contract.ticks.get_item(-92110).position());
 
     // // Uniswap V2
     // println!("totalSupply {:?}", contract.totalSupply.position());
@@ -68,10 +69,10 @@ fn main() {
     // println!("s_signers[0] {:?}", contract.s_signers.get_item(0).position());
 
     // Augur 2
-    let address = U256::from_str("0x51A18333479472D1250Ee5063910079fc0B9b801").unwrap();
-    println!("{:#x}", address);
-    println!("{:#?}", address);
-    println!("{:?}", u256_to_bytes32(address));
-    println!("marketCreationData {:?}", contract.marketCreationData.get_item(address).position());
-    println!("extraInfo {:?}, {:?}", contract.marketCreationData.get_item(address).extraInfo.position(), contract.marketCreationData.get_item(address).extraInfo.storage());
+    // let address = U256::from_str("0x51A18333479472D1250Ee5063910079fc0B9b801").unwrap();
+    // println!("{:#x}", address);
+    // println!("{:#?}", address);
+    // println!("{:?}", u256_to_bytes32(address));
+    // println!("marketCreationData {:?}", contract.marketCreationData.get_item(address).position());
+    // println!("extraInfo {:?}, {:?}", contract.marketCreationData.get_item(address).extraInfo.position(), contract.marketCreationData.get_item(address).extraInfo.storage());
 }
