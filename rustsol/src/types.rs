@@ -8,14 +8,14 @@ pub trait Position {
 }
 
 #[derive(Debug, Default)]
-pub struct Primitive<const BYTES: u64> {
+pub struct Primitive<const SIZE: u64> {
     __slot: U256,
     __offset: u8,
 }
 
-impl<const BYTES: u64> Primitive<BYTES> {
+impl<const SIZE: u64> Primitive<SIZE> {
     pub fn size(&self) -> u64 {
-        BYTES
+        SIZE
     }
 
     pub fn slot(&self) -> U256 {
@@ -27,17 +27,17 @@ impl<const BYTES: u64> Primitive<BYTES> {
     }
 
     pub fn position(&self) -> (U256, u8, u64) {
-        (self.__slot, self.__offset, BYTES)
+        (self.__slot, self.__offset, SIZE)
     }
 }
 
-impl<const BYTES: u64> Position for Primitive<BYTES> {
+impl<const SIZE: u64> Position for Primitive<SIZE> {
     fn from_position(slot: U256, offset: u8) -> Self {
         Primitive { __slot: slot, __offset: offset }  // Use the conversion from U256 to u64
     }
 
     fn size() -> u64 {
-        BYTES
+        SIZE
     }
 }
 
@@ -265,46 +265,46 @@ fn packing_ratio(element_size: u64) -> (u64, u64) {
 }
 
 #[derive(Debug)]
-pub struct StaticArray<const BYTES: u64, Value> {
+pub struct StaticArray<const SIZE: u64, Value> {
     __slot: U256,
     __marker: PhantomData<Value>,
 }
 
-impl<const BYTES: u64, Value: Position> StaticArray<BYTES, Value> {
+impl<const SIZE: u64, Value: Position> StaticArray<SIZE, Value> {
     pub fn slot(&self) -> U256 {
         self.__slot
     }
 
     fn position(&self) -> (U256, u8, u64) {
-        (self.__slot, 0, BYTES)
+        (self.__slot, 0, SIZE)
     }
 
     pub fn capacity(&self) -> usize {
         let value_size = Value::size();
         let (packing_n, packing_d) = packing_ratio(value_size);
-        let capacity = BYTES / 32 * packing_d / packing_n;
+        let capacity = SIZE / 32 * packing_d / packing_n;
         capacity as usize
     }
 }
 
-impl<const BYTES: u64, Value> Position for StaticArray<BYTES, Value> {
+impl<const SIZE: u64, Value> Position for StaticArray<SIZE, Value> {
     fn from_position(slot: U256, offset: u8) -> Self {
-        StaticArray::<BYTES, Value> { __slot: slot, __marker: PhantomData }
+        StaticArray::<SIZE, Value> { __slot: slot, __marker: PhantomData }
     }
 
     fn size() -> u64 {
-        BYTES
+        SIZE
     }
 }
 
-impl<const BYTES: u64, Value> StaticArray<BYTES, Value> {
+impl<const SIZE: u64, Value> StaticArray<SIZE, Value> {
     pub fn get_item(&self, index: usize) -> Value
         where
             Value: Position,
     {
         let value_size = Value::size();
         let (packing_n, packing_d) = packing_ratio(value_size);
-        let capacity = BYTES / 32 * packing_d / packing_n;
+        let capacity = SIZE / 32 * packing_d / packing_n;
         if index >= capacity as usize {
             panic!("Index is outside array capacity: {} vs {}", index, capacity)
         }
