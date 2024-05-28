@@ -1,7 +1,7 @@
 use std::marker::PhantomData;
 use primitive_types::U256;
-use crate::utils::{bytes32_to_u256, ceil_div, keccak256, u256_to_bytes32};
 use crate::types::Position;
+use crate::utils::{bytes32_to_u256, ceil_div, index_to_position, keccak256, u256_to_bytes32};
 
 #[derive(Debug)]
 pub struct DynamicArray<Value> {
@@ -22,7 +22,9 @@ impl<Value: Position> DynamicArray<Value> {
         bytes32_to_u256(keccak256(u256_to_bytes32(self.__slot)))
     }
 
-    // Return packing ration as (n, d) tuple: n slots per d elements.
+    // Return the packing ratio: (n, d).
+    // This means that packing is "n slot per d elements"
+    // For dynamic array d is always one, i.e., values are not tightly packed.
     pub fn packing_ratio(&self) -> (u64, u64) {
         (ceil_div(Value::size(), 32), 1)
     }
@@ -43,9 +45,8 @@ impl<Value> DynamicArray<Value> {
         where
             Value: Position,
     {
-        let storage_slot = self.storage();
         let (packing_n, packing_d) = self.packing_ratio(); // Currently in solidity always ratio_d == 1.
-        let value_slot = storage_slot + packing_n * index as u64 / packing_d;
-        Value::from_position(value_slot, 0)
+        let (index_slot, index_offset) = index_to_position(index, packing_n, packing_d);
+        Value::from_position(self.storage() + index_slot, index_offset)
     }
 }

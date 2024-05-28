@@ -1,7 +1,7 @@
 use std::marker::PhantomData;
 use primitive_types::U256;
-use crate::utils;
 use crate::types::Position;
+use crate::utils::{index_to_position, ceil_div};
 
 #[derive(Debug)]
 pub struct StaticArray<const SIZE: u64, Value> {
@@ -14,13 +14,28 @@ impl<const SIZE: u64, Value: Position> StaticArray<SIZE, Value> {
         self.__slot
     }
 
-    fn position(&self) -> (U256, u8, u64) {
+    pub fn position(&self) -> (U256, u8, u64) {
         (self.__slot, 0, SIZE)
     }
 
+    pub fn storage(&self) -> U256 {
+        self.__slot
+    }
+
+    // Return the packing ratio: (n, d).
+    // This means that packing is "n slot per d elements"
+    // In the current solidity implementation one element of the pair is always one.
+    pub fn packing_ratio(&self) -> (u64, u64) {
+        let element_size = Value::size();
+        if element_size > 32 {
+            (ceil_div(element_size, 32), 1)
+        } else {
+            (1, 32 / element_size)
+        }
+    }
+
     pub fn capacity(&self) -> usize {
-        let value_size = Value::size();
-        let (packing_n, packing_d) = utils::packing_ratio(value_size);
+        let (packing_n, packing_d) = self.packing_ratio();
         let capacity = SIZE / 32 * packing_d / packing_n;
         capacity as usize
     }
@@ -41,14 +56,12 @@ impl<const SIZE: u64, Value> StaticArray<SIZE, Value> {
         where
             Value: Position,
     {
-        let value_size = Value::size();
-        let (packing_n, packing_d) = utils::packing_ratio(value_size);
+        let (packing_n, packing_d) = self.packing_ratio();
         let capacity = SIZE / 32 * packing_d / packing_n;
         if index >= capacity as usize {
             panic!("Index is outside array capacity: {} vs {}", index, capacity)
         }
-        let slot = self.__slot + index as u64 * packing_n / packing_d;
-        let offset = (index as u64 * 32 * packing_n / packing_d % 32) as u8;  // guaranteed to fit in u8
-        Value::from_position(slot, offset)
+        let (index_slot, index_offset) = index_to_position(index, packing_n, packing_d);
+        Value::from_position(self.storage() + index_slot, index_offset)
     }
 }

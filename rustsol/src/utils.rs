@@ -37,13 +37,8 @@ pub fn bytes32_to_u256(bytes: [u8; 32]) -> U256 {
     U256::from_big_endian(&bytes)
 }
 
-// Return the packing ratio: (n, d).
-// This means that packing is "n slot per d elements"
-// In the current solidity implementation one element of the pair is always one.
-pub fn packing_ratio(element_size: u64) -> (u64, u64) {
-    if element_size > 32 {
-        (ceil_div(element_size, 32), 1)
-    } else {
-        (1, 32 / element_size)
-    }
+pub fn index_to_position(index: usize, packing_ratio_n: u64, packing_ratio_d: u64) -> (u64, u8) {
+    let slot = index as u64 * packing_ratio_n / packing_ratio_d;
+    let offset = (index as u64 * 32 * packing_ratio_n / packing_ratio_d % 32) as u8;  // guaranteed to fit in u8
+    (slot, offset)
 }
