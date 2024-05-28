@@ -1,6 +1,6 @@
 use std::str::FromStr;
 use primitive_types::U256;
-use rustsol::keccak::u256_to_bytes32;
+use rustsol::utils::u256_to_bytes32;
 use rustsol::types::Position;
 
 mod generated_contract;
