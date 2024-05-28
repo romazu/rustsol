@@ -117,10 +117,47 @@ pub struct BytesKey([u8; 32]);
 
 impl From<&str> for BytesKey {
     fn from(value: &str) -> Self {
-        panic!("Not implemented")
+        BytesKey(keccak256(value.as_bytes()))
     }
 }
 
+impl From<String> for BytesKey {
+    fn from(value: String) -> Self {
+        BytesKey::from(value.as_str())
+    }
+}
+
+impl From<&String> for BytesKey {
+    fn from(value: &String) -> Self {
+        BytesKey::from(value.as_str())
+    }
+}
+
+impl From<&[u8]> for BytesKey {
+    fn from(value: &[u8]) -> Self {
+        let mut bytes = [0u8; 32];
+        bytes.copy_from_slice(&keccak256(value)[..32]);
+        BytesKey(bytes)
+    }
+}
+
+impl From<Vec<u8>> for BytesKey {
+    fn from(value: Vec<u8>) -> Self {
+        BytesKey::from(value.as_slice())
+    }
+}
+
+impl From<&Vec<u8>> for BytesKey {
+    fn from(value: &Vec<u8>) -> Self {
+        BytesKey::from(value.as_slice())
+    }
+}
+
+
+// The value corresponding to a mapping key k is located at keccak256(h(k) . p) where . is
+// concatenation and h is a function that is applied to the key depending on its type:
+// - for value types, h pads the value to 32 bytes in the same way as when storing the value in memory.
+// - for strings and byte arrays, h computes the keccak256 hash of the unpadded data.
 #[derive(Debug)]
 pub struct Mapping<KeyType, Value> {
     __slot: U256,

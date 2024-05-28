@@ -10,7 +10,7 @@ fn to_bytes32(num: u64) -> [u8; 32] {
 }
 
 /// Computes the keccak256 hash of the concatenation of two 32-byte arrays
-pub fn keccak256(v: [u8; 32]) -> [u8; 32] {
+pub fn keccak256<T: AsRef<[u8]>>(v: T) -> [u8; 32] {
     let mut hasher = Keccak256::new();
     hasher.update(v);
     hasher.finalize().as_slice().try_into().expect("Wrong length")
@@ -25,23 +25,6 @@ pub fn keccak256_concat(a: [u8; 32], b: [u8; 32]) -> [u8; 32] {
 
 pub fn ceil_div(a: u64, b: u64) -> u64 {
     (a + b - 1) / b
-}
-
-/// Computes the storage slot and offset for an element in an array
-fn compute_array_element_slot(base_slot: U256, index: u64, element_size: u64) -> (U256, u64) {
-    if element_size > 32 {
-        // Elements larger than 32 bytes, each element starts at a new slot
-        let slots_per_element = ceil_div(element_size, 32);
-        let slot = base_slot + U256::from(index * slots_per_element);
-        (slot, 0)
-    } else {
-        // Elements smaller than or equal to 32 bytes, packed within slots
-        let elements_per_slot = 32 / element_size; // Number of elements per 32-byte slot
-        let slot_offset = U256::from(index / elements_per_slot);
-        let slot = base_slot + slot_offset;
-        let offset = (index % elements_per_slot) * element_size;
-        (slot, offset)
-    }
 }
 
 pub fn u256_to_bytes32(num: U256) -> [u8; 32] {
