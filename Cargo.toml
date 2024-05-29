@@ -1,6 +1,6 @@
 [workspace]
 members = [
     "rustsol",
-    "generated",
+    "example",
 ]
 resolver = "2"
