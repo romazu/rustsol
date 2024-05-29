@@ -23,13 +23,7 @@ def get_solc_input_json(contract_sources: Dict[str, str]):
     return res
 
 
-
-if __name__ == '__main__':
-    output_path = '../example/solc_output.json'
-
-    contracts_dir = '../example/contracts/simple'
-    solc_version = "v0.8.26"
-
+def generate_storage_layout(contracts_dir: str, output_path: str, solc_version: str):
     contract_sources = {}
     for root, _, files in os.walk(contracts_dir):
         for file in files:
@@ -47,3 +41,9 @@ if __name__ == '__main__':
     )
     with open(output_path, 'w') as fp:
         json.dump(results, fp, indent=2)
+
+
+if __name__ == '__main__':
+    output_path = '../example/solc_output.json'
+
+    generate_storage_layout("../example/contracts/simple", output_path, "v0.8.26")
