@@ -46,4 +46,5 @@ def generate_storage_layout(contracts_dir: str, output_path: str, solc_version: 
 if __name__ == '__main__':
     output_path = '../example/solc_output.json'
 
-    generate_storage_layout("../example/contracts/simple", output_path, "v0.8.26")
+    # generate_storage_layout("../example/contracts/simple", output_path, "v0.8.26")
+    generate_storage_layout("../example/contracts/uniswap3pool", output_path, "v0.7.6")

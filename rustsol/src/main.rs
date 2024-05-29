@@ -15,7 +15,8 @@ fn main() {
     let storage_layout_path = "example/solc_output.json";
     let generated_file_path = "example/src/generated_contract.rs";
 
-    let (contract_path, contract_name) = ("contract.sol", "MyContract");
+    // let (contract_path, contract_name) = ("contract.sol", "MyContract");
+    let (contract_path, contract_name) = ("UniswapV3Pool.sol", "UniswapV3Pool");
 
     let mut file = File::open(storage_layout_path).expect("Cannot open storage layout json file");
     let mut storage_layout_json_string = String::new();

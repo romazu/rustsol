@@ -1,266 +1,405 @@
 {
   "contracts": {
-    "contract.sol": {
-      "MyContract": {
+    "NoDelegateCall.sol": {
+      "NoDelegateCall": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      }
+    },
+    "UniswapV3Pool.sol": {
+      "UniswapV3Pool": {
         "storageLayout": {
           "storage": [
             {
-              "astId": 2,
-              "contract": "contract.sol:MyContract",
-              "label": "plainUint112",
+              "astId": 144,
+              "contract": "UniswapV3Pool.sol:UniswapV3Pool",
+              "label": "slot0",
               "offset": 0,
               "slot": "0",
-              "type": "t_uint112"
+              "type": "t_struct(Slot0)140_storage"
             },
             {
-              "astId": 4,
-              "contract": "contract.sol:MyContract",
-              "label": "plainUint32",
-              "offset": 14,
-              "slot": "0",
-              "type": "t_uint32"
-            },
-            {
-              "astId": 6,
-              "contract": "contract.sol:MyContract",
-              "label": "plainString",
+              "astId": 148,
+              "contract": "UniswapV3Pool.sol:UniswapV3Pool",
+              "label": "feeGrowthGlobal0X128",
               "offset": 0,
               "slot": "1",
-              "type": "t_string_storage"
+              "type": "t_uint256"
             },
             {
-              "astId": 25,
-              "contract": "contract.sol:MyContract",
-              "label": "myStructNested",
+              "astId": 152,
+              "contract": "UniswapV3Pool.sol:UniswapV3Pool",
+              "label": "feeGrowthGlobal1X128",
               "offset": 0,
               "slot": "2",
-              "type": "t_struct(MyStructNested)17_storage"
+              "type": "t_uint256"
             },
             {
-              "astId": 29,
-              "contract": "contract.sol:MyContract",
-              "label": "staticArray",
+              "astId": 161,
+              "contract": "UniswapV3Pool.sol:UniswapV3Pool",
+              "label": "protocolFees",
+              "offset": 0,
+              "slot": "3",
+              "type": "t_struct(ProtocolFees)157_storage"
+            },
+            {
+              "astId": 165,
+              "contract": "UniswapV3Pool.sol:UniswapV3Pool",
+              "label": "liquidity",
+              "offset": 0,
+              "slot": "4",
+              "type": "t_uint128"
+            },
+            {
+              "astId": 171,
+              "contract": "UniswapV3Pool.sol:UniswapV3Pool",
+              "label": "ticks",
               "offset": 0,
               "slot": "5",
-              "type": "t_array(t_uint112)10_storage"
+              "type": "t_mapping(t_int24,t_struct(Info)5612_storage)"
             },
             {
-              "astId": 34,
-              "contract": "contract.sol:MyContract",
-              "label": "staticArrayLarge",
+              "astId": 177,
+              "contract": "UniswapV3Pool.sol:UniswapV3Pool",
+              "label": "tickBitmap",
               "offset": 0,
-              "slot": "10",
-              "type": "t_array(t_struct(MyStruct)11_storage)2_storage"
+              "slot": "6",
+              "type": "t_mapping(t_int16,t_uint256)"
             },
             {
-              "astId": 40,
-              "contract": "contract.sol:MyContract",
-              "label": "staticArrayNestedSmall",
+              "astId": 183,
+              "contract": "UniswapV3Pool.sol:UniswapV3Pool",
+              "label": "positions",
               "offset": 0,
-              "slot": "14",
-              "type": "t_array(t_array(t_uint8)2_storage)4_storage"
+              "slot": "7",
+              "type": "t_mapping(t_bytes32,t_struct(Info)4579_storage)"
             },
             {
-              "astId": 43,
-              "contract": "contract.sol:MyContract",
-              "label": "dynamicArray",
+              "astId": 189,
+              "contract": "UniswapV3Pool.sol:UniswapV3Pool",
+              "label": "observations",
               "offset": 0,
-              "slot": "18",
-              "type": "t_array(t_uint256)dyn_storage"
-            },
-            {
-              "astId": 47,
-              "contract": "contract.sol:MyContract",
-              "label": "dynamicArrayStruct",
-              "offset": 0,
-              "slot": "19",
-              "type": "t_array(t_struct(MyStructNested)17_storage)dyn_storage"
-            },
-            {
-              "astId": 51,
-              "contract": "contract.sol:MyContract",
-              "label": "dynamicArraySmall",
-              "offset": 0,
-              "slot": "20",
-              "type": "t_array(t_struct(MyStructSmall)22_storage)dyn_storage"
-            },
-            {
-              "astId": 55,
-              "contract": "contract.sol:MyContract",
-              "label": "myMapping1",
-              "offset": 0,
-              "slot": "21",
-              "type": "t_mapping(t_uint256,t_uint256)"
-            },
-            {
-              "astId": 59,
-              "contract": "contract.sol:MyContract",
-              "label": "myMapping2",
-              "offset": 0,
-              "slot": "22",
-              "type": "t_mapping(t_string_memory_ptr,t_uint256)"
-            },
-            {
-              "astId": 65,
-              "contract": "contract.sol:MyContract",
-              "label": "myNestedMapping",
-              "offset": 0,
-              "slot": "23",
-              "type": "t_mapping(t_uint256,t_mapping(t_uint256,t_uint256))"
+              "slot": "8",
+              "type": "t_array(t_struct(Observation)3839_storage)65535_storage"
             }
           ],
           "types": {
-            "t_address": {
+            "t_array(t_struct(Observation)3839_storage)65535_storage": {
+              "base": "t_struct(Observation)3839_storage",
               "encoding": "inplace",
-              "label": "address",
-              "numberOfBytes": "20"
+              "label": "struct Oracle.Observation[65535]",
+              "numberOfBytes": "2097120"
             },
-            "t_array(t_array(t_uint8)2_storage)4_storage": {
-              "base": "t_array(t_uint8)2_storage",
+            "t_bool": {
               "encoding": "inplace",
-              "label": "uint8[2][4]",
-              "numberOfBytes": "128"
+              "label": "bool",
+              "numberOfBytes": "1"
             },
-            "t_array(t_struct(MyStruct)11_storage)2_storage": {
-              "base": "t_struct(MyStruct)11_storage",
+            "t_bytes32": {
               "encoding": "inplace",
-              "label": "struct MyContract.MyStruct[2]",
-              "numberOfBytes": "128"
-            },
-            "t_array(t_struct(MyStructNested)17_storage)dyn_storage": {
-              "base": "t_struct(MyStructNested)17_storage",
-              "encoding": "dynamic_array",
-              "label": "struct MyContract.MyStructNested[]",
+              "label": "bytes32",
               "numberOfBytes": "32"
             },
-            "t_array(t_struct(MyStructSmall)22_storage)dyn_storage": {
-              "base": "t_struct(MyStructSmall)22_storage",
-              "encoding": "dynamic_array",
-              "label": "struct MyContract.MyStructSmall[]",
-              "numberOfBytes": "32"
-            },
-            "t_array(t_uint112)10_storage": {
-              "base": "t_uint112",
+            "t_int128": {
               "encoding": "inplace",
-              "label": "uint112[10]",
-              "numberOfBytes": "160"
+              "label": "int128",
+              "numberOfBytes": "16"
             },
-            "t_array(t_uint256)dyn_storage": {
-              "base": "t_uint256",
-              "encoding": "dynamic_array",
-              "label": "uint256[]",
-              "numberOfBytes": "32"
-            },
-            "t_array(t_uint8)2_storage": {
-              "base": "t_uint8",
+            "t_int16": {
               "encoding": "inplace",
-              "label": "uint8[2]",
-              "numberOfBytes": "32"
+              "label": "int16",
+              "numberOfBytes": "2"
             },
-            "t_mapping(t_string_memory_ptr,t_uint256)": {
+            "t_int24": {
+              "encoding": "inplace",
+              "label": "int24",
+              "numberOfBytes": "3"
+            },
+            "t_int56": {
+              "encoding": "inplace",
+              "label": "int56",
+              "numberOfBytes": "7"
+            },
+            "t_mapping(t_bytes32,t_struct(Info)4579_storage)": {
               "encoding": "mapping",
-              "key": "t_string_memory_ptr",
-              "label": "mapping(string => uint256)",
+              "key": "t_bytes32",
+              "label": "mapping(bytes32 => struct Position.Info)",
+              "numberOfBytes": "32",
+              "value": "t_struct(Info)4579_storage"
+            },
+            "t_mapping(t_int16,t_uint256)": {
+              "encoding": "mapping",
+              "key": "t_int16",
+              "label": "mapping(int16 => uint256)",
               "numberOfBytes": "32",
               "value": "t_uint256"
             },
-            "t_mapping(t_uint256,t_mapping(t_uint256,t_uint256))": {
+            "t_mapping(t_int24,t_struct(Info)5612_storage)": {
               "encoding": "mapping",
-              "key": "t_uint256",
-              "label": "mapping(uint256 => mapping(uint256 => uint256))",
+              "key": "t_int24",
+              "label": "mapping(int24 => struct Tick.Info)",
               "numberOfBytes": "32",
-              "value": "t_mapping(t_uint256,t_uint256)"
+              "value": "t_struct(Info)5612_storage"
             },
-            "t_mapping(t_uint256,t_uint256)": {
-              "encoding": "mapping",
-              "key": "t_uint256",
-              "label": "mapping(uint256 => uint256)",
-              "numberOfBytes": "32",
-              "value": "t_uint256"
-            },
-            "t_string_memory_ptr": {
-              "encoding": "bytes",
-              "label": "string",
-              "numberOfBytes": "32"
-            },
-            "t_string_storage": {
-              "encoding": "bytes",
-              "label": "string",
-              "numberOfBytes": "32"
-            },
-            "t_struct(MyStruct)11_storage": {
+            "t_struct(Info)4579_storage": {
               "encoding": "inplace",
-              "label": "struct MyContract.MyStruct",
+              "label": "struct Position.Info",
               "members": [
                 {
-                  "astId": 8,
-                  "contract": "contract.sol:MyContract",
-                  "label": "myAddress",
+                  "astId": 4570,
+                  "contract": "UniswapV3Pool.sol:UniswapV3Pool",
+                  "label": "liquidity",
                   "offset": 0,
                   "slot": "0",
-                  "type": "t_address"
+                  "type": "t_uint128"
                 },
                 {
-                  "astId": 10,
-                  "contract": "contract.sol:MyContract",
-                  "label": "myUint",
+                  "astId": 4572,
+                  "contract": "UniswapV3Pool.sol:UniswapV3Pool",
+                  "label": "feeGrowthInside0LastX128",
                   "offset": 0,
                   "slot": "1",
                   "type": "t_uint256"
-                }
-              ],
-              "numberOfBytes": "64"
-            },
-            "t_struct(MyStructNested)17_storage": {
-              "encoding": "inplace",
-              "label": "struct MyContract.MyStructNested",
-              "members": [
-                {
-                  "astId": 13,
-                  "contract": "contract.sol:MyContract",
-                  "label": "myAddress",
-                  "offset": 0,
-                  "slot": "0",
-                  "type": "t_address"
                 },
                 {
-                  "astId": 16,
-                  "contract": "contract.sol:MyContract",
-                  "label": "myStruct",
+                  "astId": 4574,
+                  "contract": "UniswapV3Pool.sol:UniswapV3Pool",
+                  "label": "feeGrowthInside1LastX128",
+                  "offset": 0,
+                  "slot": "2",
+                  "type": "t_uint256"
+                },
+                {
+                  "astId": 4576,
+                  "contract": "UniswapV3Pool.sol:UniswapV3Pool",
+                  "label": "tokensOwed0",
+                  "offset": 0,
+                  "slot": "3",
+                  "type": "t_uint128"
+                },
+                {
+                  "astId": 4578,
+                  "contract": "UniswapV3Pool.sol:UniswapV3Pool",
+                  "label": "tokensOwed1",
+                  "offset": 16,
+                  "slot": "3",
+                  "type": "t_uint128"
+                }
+              ],
+              "numberOfBytes": "128"
+            },
+            "t_struct(Info)5612_storage": {
+              "encoding": "inplace",
+              "label": "struct Tick.Info",
+              "members": [
+                {
+                  "astId": 5597,
+                  "contract": "UniswapV3Pool.sol:UniswapV3Pool",
+                  "label": "liquidityGross",
+                  "offset": 0,
+                  "slot": "0",
+                  "type": "t_uint128"
+                },
+                {
+                  "astId": 5599,
+                  "contract": "UniswapV3Pool.sol:UniswapV3Pool",
+                  "label": "liquidityNet",
+                  "offset": 16,
+                  "slot": "0",
+                  "type": "t_int128"
+                },
+                {
+                  "astId": 5601,
+                  "contract": "UniswapV3Pool.sol:UniswapV3Pool",
+                  "label": "feeGrowthOutside0X128",
                   "offset": 0,
                   "slot": "1",
-                  "type": "t_struct(MyStruct)11_storage"
+                  "type": "t_uint256"
+                },
+                {
+                  "astId": 5603,
+                  "contract": "UniswapV3Pool.sol:UniswapV3Pool",
+                  "label": "feeGrowthOutside1X128",
+                  "offset": 0,
+                  "slot": "2",
+                  "type": "t_uint256"
+                },
+                {
+                  "astId": 5605,
+                  "contract": "UniswapV3Pool.sol:UniswapV3Pool",
+                  "label": "tickCumulativeOutside",
+                  "offset": 0,
+                  "slot": "3",
+                  "type": "t_int56"
+                },
+                {
+                  "astId": 5607,
+                  "contract": "UniswapV3Pool.sol:UniswapV3Pool",
+                  "label": "secondsPerLiquidityOutsideX128",
+                  "offset": 7,
+                  "slot": "3",
+                  "type": "t_uint160"
+                },
+                {
+                  "astId": 5609,
+                  "contract": "UniswapV3Pool.sol:UniswapV3Pool",
+                  "label": "secondsOutside",
+                  "offset": 27,
+                  "slot": "3",
+                  "type": "t_uint32"
+                },
+                {
+                  "astId": 5611,
+                  "contract": "UniswapV3Pool.sol:UniswapV3Pool",
+                  "label": "initialized",
+                  "offset": 31,
+                  "slot": "3",
+                  "type": "t_bool"
                 }
               ],
-              "numberOfBytes": "96"
+              "numberOfBytes": "128"
             },
-            "t_struct(MyStructSmall)22_storage": {
+            "t_struct(Observation)3839_storage": {
               "encoding": "inplace",
-              "label": "struct MyContract.MyStructSmall",
+              "label": "struct Oracle.Observation",
               "members": [
                 {
-                  "astId": 19,
-                  "contract": "contract.sol:MyContract",
-                  "label": "smallInt1",
+                  "astId": 3832,
+                  "contract": "UniswapV3Pool.sol:UniswapV3Pool",
+                  "label": "blockTimestamp",
                   "offset": 0,
                   "slot": "0",
                   "type": "t_uint32"
                 },
                 {
-                  "astId": 21,
-                  "contract": "contract.sol:MyContract",
-                  "label": "smallInt2",
+                  "astId": 3834,
+                  "contract": "UniswapV3Pool.sol:UniswapV3Pool",
+                  "label": "tickCumulative",
                   "offset": 4,
                   "slot": "0",
-                  "type": "t_uint32"
+                  "type": "t_int56"
+                },
+                {
+                  "astId": 3836,
+                  "contract": "UniswapV3Pool.sol:UniswapV3Pool",
+                  "label": "secondsPerLiquidityCumulativeX128",
+                  "offset": 11,
+                  "slot": "0",
+                  "type": "t_uint160"
+                },
+                {
+                  "astId": 3838,
+                  "contract": "UniswapV3Pool.sol:UniswapV3Pool",
+                  "label": "initialized",
+                  "offset": 31,
+                  "slot": "0",
+                  "type": "t_bool"
                 }
               ],
               "numberOfBytes": "32"
             },
-            "t_uint112": {
+            "t_struct(ProtocolFees)157_storage": {
               "encoding": "inplace",
-              "label": "uint112",
-              "numberOfBytes": "14"
+              "label": "struct UniswapV3Pool.ProtocolFees",
+              "members": [
+                {
+                  "astId": 154,
+                  "contract": "UniswapV3Pool.sol:UniswapV3Pool",
+                  "label": "token0",
+                  "offset": 0,
+                  "slot": "0",
+                  "type": "t_uint128"
+                },
+                {
+                  "astId": 156,
+                  "contract": "UniswapV3Pool.sol:UniswapV3Pool",
+                  "label": "token1",
+                  "offset": 16,
+                  "slot": "0",
+                  "type": "t_uint128"
+                }
+              ],
+              "numberOfBytes": "32"
+            },
+            "t_struct(Slot0)140_storage": {
+              "encoding": "inplace",
+              "label": "struct UniswapV3Pool.Slot0",
+              "members": [
+                {
+                  "astId": 127,
+                  "contract": "UniswapV3Pool.sol:UniswapV3Pool",
+                  "label": "sqrtPriceX96",
+                  "offset": 0,
+                  "slot": "0",
+                  "type": "t_uint160"
+                },
+                {
+                  "astId": 129,
+                  "contract": "UniswapV3Pool.sol:UniswapV3Pool",
+                  "label": "tick",
+                  "offset": 20,
+                  "slot": "0",
+                  "type": "t_int24"
+                },
+                {
+                  "astId": 131,
+                  "contract": "UniswapV3Pool.sol:UniswapV3Pool",
+                  "label": "observationIndex",
+                  "offset": 23,
+                  "slot": "0",
+                  "type": "t_uint16"
+                },
+                {
+                  "astId": 133,
+                  "contract": "UniswapV3Pool.sol:UniswapV3Pool",
+                  "label": "observationCardinality",
+                  "offset": 25,
+                  "slot": "0",
+                  "type": "t_uint16"
+                },
+                {
+                  "astId": 135,
+                  "contract": "UniswapV3Pool.sol:UniswapV3Pool",
+                  "label": "observationCardinalityNext",
+                  "offset": 27,
+                  "slot": "0",
+                  "type": "t_uint16"
+                },
+                {
+                  "astId": 137,
+                  "contract": "UniswapV3Pool.sol:UniswapV3Pool",
+                  "label": "feeProtocol",
+                  "offset": 29,
+                  "slot": "0",
+                  "type": "t_uint8"
+                },
+                {
+                  "astId": 139,
+                  "contract": "UniswapV3Pool.sol:UniswapV3Pool",
+                  "label": "unlocked",
+                  "offset": 30,
+                  "slot": "0",
+                  "type": "t_bool"
+                }
+              ],
+              "numberOfBytes": "32"
+            },
+            "t_uint128": {
+              "encoding": "inplace",
+              "label": "uint128",
+              "numberOfBytes": "16"
+            },
+            "t_uint16": {
+              "encoding": "inplace",
+              "label": "uint16",
+              "numberOfBytes": "2"
+            },
+            "t_uint160": {
+              "encoding": "inplace",
+              "label": "uint160",
+              "numberOfBytes": "20"
             },
             "t_uint256": {
               "encoding": "inplace",
@@ -280,39 +419,333 @@
           }
         }
       }
+    },
+    "interfaces/IERC20Minimal.sol": {
+      "IERC20Minimal": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      }
+    },
+    "interfaces/IUniswapV3Factory.sol": {
+      "IUniswapV3Factory": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      }
+    },
+    "interfaces/IUniswapV3Pool.sol": {
+      "IUniswapV3Pool": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      }
+    },
+    "interfaces/IUniswapV3PoolDeployer.sol": {
+      "IUniswapV3PoolDeployer": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      }
+    },
+    "interfaces/callback/IUniswapV3FlashCallback.sol": {
+      "IUniswapV3FlashCallback": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      }
+    },
+    "interfaces/callback/IUniswapV3MintCallback.sol": {
+      "IUniswapV3MintCallback": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      }
+    },
+    "interfaces/callback/IUniswapV3SwapCallback.sol": {
+      "IUniswapV3SwapCallback": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      }
+    },
+    "interfaces/pool/IUniswapV3PoolActions.sol": {
+      "IUniswapV3PoolActions": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      }
+    },
+    "interfaces/pool/IUniswapV3PoolDerivedState.sol": {
+      "IUniswapV3PoolDerivedState": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      }
+    },
+    "interfaces/pool/IUniswapV3PoolEvents.sol": {
+      "IUniswapV3PoolEvents": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      }
+    },
+    "interfaces/pool/IUniswapV3PoolImmutables.sol": {
+      "IUniswapV3PoolImmutables": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      }
+    },
+    "interfaces/pool/IUniswapV3PoolOwnerActions.sol": {
+      "IUniswapV3PoolOwnerActions": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      }
+    },
+    "interfaces/pool/IUniswapV3PoolState.sol": {
+      "IUniswapV3PoolState": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      }
+    },
+    "libraries/BitMath.sol": {
+      "BitMath": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      }
+    },
+    "libraries/FixedPoint128.sol": {
+      "FixedPoint128": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      }
+    },
+    "libraries/FixedPoint96.sol": {
+      "FixedPoint96": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      }
+    },
+    "libraries/FullMath.sol": {
+      "FullMath": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      }
+    },
+    "libraries/LiquidityMath.sol": {
+      "LiquidityMath": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      }
+    },
+    "libraries/LowGasSafeMath.sol": {
+      "LowGasSafeMath": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      }
+    },
+    "libraries/Oracle.sol": {
+      "Oracle": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      }
+    },
+    "libraries/Position.sol": {
+      "Position": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      }
+    },
+    "libraries/SafeCast.sol": {
+      "SafeCast": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      }
+    },
+    "libraries/SqrtPriceMath.sol": {
+      "SqrtPriceMath": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      }
+    },
+    "libraries/SwapMath.sol": {
+      "SwapMath": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      }
+    },
+    "libraries/Tick.sol": {
+      "Tick": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      }
+    },
+    "libraries/TickBitmap.sol": {
+      "TickBitmap": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      }
+    },
+    "libraries/TickMath.sol": {
+      "TickMath": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      }
+    },
+    "libraries/TransferHelper.sol": {
+      "TransferHelper": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      }
+    },
+    "libraries/UnsafeMath.sol": {
+      "UnsafeMath": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      }
     }
   },
-  "errors": [
-    {
-      "component": "general",
-      "errorCode": "1878",
-      "formattedMessage": "Warning: SPDX license identifier not provided in source file. Before publishing, consider adding a comment containing \"SPDX-License-Identifier: <SPDX-License>\" to each source file. Use \"SPDX-License-Identifier: UNLICENSED\" for non-open-source code. Please see https://spdx.org for more information.\n--> contract.sol\n\n",
-      "message": "SPDX license identifier not provided in source file. Before publishing, consider adding a comment containing \"SPDX-License-Identifier: <SPDX-License>\" to each source file. Use \"SPDX-License-Identifier: UNLICENSED\" for non-open-source code. Please see https://spdx.org for more information.",
-      "severity": "warning",
-      "sourceLocation": {
-        "end": -1,
-        "file": "contract.sol",
-        "start": -1
-      },
-      "type": "Warning"
-    },
-    {
-      "component": "general",
-      "errorCode": "3420",
-      "formattedMessage": "Warning: Source file does not specify required compiler version! Consider adding \"pragma solidity ^0.8.26;\"\n--> contract.sol\n\n",
-      "message": "Source file does not specify required compiler version! Consider adding \"pragma solidity ^0.8.26;\"",
-      "severity": "warning",
-      "sourceLocation": {
-        "end": -1,
-        "file": "contract.sol",
-        "start": -1
-      },
-      "type": "Warning"
-    }
-  ],
   "sources": {
-    "contract.sol": {
+    "NoDelegateCall.sol": {
       "id": 0
+    },
+    "UniswapV3Pool.sol": {
+      "id": 1
+    },
+    "interfaces/IERC20Minimal.sol": {
+      "id": 2
+    },
+    "interfaces/IUniswapV3Factory.sol": {
+      "id": 3
+    },
+    "interfaces/IUniswapV3Pool.sol": {
+      "id": 4
+    },
+    "interfaces/IUniswapV3PoolDeployer.sol": {
+      "id": 5
+    },
+    "interfaces/callback/IUniswapV3FlashCallback.sol": {
+      "id": 6
+    },
+    "interfaces/callback/IUniswapV3MintCallback.sol": {
+      "id": 7
+    },
+    "interfaces/callback/IUniswapV3SwapCallback.sol": {
+      "id": 8
+    },
+    "interfaces/pool/IUniswapV3PoolActions.sol": {
+      "id": 9
+    },
+    "interfaces/pool/IUniswapV3PoolDerivedState.sol": {
+      "id": 10
+    },
+    "interfaces/pool/IUniswapV3PoolEvents.sol": {
+      "id": 11
+    },
+    "interfaces/pool/IUniswapV3PoolImmutables.sol": {
+      "id": 12
+    },
+    "interfaces/pool/IUniswapV3PoolOwnerActions.sol": {
+      "id": 13
+    },
+    "interfaces/pool/IUniswapV3PoolState.sol": {
+      "id": 14
+    },
+    "libraries/BitMath.sol": {
+      "id": 15
+    },
+    "libraries/FixedPoint128.sol": {
+      "id": 16
+    },
+    "libraries/FixedPoint96.sol": {
+      "id": 17
+    },
+    "libraries/FullMath.sol": {
+      "id": 18
+    },
+    "libraries/LiquidityMath.sol": {
+      "id": 19
+    },
+    "libraries/LowGasSafeMath.sol": {
+      "id": 20
+    },
+    "libraries/Oracle.sol": {
+      "id": 21
+    },
+    "libraries/Position.sol": {
+      "id": 22
+    },
+    "libraries/SafeCast.sol": {
+      "id": 23
+    },
+    "libraries/SqrtPriceMath.sol": {
+      "id": 24
+    },
+    "libraries/SwapMath.sol": {
+      "id": 25
+    },
+    "libraries/Tick.sol": {
+      "id": 26
+    },
+    "libraries/TickBitmap.sol": {
+      "id": 27
+    },
+    "libraries/TickMath.sol": {
+      "id": 28
+    },
+    "libraries/TransferHelper.sol": {
+      "id": 29
+    },
+    "libraries/UnsafeMath.sol": {
+      "id": 30
     }
   }
 }
