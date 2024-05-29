@@ -1,4 +1,5 @@
 import json
+import os
 from typing import Dict
 
 import solcx
@@ -22,13 +23,14 @@ def get_solc_input_json(contract_sources: Dict[str, str]):
     return res
 
 
-contract_path = '../example/contract.sol'
+contracts_dir = '../example/contracts/simple'
+contract_relpath = 'contract.sol'
 output_path = '../example/solc_output.json'
 solc_version = "v0.8.26"
-with open(contract_path) as fp:
+with open(os.path.join(contracts_dir, contract_relpath)) as fp:
     contract_source_content = fp.read()
 contract_sources = {
-    contract_path: contract_source_content
+    contract_relpath: contract_source_content
 }
 solcx.install_solc(version=solc_version, show_progress=True)
 results = solcx.compile_standard(
@@ -36,4 +38,4 @@ results = solcx.compile_standard(
     solc_version=solc_version,
 )
 with open(output_path, 'w') as fp:
-    json.dump(results["contracts"][contract_path]["MyContract"]["storageLayout"], fp, indent=2)
+    json.dump(results["contracts"][contract_relpath]["MyContract"]["storageLayout"], fp, indent=2)
