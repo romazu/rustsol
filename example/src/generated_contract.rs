@@ -5,7 +5,7 @@ use rustsol::types::{
 };
 use primitive_types::U256;
 #[derive(Debug)]
-pub struct Contract {
+pub struct MyContract {
     __slot: U256,
     pub plainUint112: Primitive<14>,
     pub plainUint32: Primitive<4>,
@@ -39,7 +39,7 @@ pub struct MyContractMyStructSmall {
     pub smallInt1: Primitive<4>,
     pub smallInt2: Primitive<4>,
 }
-impl Contract {
+impl MyContract {
     pub fn new_from_position(slot: U256, offset: u8) -> Self {
         Self {
             __slot: slot,
@@ -65,7 +65,7 @@ impl Contract {
         (self.__slot, 0, 0)
     }
 }
-impl Position for Contract {
+impl Position for MyContract {
     fn from_position(slot: U256, offset: u8) -> Self {
         Self::new_from_position(slot, offset)
     }

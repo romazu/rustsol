@@ -50,7 +50,7 @@ pub enum MemberType {
 #[derive(Debug, Deserialize)]
 pub struct SolcOutput {
     // contracts: file_path: contract_name: storageLayout -> StorageLayout
-    pub contracts: HashMap<String, HashMap<String, SolcOutputContract>>
+    pub contracts: HashMap<String, HashMap<String, SolcOutputContract>>,
 
     // other fields
 }
@@ -58,14 +58,14 @@ pub struct SolcOutput {
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SolcOutputContract {
-    pub storage_layout: StorageLayout
+    pub storage_layout: StorageLayout,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct StorageLayout {
     #[serde(rename = "storage")]
     pub members: Vec<Member>,
-    pub types: HashMap<String, MemberType>,
+    pub types: Option<HashMap<String, MemberType>>,
 }
 
 impl<'de> Deserialize<'de> for MemberType {
@@ -167,7 +167,7 @@ impl NestedType {
         match self {
             NestedType::Primitive { number_of_bytes } => {
                 format!("Primitive<{}>", number_of_bytes.to_string())
-            },
+            }
             NestedType::Bytes => "Bytes".to_string(),
             NestedType::Mapping { key, value } => {
                 format!("Mapping<{}, {}>", key.to_string(), value.to_string())
@@ -198,8 +198,8 @@ fn get_struct_name(s: &str) -> String {
 }
 
 impl StorageLayout {
-    pub fn traverse(&self) -> Vec<NestedType> {
-        self.traverse_struct("Contract".into(), &self.members, 0)
+    pub fn traverse(&self, name: String) -> Vec<NestedType> {
+        self.traverse_struct(name, &self.members, 0)
     }
 
     fn traverse_struct(&self, label: String, members: &Vec<Member>, size: u64) -> Vec<NestedType> {
@@ -226,67 +226,65 @@ impl StorageLayout {
     }
 
     fn traverse_type(&self, type_name: &str) -> Option<NestedType> {
-        if let Some(ty) = self.types.get(type_name) {
-            match ty {
-                MemberType::Primitive { label, number_of_bytes } => Some(NestedType::Primitive { number_of_bytes: *number_of_bytes }),
-                MemberType::Bytes { .. } => Some(NestedType::Bytes),
-                MemberType::Mapping { key, value, .. } => {
-                    let key_type = match self.traverse_type(key) {
-                        Some(NestedType::Primitive { number_of_bytes }) => Some(NestedType::Primitive { number_of_bytes }),
-                        Some(NestedType::Bytes) => Some(NestedType::Bytes),
-                        _ => panic!("Key type must be Primitive or Bytes"),
-                    };
+        let type_def = self.types.as_ref().expect("Types map is None")
+            .get(type_name).expect("No type definition found for {}");
+        match type_def {
+            MemberType::Primitive { label, number_of_bytes } => Some(NestedType::Primitive { number_of_bytes: *number_of_bytes }),
+            MemberType::Bytes { .. } => Some(NestedType::Bytes),
+            MemberType::Mapping { key, value, .. } => {
+                let key_type = match self.traverse_type(key) {
+                    Some(NestedType::Primitive { number_of_bytes }) => Some(NestedType::Primitive { number_of_bytes }),
+                    Some(NestedType::Bytes) => Some(NestedType::Bytes),
+                    _ => panic!("Key type must be Primitive or Bytes"),
+                };
 
-                    let value_type = self.traverse_type(value);
+                let value_type = self.traverse_type(value);
 
-                    if let Some(valid_key_type) = key_type {
-                        if let Some(valid_value_type) = value_type {
-                            Some(NestedType::Mapping {
-                                key: Box::new(valid_key_type),
-                                value: Box::new(valid_value_type),
-                            })
-                        } else {
-                            // panic!("Value type could not be resolved for type: {}", value);
-                            println!("Value type could not be resolved for type: {}", value);
-                            None
-                        }
-                    } else {
-                        None
-                    }
-                }
-                MemberType::Struct { label, members, number_of_bytes } => {
-                    let struct_name = get_struct_name(label);
-                    let nested_types = self.traverse_struct(struct_name, members, *number_of_bytes);
-                    Some(nested_types[0].clone())
-                }
-                MemberType::DynamicArray { base, label, number_of_bytes } => {
-                    let value_type = self.traverse_type(base);
+                if let Some(valid_key_type) = key_type {
                     if let Some(valid_value_type) = value_type {
-                        Some(NestedType::DynamicArray {
+                        Some(NestedType::Mapping {
+                            key: Box::new(valid_key_type),
                             value: Box::new(valid_value_type),
                         })
                     } else {
                         // panic!("Value type could not be resolved for type: {}", value);
-                        println!("Value type could not be resolved for type: {}", base);
+                        println!("Value type could not be resolved for type: {}", value);
                         None
                     }
-                }
-                MemberType::StaticArray { base, label, number_of_bytes } => {
-                    let value_type = self.traverse_type(base);
-                    if let Some(valid_value_type) = value_type {
-                        Some(NestedType::StaticArray {
-                            value: Box::new(valid_value_type),
-                            number_of_bytes: *number_of_bytes,
-                        })
-                    } else {
-                        // panic!("Value type could not be resolved for type: {}", value);
-                        println!("Value type could not be resolved for type: {}", base);
-                        None
-                    }
+                } else {
+                    None
                 }
             }
-        } else {
-            None
+            MemberType::Struct { label, members, number_of_bytes } => {
+                let struct_name = get_struct_name(label);
+                let nested_types = self.traverse_struct(struct_name, members, *number_of_bytes);
+                Some(nested_types[0].clone())
+            }
+            MemberType::DynamicArray { base, label, number_of_bytes } => {
+                let value_type = self.traverse_type(base);
+                if let Some(valid_value_type) = value_type {
+                    Some(NestedType::DynamicArray {
+                        value: Box::new(valid_value_type),
+                    })
+                } else {
+                    // panic!("Value type could not be resolved for type: {}", value);
+                    println!("Value type could not be resolved for type: {}", base);
+                    None
+                }
+            }
+            MemberType::StaticArray { base, label, number_of_bytes } => {
+                let value_type = self.traverse_type(base);
+                if let Some(valid_value_type) = value_type {
+                    Some(NestedType::StaticArray {
+                        value: Box::new(valid_value_type),
+                        number_of_bytes: *number_of_bytes,
+                    })
+                } else {
+                    // panic!("Value type could not be resolved for type: {}", value);
+                    println!("Value type could not be resolved for type: {}", base);
+                    None
+                }
+            }
         }
     }
 

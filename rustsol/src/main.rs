@@ -23,7 +23,7 @@ fn main() {
     let solc_output: layout::SolcOutput = serde_json::from_str(&storage_layout_json_string).expect("JSON was not well-formatted");
     let storage_layout = &solc_output.contracts[contract_path][contract_name].storage_layout;
 
-    let nested_types = storage_layout.traverse();
+    let nested_types = storage_layout.traverse(contract_name.into());
     let generated_tokens = generate::generate_structs(nested_types);
 
     let syntax_tree = syn::parse_file(&generated_tokens.to_string()).expect("Failed to parse TokenStream");

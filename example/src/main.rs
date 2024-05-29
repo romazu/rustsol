@@ -8,7 +8,7 @@ mod generated_contract;
 
 
 fn main() {
-    let contract = generated_contract::Contract::new_from_position(U256::zero(), 0);
+    let contract = generated_contract::MyContract::new_from_position(U256::zero(), 0);
 
     // Example contract
     println!("{:?}", contract.myNestedMapping.get_item(0u64));
