@@ -1,277 +1,318 @@
 {
-  "storage": [
+  "contracts": {
+    "contract.sol": {
+      "MyContract": {
+        "storageLayout": {
+          "storage": [
+            {
+              "astId": 2,
+              "contract": "contract.sol:MyContract",
+              "label": "plainUint112",
+              "offset": 0,
+              "slot": "0",
+              "type": "t_uint112"
+            },
+            {
+              "astId": 4,
+              "contract": "contract.sol:MyContract",
+              "label": "plainUint32",
+              "offset": 14,
+              "slot": "0",
+              "type": "t_uint32"
+            },
+            {
+              "astId": 6,
+              "contract": "contract.sol:MyContract",
+              "label": "plainString",
+              "offset": 0,
+              "slot": "1",
+              "type": "t_string_storage"
+            },
+            {
+              "astId": 25,
+              "contract": "contract.sol:MyContract",
+              "label": "myStructNested",
+              "offset": 0,
+              "slot": "2",
+              "type": "t_struct(MyStructNested)17_storage"
+            },
+            {
+              "astId": 29,
+              "contract": "contract.sol:MyContract",
+              "label": "staticArray",
+              "offset": 0,
+              "slot": "5",
+              "type": "t_array(t_uint112)10_storage"
+            },
+            {
+              "astId": 34,
+              "contract": "contract.sol:MyContract",
+              "label": "staticArrayLarge",
+              "offset": 0,
+              "slot": "10",
+              "type": "t_array(t_struct(MyStruct)11_storage)2_storage"
+            },
+            {
+              "astId": 40,
+              "contract": "contract.sol:MyContract",
+              "label": "staticArrayNestedSmall",
+              "offset": 0,
+              "slot": "14",
+              "type": "t_array(t_array(t_uint8)2_storage)4_storage"
+            },
+            {
+              "astId": 43,
+              "contract": "contract.sol:MyContract",
+              "label": "dynamicArray",
+              "offset": 0,
+              "slot": "18",
+              "type": "t_array(t_uint256)dyn_storage"
+            },
+            {
+              "astId": 47,
+              "contract": "contract.sol:MyContract",
+              "label": "dynamicArrayStruct",
+              "offset": 0,
+              "slot": "19",
+              "type": "t_array(t_struct(MyStructNested)17_storage)dyn_storage"
+            },
+            {
+              "astId": 51,
+              "contract": "contract.sol:MyContract",
+              "label": "dynamicArraySmall",
+              "offset": 0,
+              "slot": "20",
+              "type": "t_array(t_struct(MyStructSmall)22_storage)dyn_storage"
+            },
+            {
+              "astId": 55,
+              "contract": "contract.sol:MyContract",
+              "label": "myMapping1",
+              "offset": 0,
+              "slot": "21",
+              "type": "t_mapping(t_uint256,t_uint256)"
+            },
+            {
+              "astId": 59,
+              "contract": "contract.sol:MyContract",
+              "label": "myMapping2",
+              "offset": 0,
+              "slot": "22",
+              "type": "t_mapping(t_string_memory_ptr,t_uint256)"
+            },
+            {
+              "astId": 65,
+              "contract": "contract.sol:MyContract",
+              "label": "myNestedMapping",
+              "offset": 0,
+              "slot": "23",
+              "type": "t_mapping(t_uint256,t_mapping(t_uint256,t_uint256))"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "encoding": "inplace",
+              "label": "address",
+              "numberOfBytes": "20"
+            },
+            "t_array(t_array(t_uint8)2_storage)4_storage": {
+              "base": "t_array(t_uint8)2_storage",
+              "encoding": "inplace",
+              "label": "uint8[2][4]",
+              "numberOfBytes": "128"
+            },
+            "t_array(t_struct(MyStruct)11_storage)2_storage": {
+              "base": "t_struct(MyStruct)11_storage",
+              "encoding": "inplace",
+              "label": "struct MyContract.MyStruct[2]",
+              "numberOfBytes": "128"
+            },
+            "t_array(t_struct(MyStructNested)17_storage)dyn_storage": {
+              "base": "t_struct(MyStructNested)17_storage",
+              "encoding": "dynamic_array",
+              "label": "struct MyContract.MyStructNested[]",
+              "numberOfBytes": "32"
+            },
+            "t_array(t_struct(MyStructSmall)22_storage)dyn_storage": {
+              "base": "t_struct(MyStructSmall)22_storage",
+              "encoding": "dynamic_array",
+              "label": "struct MyContract.MyStructSmall[]",
+              "numberOfBytes": "32"
+            },
+            "t_array(t_uint112)10_storage": {
+              "base": "t_uint112",
+              "encoding": "inplace",
+              "label": "uint112[10]",
+              "numberOfBytes": "160"
+            },
+            "t_array(t_uint256)dyn_storage": {
+              "base": "t_uint256",
+              "encoding": "dynamic_array",
+              "label": "uint256[]",
+              "numberOfBytes": "32"
+            },
+            "t_array(t_uint8)2_storage": {
+              "base": "t_uint8",
+              "encoding": "inplace",
+              "label": "uint8[2]",
+              "numberOfBytes": "32"
+            },
+            "t_mapping(t_string_memory_ptr,t_uint256)": {
+              "encoding": "mapping",
+              "key": "t_string_memory_ptr",
+              "label": "mapping(string => uint256)",
+              "numberOfBytes": "32",
+              "value": "t_uint256"
+            },
+            "t_mapping(t_uint256,t_mapping(t_uint256,t_uint256))": {
+              "encoding": "mapping",
+              "key": "t_uint256",
+              "label": "mapping(uint256 => mapping(uint256 => uint256))",
+              "numberOfBytes": "32",
+              "value": "t_mapping(t_uint256,t_uint256)"
+            },
+            "t_mapping(t_uint256,t_uint256)": {
+              "encoding": "mapping",
+              "key": "t_uint256",
+              "label": "mapping(uint256 => uint256)",
+              "numberOfBytes": "32",
+              "value": "t_uint256"
+            },
+            "t_string_memory_ptr": {
+              "encoding": "bytes",
+              "label": "string",
+              "numberOfBytes": "32"
+            },
+            "t_string_storage": {
+              "encoding": "bytes",
+              "label": "string",
+              "numberOfBytes": "32"
+            },
+            "t_struct(MyStruct)11_storage": {
+              "encoding": "inplace",
+              "label": "struct MyContract.MyStruct",
+              "members": [
+                {
+                  "astId": 8,
+                  "contract": "contract.sol:MyContract",
+                  "label": "myAddress",
+                  "offset": 0,
+                  "slot": "0",
+                  "type": "t_address"
+                },
+                {
+                  "astId": 10,
+                  "contract": "contract.sol:MyContract",
+                  "label": "myUint",
+                  "offset": 0,
+                  "slot": "1",
+                  "type": "t_uint256"
+                }
+              ],
+              "numberOfBytes": "64"
+            },
+            "t_struct(MyStructNested)17_storage": {
+              "encoding": "inplace",
+              "label": "struct MyContract.MyStructNested",
+              "members": [
+                {
+                  "astId": 13,
+                  "contract": "contract.sol:MyContract",
+                  "label": "myAddress",
+                  "offset": 0,
+                  "slot": "0",
+                  "type": "t_address"
+                },
+                {
+                  "astId": 16,
+                  "contract": "contract.sol:MyContract",
+                  "label": "myStruct",
+                  "offset": 0,
+                  "slot": "1",
+                  "type": "t_struct(MyStruct)11_storage"
+                }
+              ],
+              "numberOfBytes": "96"
+            },
+            "t_struct(MyStructSmall)22_storage": {
+              "encoding": "inplace",
+              "label": "struct MyContract.MyStructSmall",
+              "members": [
+                {
+                  "astId": 19,
+                  "contract": "contract.sol:MyContract",
+                  "label": "smallInt1",
+                  "offset": 0,
+                  "slot": "0",
+                  "type": "t_uint32"
+                },
+                {
+                  "astId": 21,
+                  "contract": "contract.sol:MyContract",
+                  "label": "smallInt2",
+                  "offset": 4,
+                  "slot": "0",
+                  "type": "t_uint32"
+                }
+              ],
+              "numberOfBytes": "32"
+            },
+            "t_uint112": {
+              "encoding": "inplace",
+              "label": "uint112",
+              "numberOfBytes": "14"
+            },
+            "t_uint256": {
+              "encoding": "inplace",
+              "label": "uint256",
+              "numberOfBytes": "32"
+            },
+            "t_uint32": {
+              "encoding": "inplace",
+              "label": "uint32",
+              "numberOfBytes": "4"
+            },
+            "t_uint8": {
+              "encoding": "inplace",
+              "label": "uint8",
+              "numberOfBytes": "1"
+            }
+          }
+        }
+      }
+    }
+  },
+  "errors": [
     {
-      "astId": 2,
-      "contract": "contract.sol:MyContract",
-      "label": "plainUint112",
-      "offset": 0,
-      "slot": "0",
-      "type": "t_uint112"
+      "component": "general",
+      "errorCode": "1878",
+      "formattedMessage": "Warning: SPDX license identifier not provided in source file. Before publishing, consider adding a comment containing \"SPDX-License-Identifier: <SPDX-License>\" to each source file. Use \"SPDX-License-Identifier: UNLICENSED\" for non-open-source code. Please see https://spdx.org for more information.\n--> contract.sol\n\n",
+      "message": "SPDX license identifier not provided in source file. Before publishing, consider adding a comment containing \"SPDX-License-Identifier: <SPDX-License>\" to each source file. Use \"SPDX-License-Identifier: UNLICENSED\" for non-open-source code. Please see https://spdx.org for more information.",
+      "severity": "warning",
+      "sourceLocation": {
+        "end": -1,
+        "file": "contract.sol",
+        "start": -1
+      },
+      "type": "Warning"
     },
     {
-      "astId": 4,
-      "contract": "contract.sol:MyContract",
-      "label": "plainUint32",
-      "offset": 14,
-      "slot": "0",
-      "type": "t_uint32"
-    },
-    {
-      "astId": 6,
-      "contract": "contract.sol:MyContract",
-      "label": "plainString",
-      "offset": 0,
-      "slot": "1",
-      "type": "t_string_storage"
-    },
-    {
-      "astId": 25,
-      "contract": "contract.sol:MyContract",
-      "label": "myStructNested",
-      "offset": 0,
-      "slot": "2",
-      "type": "t_struct(MyStructNested)17_storage"
-    },
-    {
-      "astId": 29,
-      "contract": "contract.sol:MyContract",
-      "label": "staticArray",
-      "offset": 0,
-      "slot": "5",
-      "type": "t_array(t_uint112)10_storage"
-    },
-    {
-      "astId": 34,
-      "contract": "contract.sol:MyContract",
-      "label": "staticArrayLarge",
-      "offset": 0,
-      "slot": "10",
-      "type": "t_array(t_struct(MyStruct)11_storage)2_storage"
-    },
-    {
-      "astId": 40,
-      "contract": "contract.sol:MyContract",
-      "label": "staticArrayNestedSmall",
-      "offset": 0,
-      "slot": "14",
-      "type": "t_array(t_array(t_uint8)2_storage)4_storage"
-    },
-    {
-      "astId": 43,
-      "contract": "contract.sol:MyContract",
-      "label": "dynamicArray",
-      "offset": 0,
-      "slot": "18",
-      "type": "t_array(t_uint256)dyn_storage"
-    },
-    {
-      "astId": 47,
-      "contract": "contract.sol:MyContract",
-      "label": "dynamicArrayStruct",
-      "offset": 0,
-      "slot": "19",
-      "type": "t_array(t_struct(MyStructNested)17_storage)dyn_storage"
-    },
-    {
-      "astId": 51,
-      "contract": "contract.sol:MyContract",
-      "label": "dynamicArraySmall",
-      "offset": 0,
-      "slot": "20",
-      "type": "t_array(t_struct(MyStructSmall)22_storage)dyn_storage"
-    },
-    {
-      "astId": 55,
-      "contract": "contract.sol:MyContract",
-      "label": "myMapping1",
-      "offset": 0,
-      "slot": "21",
-      "type": "t_mapping(t_uint256,t_uint256)"
-    },
-    {
-      "astId": 59,
-      "contract": "contract.sol:MyContract",
-      "label": "myMapping2",
-      "offset": 0,
-      "slot": "22",
-      "type": "t_mapping(t_string_memory_ptr,t_uint256)"
-    },
-    {
-      "astId": 65,
-      "contract": "contract.sol:MyContract",
-      "label": "myNestedMapping",
-      "offset": 0,
-      "slot": "23",
-      "type": "t_mapping(t_uint256,t_mapping(t_uint256,t_uint256))"
+      "component": "general",
+      "errorCode": "3420",
+      "formattedMessage": "Warning: Source file does not specify required compiler version! Consider adding \"pragma solidity ^0.8.26;\"\n--> contract.sol\n\n",
+      "message": "Source file does not specify required compiler version! Consider adding \"pragma solidity ^0.8.26;\"",
+      "severity": "warning",
+      "sourceLocation": {
+        "end": -1,
+        "file": "contract.sol",
+        "start": -1
+      },
+      "type": "Warning"
     }
   ],
-  "types": {
-    "t_address": {
-      "encoding": "inplace",
-      "label": "address",
-      "numberOfBytes": "20"
-    },
-    "t_array(t_array(t_uint8)2_storage)4_storage": {
-      "base": "t_array(t_uint8)2_storage",
-      "encoding": "inplace",
-      "label": "uint8[2][4]",
-      "numberOfBytes": "128"
-    },
-    "t_array(t_struct(MyStruct)11_storage)2_storage": {
-      "base": "t_struct(MyStruct)11_storage",
-      "encoding": "inplace",
-      "label": "struct MyContract.MyStruct[2]",
-      "numberOfBytes": "128"
-    },
-    "t_array(t_struct(MyStructNested)17_storage)dyn_storage": {
-      "base": "t_struct(MyStructNested)17_storage",
-      "encoding": "dynamic_array",
-      "label": "struct MyContract.MyStructNested[]",
-      "numberOfBytes": "32"
-    },
-    "t_array(t_struct(MyStructSmall)22_storage)dyn_storage": {
-      "base": "t_struct(MyStructSmall)22_storage",
-      "encoding": "dynamic_array",
-      "label": "struct MyContract.MyStructSmall[]",
-      "numberOfBytes": "32"
-    },
-    "t_array(t_uint112)10_storage": {
-      "base": "t_uint112",
-      "encoding": "inplace",
-      "label": "uint112[10]",
-      "numberOfBytes": "160"
-    },
-    "t_array(t_uint256)dyn_storage": {
-      "base": "t_uint256",
-      "encoding": "dynamic_array",
-      "label": "uint256[]",
-      "numberOfBytes": "32"
-    },
-    "t_array(t_uint8)2_storage": {
-      "base": "t_uint8",
-      "encoding": "inplace",
-      "label": "uint8[2]",
-      "numberOfBytes": "32"
-    },
-    "t_mapping(t_string_memory_ptr,t_uint256)": {
-      "encoding": "mapping",
-      "key": "t_string_memory_ptr",
-      "label": "mapping(string => uint256)",
-      "numberOfBytes": "32",
-      "value": "t_uint256"
-    },
-    "t_mapping(t_uint256,t_mapping(t_uint256,t_uint256))": {
-      "encoding": "mapping",
-      "key": "t_uint256",
-      "label": "mapping(uint256 => mapping(uint256 => uint256))",
-      "numberOfBytes": "32",
-      "value": "t_mapping(t_uint256,t_uint256)"
-    },
-    "t_mapping(t_uint256,t_uint256)": {
-      "encoding": "mapping",
-      "key": "t_uint256",
-      "label": "mapping(uint256 => uint256)",
-      "numberOfBytes": "32",
-      "value": "t_uint256"
-    },
-    "t_string_memory_ptr": {
-      "encoding": "bytes",
-      "label": "string",
-      "numberOfBytes": "32"
-    },
-    "t_string_storage": {
-      "encoding": "bytes",
-      "label": "string",
-      "numberOfBytes": "32"
-    },
-    "t_struct(MyStruct)11_storage": {
-      "encoding": "inplace",
-      "label": "struct MyContract.MyStruct",
-      "members": [
-        {
-          "astId": 8,
-          "contract": "contract.sol:MyContract",
-          "label": "myAddress",
-          "offset": 0,
-          "slot": "0",
-          "type": "t_address"
-        },
-        {
-          "astId": 10,
-          "contract": "contract.sol:MyContract",
-          "label": "myUint",
-          "offset": 0,
-          "slot": "1",
-          "type": "t_uint256"
-        }
-      ],
-      "numberOfBytes": "64"
-    },
-    "t_struct(MyStructNested)17_storage": {
-      "encoding": "inplace",
-      "label": "struct MyContract.MyStructNested",
-      "members": [
-        {
-          "astId": 13,
-          "contract": "contract.sol:MyContract",
-          "label": "myAddress",
-          "offset": 0,
-          "slot": "0",
-          "type": "t_address"
-        },
-        {
-          "astId": 16,
-          "contract": "contract.sol:MyContract",
-          "label": "myStruct",
-          "offset": 0,
-          "slot": "1",
-          "type": "t_struct(MyStruct)11_storage"
-        }
-      ],
-      "numberOfBytes": "96"
-    },
-    "t_struct(MyStructSmall)22_storage": {
-      "encoding": "inplace",
-      "label": "struct MyContract.MyStructSmall",
-      "members": [
-        {
-          "astId": 19,
-          "contract": "contract.sol:MyContract",
-          "label": "smallInt1",
-          "offset": 0,
-          "slot": "0",
-          "type": "t_uint32"
-        },
-        {
-          "astId": 21,
-          "contract": "contract.sol:MyContract",
-          "label": "smallInt2",
-          "offset": 4,
-          "slot": "0",
-          "type": "t_uint32"
-        }
-      ],
-      "numberOfBytes": "32"
-    },
-    "t_uint112": {
-      "encoding": "inplace",
-      "label": "uint112",
-      "numberOfBytes": "14"
-    },
-    "t_uint256": {
-      "encoding": "inplace",
-      "label": "uint256",
-      "numberOfBytes": "32"
-    },
-    "t_uint32": {
-      "encoding": "inplace",
-      "label": "uint32",
-      "numberOfBytes": "4"
-    },
-    "t_uint8": {
-      "encoding": "inplace",
-      "label": "uint8",
-      "numberOfBytes": "1"
+  "sources": {
+    "contract.sol": {
+      "id": 0
     }
   }
 }

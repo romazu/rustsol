@@ -48,6 +48,20 @@ pub enum MemberType {
 }
 
 #[derive(Debug, Deserialize)]
+pub struct SolcOutput {
+    // contracts: file_path: contract_name: storageLayout -> StorageLayout
+    pub contracts: HashMap<String, HashMap<String, SolcOutputContract>>
+
+    // other fields
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SolcOutputContract {
+    pub storage_layout: StorageLayout
+}
+
+#[derive(Debug, Deserialize)]
 pub struct StorageLayout {
     #[serde(rename = "storage")]
     pub members: Vec<Member>,

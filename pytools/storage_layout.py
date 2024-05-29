@@ -38,4 +38,4 @@ results = solcx.compile_standard(
     solc_version=solc_version,
 )
 with open(output_path, 'w') as fp:
-    json.dump(results["contracts"][contract_relpath]["MyContract"]["storageLayout"], fp, indent=2)
+    json.dump(results, fp, indent=2)

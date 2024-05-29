@@ -15,7 +15,8 @@ fn main() {
     let mut file = File::open("example/solc_output.json").expect("Cannot open storage layout json file");
     let mut storage_layout_json_string = String::new();
     file.read_to_string(&mut storage_layout_json_string).expect("Cannot read storage layout json file");
-    let storage_layout: layout::StorageLayout = serde_json::from_str(&storage_layout_json_string).expect("JSON was not well-formatted");
+    let solc_output: layout::SolcOutput = serde_json::from_str(&storage_layout_json_string).expect("JSON was not well-formatted");
+    let storage_layout = &solc_output.contracts["contract.sol"]["MyContract"].storage_layout;
     // println!("{:#?}", storage_layout);
     // println!("{:#?}", storage_layout.types["t_uint32"]);
     // println!("{:#?}", storage_layout.types["t_array(t_uint112)10_storage"]);
