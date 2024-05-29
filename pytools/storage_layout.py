@@ -4,9 +4,9 @@ from typing import Dict
 import solcx
 
 
-def get_solc_input_json(source_codes: Dict[str, str]):
+def get_solc_input_json(contract_sources: Dict[str, str]):
     sources_input = {}
-    for path, content in source_codes.items():
+    for path, content in contract_sources.items():
         sources_input[path] = {"content": content}
     res = {
         "language": "Solidity",
@@ -14,7 +14,7 @@ def get_solc_input_json(source_codes: Dict[str, str]):
         "settings": {
             "outputSelection": {
                 "*": {
-                    "*": "storageLayout"
+                    "*": ["storageLayout"]
                 }
             }
         }
@@ -24,12 +24,16 @@ def get_solc_input_json(source_codes: Dict[str, str]):
 
 contract_path = '../example/contract.sol'
 output_path = '../example/solc_output.json'
+solc_version = "v0.8.26"
 with open(contract_path) as fp:
-    contract_source = fp.read()
-result = solcx.compile_source(
-    contract_source,
-    output_values=["storage-layout"],
-    solc_version="v0.8.26",
+    contract_source_content = fp.read()
+contract_sources = {
+    contract_path: contract_source_content
+}
+solcx.install_solc(version=solc_version, show_progress=True)
+results = solcx.compile_standard(
+    input_data=get_solc_input_json(contract_sources),
+    solc_version=solc_version,
 )
 with open(output_path, 'w') as fp:
-    json.dump(result["<stdin>:MyContract"]["storage-layout"], fp, indent=2)
+    json.dump(results["contracts"][contract_path]["MyContract"]["storageLayout"], fp, indent=2)

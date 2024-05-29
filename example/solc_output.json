@@ -2,7 +2,7 @@
   "storage": [
     {
       "astId": 2,
-      "contract": "<stdin>:MyContract",
+      "contract": "../example/contract.sol:MyContract",
       "label": "plainUint112",
       "offset": 0,
       "slot": "0",
@@ -10,7 +10,7 @@
     },
     {
       "astId": 4,
-      "contract": "<stdin>:MyContract",
+      "contract": "../example/contract.sol:MyContract",
       "label": "plainUint32",
       "offset": 14,
       "slot": "0",
@@ -18,7 +18,7 @@
     },
     {
       "astId": 6,
-      "contract": "<stdin>:MyContract",
+      "contract": "../example/contract.sol:MyContract",
       "label": "plainString",
       "offset": 0,
       "slot": "1",
@@ -26,7 +26,7 @@
     },
     {
       "astId": 25,
-      "contract": "<stdin>:MyContract",
+      "contract": "../example/contract.sol:MyContract",
       "label": "myStructNested",
       "offset": 0,
       "slot": "2",
@@ -34,7 +34,7 @@
     },
     {
       "astId": 29,
-      "contract": "<stdin>:MyContract",
+      "contract": "../example/contract.sol:MyContract",
       "label": "staticArray",
       "offset": 0,
       "slot": "5",
@@ -42,7 +42,7 @@
     },
     {
       "astId": 34,
-      "contract": "<stdin>:MyContract",
+      "contract": "../example/contract.sol:MyContract",
       "label": "staticArrayLarge",
       "offset": 0,
       "slot": "10",
@@ -50,7 +50,7 @@
     },
     {
       "astId": 40,
-      "contract": "<stdin>:MyContract",
+      "contract": "../example/contract.sol:MyContract",
       "label": "staticArrayNestedSmall",
       "offset": 0,
       "slot": "14",
@@ -58,7 +58,7 @@
     },
     {
       "astId": 43,
-      "contract": "<stdin>:MyContract",
+      "contract": "../example/contract.sol:MyContract",
       "label": "dynamicArray",
       "offset": 0,
       "slot": "18",
@@ -66,7 +66,7 @@
     },
     {
       "astId": 47,
-      "contract": "<stdin>:MyContract",
+      "contract": "../example/contract.sol:MyContract",
       "label": "dynamicArrayStruct",
       "offset": 0,
       "slot": "19",
@@ -74,7 +74,7 @@
     },
     {
       "astId": 51,
-      "contract": "<stdin>:MyContract",
+      "contract": "../example/contract.sol:MyContract",
       "label": "dynamicArraySmall",
       "offset": 0,
       "slot": "20",
@@ -82,7 +82,7 @@
     },
     {
       "astId": 55,
-      "contract": "<stdin>:MyContract",
+      "contract": "../example/contract.sol:MyContract",
       "label": "myMapping1",
       "offset": 0,
       "slot": "21",
@@ -90,7 +90,7 @@
     },
     {
       "astId": 59,
-      "contract": "<stdin>:MyContract",
+      "contract": "../example/contract.sol:MyContract",
       "label": "myMapping2",
       "offset": 0,
       "slot": "22",
@@ -98,7 +98,7 @@
     },
     {
       "astId": 65,
-      "contract": "<stdin>:MyContract",
+      "contract": "../example/contract.sol:MyContract",
       "label": "myNestedMapping",
       "offset": 0,
       "slot": "23",
@@ -190,7 +190,7 @@
       "members": [
         {
           "astId": 8,
-          "contract": "<stdin>:MyContract",
+          "contract": "../example/contract.sol:MyContract",
           "label": "myAddress",
           "offset": 0,
           "slot": "0",
@@ -198,7 +198,7 @@
         },
         {
           "astId": 10,
-          "contract": "<stdin>:MyContract",
+          "contract": "../example/contract.sol:MyContract",
           "label": "myUint",
           "offset": 0,
           "slot": "1",
@@ -213,7 +213,7 @@
       "members": [
         {
           "astId": 13,
-          "contract": "<stdin>:MyContract",
+          "contract": "../example/contract.sol:MyContract",
           "label": "myAddress",
           "offset": 0,
           "slot": "0",
@@ -221,7 +221,7 @@
         },
         {
           "astId": 16,
-          "contract": "<stdin>:MyContract",
+          "contract": "../example/contract.sol:MyContract",
           "label": "myStruct",
           "offset": 0,
           "slot": "1",
@@ -236,7 +236,7 @@
       "members": [
         {
           "astId": 19,
-          "contract": "<stdin>:MyContract",
+          "contract": "../example/contract.sol:MyContract",
           "label": "smallInt1",
           "offset": 0,
           "slot": "0",
@@ -244,7 +244,7 @@
         },
         {
           "astId": 21,
-          "contract": "<stdin>:MyContract",
+          "contract": "../example/contract.sol:MyContract",
           "label": "smallInt2",
           "offset": 4,
           "slot": "0",
