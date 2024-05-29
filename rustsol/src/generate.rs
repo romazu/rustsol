@@ -1,8 +1,7 @@
 use proc_macro2::{Ident, TokenStream};
 use quote::{quote, ToTokens};
 use syn::{Item, parse_str};
-use crate::generate;
-use crate::layout::{MemberDef, NestedType};
+use crate::layout::NestedType;
 
 
 pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
@@ -74,7 +73,7 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
     }
 
     let global_attribites = quote! {
-        #![allow(non_snake_case, unused, dead_code, unused_imports)]
+        #![allow(unused_imports, non_snake_case, unused, dead_code)]
     };
     let imports_definition_items: Vec<Item> = vec![
         parse_str("use rustsol::types::{Primitive, Bytes, Mapping, DynamicArray, StaticArray, PrimitiveKey, BytesKey, Position};").expect("Failed to parse"),
@@ -114,7 +113,6 @@ fn get_nested_type(nested_type: &NestedType) -> TokenStream {
         }
         NestedType::Bytes => quote! { Bytes },
         NestedType::Mapping { key, value } => {
-            let key_type = get_nested_type(key);
             let value_type = get_nested_type(value);
             let key_type_for_mapping = match key.as_ref() {
                 NestedType::Primitive { .. } => quote! { PrimitiveKey },
@@ -124,7 +122,7 @@ fn get_nested_type(nested_type: &NestedType) -> TokenStream {
 
             quote! { Mapping<#key_type_for_mapping, #value_type> }
         }
-        NestedType::Struct { label, members, number_of_bytes } => {
+        NestedType::Struct { label, .. } => {
             let label_ident = syn::Ident::new(label, proc_macro2::Span::call_site());
             quote! { #label_ident }
         }

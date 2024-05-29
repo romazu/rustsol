@@ -15,6 +15,7 @@ macro_rules! impl_from_for {
         $(
             impl From<$type> for $target {
                 fn from(value: $type) -> Self {
+                    #[allow(unused_comparisons)]
                     let mut bytes = if value < 0 {
                         [0xFF; 32]
                     } else {

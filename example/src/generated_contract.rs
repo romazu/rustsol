@@ -1,4 +1,4 @@
-#![allow(non_snake_case, unused, dead_code, unused_imports)]
+#![allow(unused_imports, non_snake_case, unused, dead_code)]
 use rustsol::types::{
     Primitive, Bytes, Mapping, DynamicArray, StaticArray, PrimitiveKey, BytesKey,
     Position,

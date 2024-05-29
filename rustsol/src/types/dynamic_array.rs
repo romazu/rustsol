@@ -31,7 +31,7 @@ impl<Value: Position> DynamicArray<Value> {
 }
 
 impl<Value> Position for DynamicArray<Value> {
-    fn from_position(slot: U256, offset: u8) -> Self {
+    fn from_position(slot: U256, _: u8) -> Self {
         DynamicArray::<Value> { __slot: slot, __marker: PhantomData }
     }
 

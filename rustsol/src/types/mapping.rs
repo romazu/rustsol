@@ -33,7 +33,7 @@ impl<KeyType, Value> Mapping<KeyType, Value> {
 }
 
 impl<KeyType, Value> Position for Mapping<KeyType, Value> {
-    fn from_position(slot: U256, offset: u8) -> Self {
+    fn from_position(slot: U256, _: u8) -> Self {
         Mapping::<KeyType, Value> { __slot: slot, __marker: PhantomData }
     }
 

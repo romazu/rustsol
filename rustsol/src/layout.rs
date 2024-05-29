@@ -172,7 +172,7 @@ impl NestedType {
             NestedType::Mapping { key, value } => {
                 format!("Mapping<{}, {}>", key.to_string(), value.to_string())
             }
-            NestedType::Struct { label, members, number_of_bytes } => {
+            NestedType::Struct { label, .. } => {
                 format!("Struct<{}>", label)
             }
             NestedType::DynamicArray { value } => {
@@ -229,7 +229,7 @@ impl StorageLayout {
         let type_def = self.types.as_ref().expect("Types map is None")
             .get(type_name).expect("No type definition found for {}");
         match type_def {
-            MemberType::Primitive { label, number_of_bytes } => Some(NestedType::Primitive { number_of_bytes: *number_of_bytes }),
+            MemberType::Primitive { label: _, number_of_bytes } => Some(NestedType::Primitive { number_of_bytes: *number_of_bytes }),
             MemberType::Bytes { .. } => Some(NestedType::Bytes),
             MemberType::Mapping { key, value, .. } => {
                 let key_type = match self.traverse_type(key) {
@@ -247,12 +247,10 @@ impl StorageLayout {
                             value: Box::new(valid_value_type),
                         })
                     } else {
-                        // panic!("Value type could not be resolved for type: {}", value);
-                        println!("Value type could not be resolved for type: {}", value);
-                        None
+                        panic!("Mapping value type could not be resolved for type: {}", value);
                     }
                 } else {
-                    None
+                    panic!("Key type could not be resolved for type: {}", value);
                 }
             }
             MemberType::Struct { label, members, number_of_bytes } => {
@@ -260,7 +258,7 @@ impl StorageLayout {
                 let nested_types = self.traverse_struct(struct_name, members, *number_of_bytes);
                 Some(nested_types[0].clone())
             }
-            MemberType::DynamicArray { base, label, number_of_bytes } => {
+            MemberType::DynamicArray { base, .. } => {
                 let value_type = self.traverse_type(base);
                 if let Some(valid_value_type) = value_type {
                     Some(NestedType::DynamicArray {
@@ -272,7 +270,7 @@ impl StorageLayout {
                     None
                 }
             }
-            MemberType::StaticArray { base, label, number_of_bytes } => {
+            MemberType::StaticArray { base, label: _, number_of_bytes } => {
                 let value_type = self.traverse_type(base);
                 if let Some(valid_value_type) = value_type {
                     Some(NestedType::StaticArray {
@@ -306,7 +304,7 @@ impl StorageLayout {
                 self.collect_unique_types(key, nested_types, unique_representations);
                 self.collect_unique_types(value, nested_types, unique_representations);
             }
-            NestedType::Struct { label, members, number_of_bytes } => {
+            NestedType::Struct { label: _, members, .. } => {
                 for member in members {
                     self.collect_unique_types(&member.type_def, nested_types, unique_representations);
                 }
@@ -314,7 +312,7 @@ impl StorageLayout {
             NestedType::DynamicArray { value } => {
                 self.collect_unique_types(value, nested_types, unique_representations);
             }
-            NestedType::StaticArray { value, number_of_bytes } => {
+            NestedType::StaticArray { value, .. } => {
                 self.collect_unique_types(value, nested_types, unique_representations);
             }
         }

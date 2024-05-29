@@ -26,7 +26,7 @@ impl Bytes {
 }
 
 impl Position for Bytes {
-    fn from_position(slot: U256, offset: u8) -> Self {
+    fn from_position(slot: U256, _: u8) -> Self {
         Bytes { __slot: slot }
     }
 

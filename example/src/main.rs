@@ -1,7 +1,6 @@
+#[allow(unused_imports)]
 use std::str::FromStr;
 use primitive_types::U256;
-use rustsol::utils::u256_to_bytes32;
-use rustsol::types::Position;
 
 mod generated_contract;
 
@@ -74,8 +73,6 @@ fn main() {
     // TODO: let contract = ...
     // let address = U256::from_str("0x51A18333479472D1250Ee5063910079fc0B9b801").unwrap();
     // println!("{:#x}", address);
-    // println!("{:#?}", address);
-    // println!("{:?}", u256_to_bytes32(address));
     // println!("marketCreationData {:?}", contract.marketCreationData.get_item(address).position());
     // println!("extraInfo {:?}, {:?}", contract.marketCreationData.get_item(address).extraInfo.position(), contract.marketCreationData.get_item(address).extraInfo.storage());
 }

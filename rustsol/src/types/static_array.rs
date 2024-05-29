@@ -42,7 +42,7 @@ impl<const SIZE: u64, Value: Position> StaticArray<SIZE, Value> {
 }
 
 impl<const SIZE: u64, Value> Position for StaticArray<SIZE, Value> {
-    fn from_position(slot: U256, offset: u8) -> Self {
+    fn from_position(slot: U256, _: u8) -> Self {
         StaticArray::<SIZE, Value> { __slot: slot, __marker: PhantomData }
     }
 
