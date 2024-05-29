@@ -3,4 +3,5 @@ members = [
     "rustsol",
     "example",
 ]
+default-members = ["rustsol"]
 resolver = "2"

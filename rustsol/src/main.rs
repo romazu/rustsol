@@ -1,16 +1,29 @@
 use rustsol;
+use clap::Parser;
+
+/// Command line arguments
+#[derive(Parser)]
+struct Args {
+    /// Path to the storage layout JSON file
+    storage_layout_path: String,
+
+    /// Contract path string in storage layout JSON
+    contract_path: String,
+
+    /// Name of the contract in storage layout JSON
+    contract_name: String,
+
+    /// Path to the generated contract file
+    output_path: String,
+}
 
 fn main() {
-    let storage_layout_path = "example/solc_output.json";
-    let generated_file_path = "example/src/generated_contract.rs";
+    let args = Args::parse();
 
-    // let (contract_path, contract_name) = ("contract.sol", "MyContract");
-    let (contract_path, contract_name) = ("UniswapV3Pool.sol", "UniswapV3Pool");
-
-    rustsol::generate(
-        storage_layout_path.into(),
-        generated_file_path.into(),
-        contract_path.into(),
-        contract_name.into(),
+    rustsol::generate_storage_bindings(
+        args.storage_layout_path.into(),
+        args.contract_path.into(),
+        args.contract_name.into(),
+        args.output_path.into(),
     );
 }

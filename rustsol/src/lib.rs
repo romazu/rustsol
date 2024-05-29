@@ -6,7 +6,7 @@ pub mod generate;
 use std::fs::File;
 use std::io::{Read, Write};
 
-pub fn generate(storage_layout_path: String, generated_file_path: String, contract_path: String, contract_name: String) {
+pub fn generate_storage_bindings(storage_layout_path: String, contract_path: String, contract_name: String, output_path: String) {
     let mut file = File::open(storage_layout_path).expect("Cannot open storage layout json file");
     let mut storage_layout_json_string = String::new();
     file.read_to_string(&mut storage_layout_json_string).expect("Cannot read storage layout json file");
@@ -19,6 +19,6 @@ pub fn generate(storage_layout_path: String, generated_file_path: String, contra
     let syntax_tree = syn::parse_file(&generated_tokens.to_string()).expect("Failed to parse TokenStream");
     let pretty_formatted_code = prettyplease::unparse(&syntax_tree);
 
-    let mut file = File::create(generated_file_path).expect("Unable to create file");
+    let mut file = File::create(output_path).expect("Unable to create file");
     file.write_all(pretty_formatted_code.as_bytes()).expect("Unable to write data");
 }
