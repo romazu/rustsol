@@ -139,32 +139,3 @@ fn get_nested_type(nested_type: &NestedType) -> TokenStream {
         }
     }
 }
-
-
-// fn get_nested_type(nested_type: &NestedType) -> TokenStream {
-//     let type_name = get_nested_type_string(nested_type);
-//     let ident = syn::Ident::new(type_name, proc_macro2::Span::call_site());
-//     quote! {#ident}
-// }
-//
-// fn get_nested_type_string(nested_type: &NestedType) -> &str {
-//     match nested_type {
-//         NestedType::Primitive => "Primitive",
-//         NestedType::Bytes => "Bytes",
-//         NestedType::Mapping { key, value } => {
-//             let key_type = get_nested_type_string(key);
-//             let value_type = get_nested_type_string(value);
-//             let key_type_for_mapping = match key.as_ref() {
-//                 NestedType::Primitive => "PrimitiveKey",
-//                 NestedType::Bytes => "BytesKey",
-//                 _ => panic!("Bad key type")
-//             };
-//
-//             // quote! { Mapping<#key_type_for_mapping, #value_type> }
-//             quote! { Mapping<#key_type_for_mapping, #value_type> }
-//         }
-//         NestedType::Struct { label, members } => {
-//             label
-//         }
-//     }
-// }
