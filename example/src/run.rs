@@ -1,10 +1,8 @@
 #![allow(unused_imports)]
+
 use std::str::FromStr;
 use primitive_types::U256;
-
 mod generated_contract;
-
-
 
 fn main() {
     // Example contract
