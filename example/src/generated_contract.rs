@@ -64,6 +64,9 @@ pub struct OracleObservation {
     pub initialized: Primitive<1>,
 }
 impl UniswapV3Pool {
+    pub fn new() -> Self {
+        Self::new_from_position(U256::zero(), 0)
+    }
     pub fn new_from_position(slot: U256, offset: u8) -> Self {
         Self {
             __slot: slot,
@@ -94,6 +97,9 @@ impl Position for UniswapV3Pool {
     }
 }
 impl UniswapV3PoolSlot0 {
+    pub fn new() -> Self {
+        Self::new_from_position(U256::zero(), 0)
+    }
     pub fn new_from_position(slot: U256, offset: u8) -> Self {
         Self {
             __slot: slot,
@@ -122,6 +128,9 @@ impl Position for UniswapV3PoolSlot0 {
     }
 }
 impl UniswapV3PoolProtocolFees {
+    pub fn new() -> Self {
+        Self::new_from_position(U256::zero(), 0)
+    }
     pub fn new_from_position(slot: U256, offset: u8) -> Self {
         Self {
             __slot: slot,
@@ -145,6 +154,9 @@ impl Position for UniswapV3PoolProtocolFees {
     }
 }
 impl TickInfo {
+    pub fn new() -> Self {
+        Self::new_from_position(U256::zero(), 0)
+    }
     pub fn new_from_position(slot: U256, offset: u8) -> Self {
         Self {
             __slot: slot,
@@ -174,6 +186,9 @@ impl Position for TickInfo {
     }
 }
 impl PositionInfo {
+    pub fn new() -> Self {
+        Self::new_from_position(U256::zero(), 0)
+    }
     pub fn new_from_position(slot: U256, offset: u8) -> Self {
         Self {
             __slot: slot,
@@ -200,6 +215,9 @@ impl Position for PositionInfo {
     }
 }
 impl OracleObservation {
+    pub fn new() -> Self {
+        Self::new_from_position(U256::zero(), 0)
+    }
     pub fn new_from_position(slot: U256, offset: u8) -> Self {
         Self {
             __slot: slot,

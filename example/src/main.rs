@@ -1,4 +1,4 @@
-#[allow(unused_imports)]
+#![allow(unused_imports)]
 use std::str::FromStr;
 use primitive_types::U256;
 
@@ -8,7 +8,7 @@ mod generated_contract;
 
 fn main() {
     // Example contract
-    // let contract = generated_contract::MyContract::new_from_position(U256::zero(), 0);
+    // let contract = generated_contract::MyContract::new());
     // println!("{:?}", contract.myNestedMapping.get_item(0u64));
     // println!("{:?}", contract.myNestedMapping.get_item(0u64).get_item(1u64).position());
     // println!("myMapping2[\"some\"] {:?}", contract.myMapping2.get_item("some").position());
@@ -30,7 +30,7 @@ fn main() {
     // // println!("{:?}", contract.staticArrayLarge.get_item(2).position()); // panic
 
     // Uniswap V3
-    let contract = generated_contract::UniswapV3Pool::new_from_position(U256::zero(), 0);
+    let contract = generated_contract::UniswapV3Pool::new();
     println!("{:?}", contract.slot0);
     println!("{:?}", contract.ticks);
     println!("{:?}", contract.ticks.get_item(42u64).initialized.position());
@@ -41,6 +41,10 @@ fn main() {
     println!("{:?}", contract.ticks.get_item(149150).position());
     println!("{:?}", contract.ticks.get_item(887270).position());
     println!("{:?}", contract.ticks.get_item(-92110).position());
+
+    let contract = generated_contract::UniswapV3Pool::new();
+    let (slot, offset, size_bytes) = contract.observations.get_item(42).tickCumulative.position();
+    println!("slot={}, offset={}, size_bytes={}", slot, offset, size_bytes);
 
     // // Uniswap V2
     // TODO: let contract = ...
