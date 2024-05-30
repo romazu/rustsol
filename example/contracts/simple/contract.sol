@@ -30,4 +30,6 @@ contract MyContract {
     mapping(address => mapping(address => address)) public myAddressMappingNested;
     mapping(uint256 => mapping(uint256 => uint256)) public myNestedMapping;
 //    mapping(uint256 => mapping(uint256 => MyStruct)) public myNestedMapping;
+    enum MyEnum {Enum1, Enum2}
+    MyEnum myEnum;
 }
