@@ -5,8 +5,9 @@ use ethereum_types::{Address, H160, U256};
 mod generated_contract;
 
 fn main() {
-    // Example contract
-    // let contract = generated_contract::MyContract::new());
+    // // Example contract
+    // let contract = generated_contract::MyContract::new();
+    // println!("{:?}", contract.myNestedMapping.get_item(0u64));
     // println!("{:?}", contract.myNestedMapping.get_item(0u64));
     // println!("{:?}", contract.myNestedMapping.get_item(0u64).get_item(1u64).position());
     // println!("myMapping2[\"some\"] {:?}", contract.myMapping2.get_item("some").position());
@@ -26,6 +27,12 @@ fn main() {
     // println!("{:?}", contract.staticArrayLarge.capacity());
     // println!("{:?}", contract.staticArrayLarge.capacity());
     // // println!("{:?}", contract.staticArrayLarge.get_item(2).position()); // panic
+    //
+    // let address = Address::from_str("0x51A18333479472D1250Ee5063910079fc0B9b801").unwrap();
+    // println!("myAddressMappingNested {:?}", contract.myAddressMappingNested.position());
+    // println!("myAddressMappingNested[addr]: {:?}", contract.myAddressMappingNested.get_item(address).position());
+    // println!("myAddressMappingNested[addr][addr]: {:?}", contract.myAddressMappingNested.get_item(address).get_item(address).position());
+
 
     // Uniswap V3
     let contract = generated_contract::UniswapV3Pool::new();
@@ -33,8 +40,6 @@ fn main() {
     println!("{:?}", contract.ticks);
     println!("{:?}", contract.ticks.get_item(42u64).initialized.position());
     println!("{:?}", contract.slot0.observationIndex.position());
-    println!("{:?}", contract.slot0.observationIndex.offset());
-    println!("{:?}", contract.slot0.observationIndex.size());
     println!("{:?}", contract.ticks.get_item(0).position());
     println!("{:?}", contract.ticks.get_item(149150).position());
     println!("{:?}", contract.ticks.get_item(887270).position());

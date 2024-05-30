@@ -26,6 +26,7 @@ contract MyContract {
 
     mapping(uint256 => uint256) public myMapping1;
     mapping(string => uint256) public myMapping2;
+    mapping(address => mapping(address => address)) public myAddressMappingNested;
     mapping(uint256 => mapping(uint256 => uint256)) public myNestedMapping;
 //    mapping(uint256 => mapping(uint256 => MyStruct)) public myNestedMapping;
 }

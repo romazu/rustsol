@@ -8,10 +8,6 @@ pub struct Primitive<const SIZE: u64> {
 }
 
 impl<const SIZE: u64> Primitive<SIZE> {
-    pub fn size(&self) -> u64 {
-        SIZE
-    }
-
     pub fn slot(&self) -> U256 {
         self.__slot
     }

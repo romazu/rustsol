@@ -1,8 +1,7 @@
 #![allow(unused_imports, non_snake_case, unused, dead_code)]
-use rustsol::types::{
-    Primitive, Bytes, Mapping, DynamicArray, StaticArray, PrimitiveKey, BytesKey,
-    Position,
-};
+use rustsol::types::Position;
+use rustsol::types::{Primitive, Bytes, Address, Mapping, DynamicArray, StaticArray};
+use rustsol::types::{PrimitiveKey, BytesKey, AddressKey};
 use ethereum_types::U256;
 #[derive(Debug)]
 pub struct UniswapV3Pool {

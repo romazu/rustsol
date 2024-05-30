@@ -79,7 +79,9 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
         #![allow(unused_imports, non_snake_case, unused, dead_code)]
     };
     let imports_definition_items: Vec<Item> = vec![
-        parse_str("use rustsol::types::{Primitive, Bytes, Mapping, DynamicArray, StaticArray, PrimitiveKey, BytesKey, Position};").expect("Failed to parse"),
+        parse_str("use rustsol::types::Position;").expect("Failed to parse"),
+        parse_str("use rustsol::types::{Primitive, Bytes, Address, Mapping, DynamicArray, StaticArray};").expect("Failed to parse"),
+        parse_str("use rustsol::types::{PrimitiveKey, BytesKey, AddressKey};").expect("Failed to parse"),
         parse_str("use ethereum_types::U256;").expect("Failed to parse"),
     ];
     let imports_definition: TokenStream = imports_definition_items.into_iter().map(|item| item.into_token_stream()).collect();
@@ -98,6 +100,7 @@ fn get_type_name(nested_type: &NestedType) -> TokenStream {
     let type_name = match nested_type {
         NestedType::Primitive { .. } => "Primitive",
         NestedType::Bytes => "Bytes",
+        NestedType::Address => "Address",
         NestedType::Mapping { .. } => "Mapping",
         NestedType::Struct { label, .. } => label,
         NestedType::DynamicArray { .. } => "DynamicArray",
@@ -115,11 +118,13 @@ fn get_nested_type(nested_type: &NestedType) -> TokenStream {
             quote! { Primitive<#number_of_bytes_literal> }
         }
         NestedType::Bytes => quote! { Bytes },
+        NestedType::Address => quote! { Address },
         NestedType::Mapping { key, value } => {
             let value_type = get_nested_type(value);
             let key_type_for_mapping = match key.as_ref() {
                 NestedType::Primitive { .. } => quote! { PrimitiveKey },
                 NestedType::Bytes => quote! { BytesKey },
+                NestedType::Address => quote! { AddressKey },
                 _ => panic!("Bad key type")
             };
 

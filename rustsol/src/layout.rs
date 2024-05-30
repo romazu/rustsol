@@ -24,6 +24,7 @@ pub enum MemberType {
         label: String,
         number_of_bytes: u64,
     },
+    Address,
     Mapping {
         key: String,
         value: String,
@@ -101,6 +102,8 @@ impl<'de> Deserialize<'de> for MemberType {
                         members: members,
                         number_of_bytes: intermediate.number_of_bytes,
                     })
+                } else if intermediate.label == "address" {
+                    Ok(MemberType::Address)
                 } else {
                     Ok(MemberType::Primitive {
                         label: intermediate.label,
@@ -143,6 +146,7 @@ pub enum NestedType {
         number_of_bytes: u64,
     },
     Bytes,
+    Address,
     Mapping {
         // Box is needed to avoid problems with recursive definition of NestedType
         key: Box<NestedType>,
@@ -169,6 +173,7 @@ impl NestedType {
                 format!("Primitive<{}>", number_of_bytes.to_string())
             }
             NestedType::Bytes => "Bytes".to_string(),
+            NestedType::Address => "Address".to_string(),
             NestedType::Mapping { key, value } => {
                 format!("Mapping<{}, {}>", key.to_string(), value.to_string())
             }
@@ -231,10 +236,12 @@ impl StorageLayout {
         match type_def {
             MemberType::Primitive { label: _, number_of_bytes } => Some(NestedType::Primitive { number_of_bytes: *number_of_bytes }),
             MemberType::Bytes { .. } => Some(NestedType::Bytes),
+            MemberType::Address => Some(NestedType::Address),
             MemberType::Mapping { key, value, .. } => {
                 let key_type = match self.traverse_type(key) {
                     Some(NestedType::Primitive { number_of_bytes }) => Some(NestedType::Primitive { number_of_bytes }),
                     Some(NestedType::Bytes) => Some(NestedType::Bytes),
+                    Some(NestedType::Address) => Some(NestedType::Address),
                     _ => panic!("Key type must be Primitive or Bytes"),
                 };
 
@@ -295,10 +302,13 @@ impl StorageLayout {
         }
         match nested_type {
             NestedType::Primitive { .. } => {
-                // This is the leaf type. Do nothing.
+                // This is a leaf type. Do nothing.
             }
             NestedType::Bytes => {
-                // This is the leaf type. Do nothing.
+                // This is a leaf type. Do nothing.
+            }
+            NestedType::Address => {
+                // This is a leaf type. Do nothing.
             }
             NestedType::Mapping { key, value } => {
                 self.collect_unique_types(key, nested_types, unique_representations);

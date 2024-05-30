@@ -2,7 +2,7 @@ use std::marker::PhantomData;
 use ethereum_types::U256;
 use crate::utils::{bytes32_to_u256, keccak256_concat, u256_to_bytes32};
 use crate::types::keys::{BytesKey, PrimitiveKey};
-use crate::types::Position;
+use crate::types::{AddressKey, Position};
 
 // The value corresponding to a mapping key k is located at keccak256(h(k) . p) where . is
 // concatenation and h is a function that is applied to the key depending on its type:
@@ -57,6 +57,16 @@ impl<Value> Mapping<BytesKey, Value> {
     pub fn get_item<T>(&self, key: T) -> Value
         where
             T: Into<BytesKey>,
+            Value: Position,
+    {
+        self.get_value(key.into().0)
+    }
+}
+
+impl<Value> Mapping<AddressKey, Value> {
+    pub fn get_item<T>(&self, key: T) -> Value
+        where
+            T: Into<AddressKey>,
             Value: Position,
     {
         self.get_value(key.into().0)
