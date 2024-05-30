@@ -20,6 +20,14 @@ pub fn ceil_div(a: u64, b: u64) -> u64 {
     (a + b - 1) / b
 }
 
+pub fn bool_to_bytes32(value: bool) -> [u8; 32] {
+    let mut bytes = [0u8; 32];
+    if value {
+        bytes[31] = 1;
+    }
+    bytes
+}
+
 pub fn u256_to_bytes32(num: U256) -> [u8; 32] {
     let mut bytes = [0u8; 32];
     num.to_big_endian(&mut bytes);

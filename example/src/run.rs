@@ -2,6 +2,7 @@
 
 use std::str::FromStr;
 use ethereum_types::{Address, H160, U256};
+
 mod generated_contract;
 
 fn main() {
@@ -27,6 +28,8 @@ fn main() {
     // println!("{:?}", contract.staticArrayLarge.capacity());
     // println!("{:?}", contract.staticArrayLarge.capacity());
     // // println!("{:?}", contract.staticArrayLarge.get_item(2).position()); // panic
+    // println!("myMappingBool[false] {:?}", contract.myMappingBool.get_item(false).position());
+    // println!("myMappingBool[true] {:?}", contract.myMappingBool.get_item(true).position());
     //
     // let address = Address::from_str("0x51A18333479472D1250Ee5063910079fc0B9b801").unwrap();
     // println!("myAddressMappingNested {:?}", contract.myAddressMappingNested.position());
