@@ -132,6 +132,7 @@ Currently, Solidity -> Rust type mapping is as follows:
 | Solidity Type                 | Generated Rust Type                        |
 |-------------------------------|--------------------------------------------|
 | all integer types, bool, enum | `Primitive<byte_size>`                     |
+| address                       | `Address`                                  |
 | string, bytes                 | `Bytes`                                    |
 | static arrays                 | `StaticArray<byte_size, value_type>`       |
 | dynamic arrays                | `DynamicArray<value_type>`                 |
