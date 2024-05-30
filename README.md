@@ -125,6 +125,23 @@ See the example script in the `example` directory:
 cargo run -p example --bin generate
 ```
 
+
+## Type Bindings
+Currently, Solidity -> Rust type mapping is as follows:
+
+| Solidity Type                 | Generated Rust Type                        |
+|-------------------------------|--------------------------------------------|
+| all integer types, bool, enum | `Primitive<byte_size>`                     |
+| string, bytes                 | `Bytes`                                    |
+| static arrays                 | `StaticArray<byte_size, value_type>`       |
+| dynamic arrays                | `DynamicArray<value_type>`                 |
+| mapping                       | `Mapping<key_type, value_type>`            |
+| struct                        | `CustomNamedStructWithCorrespondingFields` |
+
+Plans include getting rid of the `Primitive` type and having separate types for integers, bool, and enum.
+Also we plan to have a separate String type.
+
+
 ## License
 
 This project is licensed under the MIT License.

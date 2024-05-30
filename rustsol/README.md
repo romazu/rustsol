@@ -85,6 +85,21 @@ rustsol generate_storage_bindings example/solc_output.json UniswapV3Pool.sol Uni
 After running the above command, the generated structs will be in `generated_contract.rs` file.
 See the original repository for an example.
 
+## Type Bindings
+Currently, Solidity -> Rust type mapping is as follows:
+
+| Solidity Type                 | Generated Rust Type                        |
+|-------------------------------|--------------------------------------------|
+| all integer types, bool, enum | `Primitive<byte_size>`                     |
+| string, bytes                 | `Bytes`                                    |
+| static arrays                 | `StaticArray<byte_size, value_type>`       |
+| dynamic arrays                | `DynamicArray<value_type>`                 |
+| mapping                       | `Mapping<key_type, value_type>`            |
+| struct                        | `CustomNamedStructWithCorrespondingFields` |
+
+Plans include getting rid of the `Primitive` type and having separate types for integers, bool, and enum.
+Also we plan to have a separate String type.
+
 
 ## License
 
