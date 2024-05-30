@@ -1,13 +1,13 @@
 [package]
 name = "rustsol"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Roman Zubov <romazu@protonmail.com>"]
 edition = "2021"
 license = "MIT"
 description = "Rust bindings for storage layouts of solidity contracts"
 readme = "README.md"
 repository = "https://github.com/romazu/rustsol"
-keywords = ["ethereum", "evm", "bindings", "storage", "code-generation"]
+keywords = ["ethereum", "evm", "bindings", "solidity", "contract-storage"]
 categories = ["api-bindings", "development-tools::ffi", "parser-implementations", "encoding", "data-structures"]
 
 [dependencies]
