@@ -1,5 +1,5 @@
 use std::marker::PhantomData;
-use primitive_types::U256;
+use ethereum_types::U256;
 use crate::types::Position;
 use crate::utils::{bytes32_to_u256, ceil_div, index_to_position, keccak256, u256_to_bytes32};
 

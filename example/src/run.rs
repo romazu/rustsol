@@ -1,7 +1,7 @@
 #![allow(unused_imports)]
 
 use std::str::FromStr;
-use primitive_types::U256;
+use ethereum_types::{Address, H160, U256};
 mod generated_contract;
 
 fn main() {
@@ -39,6 +39,11 @@ fn main() {
     println!("{:?}", contract.ticks.get_item(149150).position());
     println!("{:?}", contract.ticks.get_item(887270).position());
     println!("{:?}", contract.ticks.get_item(-92110).position());
+
+    // Check that PrimitiveKey accepts Address type input.
+    let address = Address::from_str("0x51A18333479472D1250Ee5063910079fc0B9b801").unwrap();
+    println!("AddressKey check (Address): {:?}", contract.ticks.get_item(address).position());
+    println!("AddressKey check (H160): {:?}", contract.ticks.get_item(H160::zero()).position());
 
     let contract = generated_contract::UniswapV3Pool::new();
     let (slot, offset, size_bytes) = contract.observations.get_item(42).tickCumulative.position();

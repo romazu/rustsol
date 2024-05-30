@@ -1,5 +1,5 @@
-use primitive_types::U256;
-use crate::utils::{keccak256, u256_to_bytes32};
+use ethereum_types::{Address, U256};
+use crate::utils::{address_to_bytes32, keccak256, u256_to_bytes32};
 
 #[derive(Debug, Default)]
 pub struct PrimitiveKey(pub [u8; 32]);
@@ -37,6 +37,11 @@ impl_from_for!(PrimitiveKey, u8, u16, u32, u64, u128, i8, i16, i32, i64, i128);
 impl From<U256> for PrimitiveKey {
     fn from(value: U256) -> Self {
         PrimitiveKey(u256_to_bytes32(value))
+    }
+}
+impl From<Address> for PrimitiveKey {
+    fn from(value: Address) -> Self {
+        PrimitiveKey(address_to_bytes32(value))
     }
 }
 

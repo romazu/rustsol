@@ -80,7 +80,7 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
     };
     let imports_definition_items: Vec<Item> = vec![
         parse_str("use rustsol::types::{Primitive, Bytes, Mapping, DynamicArray, StaticArray, PrimitiveKey, BytesKey, Position};").expect("Failed to parse"),
-        parse_str("use primitive_types::{U256};").expect("Failed to parse"),
+        parse_str("use ethereum_types::U256;").expect("Failed to parse"),
     ];
     let imports_definition: TokenStream = imports_definition_items.into_iter().map(|item| item.into_token_stream()).collect();
 

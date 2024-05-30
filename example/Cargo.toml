@@ -6,7 +6,7 @@ license = "MIT"
 edition = "2021"
 
 [dependencies]
-primitive-types = "0.12"
+ethereum-types = "0.14"
 rustsol = { path = "../rustsol" }
 
 [[bin]]

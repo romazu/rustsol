@@ -3,7 +3,7 @@ use rustsol::types::{
     Primitive, Bytes, Mapping, DynamicArray, StaticArray, PrimitiveKey, BytesKey,
     Position,
 };
-use primitive_types::U256;
+use ethereum_types::U256;
 #[derive(Debug)]
 pub struct UniswapV3Pool {
     __slot: U256,
