@@ -1,9 +1,20 @@
 #![allow(unused_imports)]
 
 use std::str::FromStr;
+use std::sync::Arc;
 use alloy_primitives::{Address, U256};
+use rustsol::types::SlotsGetter;
 
 mod generated_contract;
+
+// Example implementation for a struct
+#[derive(Debug)]
+struct DummySlotsGetter;
+impl SlotsGetter for DummySlotsGetter {
+    fn get_slots(&self, start: U256, n: usize) -> Vec<U256> {
+        vec![start]
+    }
+}
 
 fn main() {
     // // Example contract
@@ -36,20 +47,30 @@ fn main() {
     // println!("myAddressMappingNested[addr]: {:?}", contract.myAddressMappingNested.get(address).position());
     // println!("myAddressMappingNested[addr][addr]: {:?}", contract.myAddressMappingNested.get(address).get(address).position());
 
-    // Uniswap V3
-    let contract = generated_contract::UniswapV3Pool::new();
-    println!("slot0 {:#?}", contract.slot0);
-    println!("ticks {:#?}", contract.ticks);
-    println!("ticks[42u64].initialized {:?}", contract.ticks.get(42u64).initialized.position());
-    println!("slot0.observationIndex   {:?}", contract.slot0.observationIndex.position());
-    println!("ticks[0]                 {:?}", contract.ticks.get(0).position());
-    println!("ticks[149150]            {:?}", contract.ticks.get(149150).position());
-    println!("ticks[887270]            {:?}", contract.ticks.get(887270).position());
-    println!("ticks[-92110]            {:?}", contract.ticks.get(-92110).position());
+    // // Uniswap V3
+    // let contract = generated_contract::UniswapV3Pool::new();
+    // println!("slot0 {:#?}", contract.slot0);
+    // println!("ticks {:#?}", contract.ticks);
+    // println!("ticks[42u64].initialized {:?}", contract.ticks.get(42u64).initialized.position());
+    // println!("slot0.observationIndex   {:?}", contract.slot0.observationIndex.position());
+    // println!("ticks[0]                 {:?}", contract.ticks.get(0).position());
+    // println!("ticks[149150]            {:?}", contract.ticks.get(149150).position());
+    // println!("ticks[887270]            {:?}", contract.ticks.get(887270).position());
+    // println!("ticks[-92110]            {:?}", contract.ticks.get(-92110).position());
+    // // println!("feeGrowthGlobal0X128.value() {:?}", contract.feeGrowthGlobal0X128.value()); // panic
 
     let contract = generated_contract::UniswapV3Pool::new();
     let (slot, offset, size_bytes) = contract.observations.get(42).tickCumulative.position();
     println!("slot={}, offset={}, size_bytes={}", slot, offset, size_bytes);
+
+    let mut contract = generated_contract::UniswapV3Pool::new();
+    let getter = Arc::new(DummySlotsGetter);
+    contract.set_slots_getter(getter);
+    println!("feeGrowthGlobal0X128.value() {:?}", contract.feeGrowthGlobal0X128.value());
+    println!("feeGrowthGlobal0X128.value() {:?}", contract.tickBitmap.get(123).value());
+
+
+
 
     // // Uniswap V2
     // TODO: let contract = ...
@@ -84,4 +105,20 @@ fn main() {
     // println!("{:#x}", address);
     // println!("marketCreationData {:?}", contract.marketCreationData.get(address).position());
     // println!("extraInfo {:?}, {:?}", contract.marketCreationData.get(address).extraInfo.position(), contract.marketCreationData.get(address).extraInfo.storage());
+
+
+    // use std::time::Instant;
+    //
+    // struct ConcreteStruct {
+    //     value: u32,
+    // }
+    //
+    // let start = Instant::now();
+    //
+    // for _ in 0..1_000_000 {
+    //     let _boxed = Box::new(ConcreteStruct { value: 42 });
+    // }
+    //
+    // let duration = start.elapsed();
+    // println!("Time elapsed in expensive_function() is: {:?}", duration / 1_000_000);
 }

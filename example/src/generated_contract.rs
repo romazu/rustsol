@@ -1,11 +1,14 @@
 #![allow(unused_imports, non_snake_case, unused, dead_code)]
-use rustsol::types::Position;
+
+use std::sync::Arc;
+use rustsol::types::{Position, SlotsGetter, SlotsGetterSetter};
 use rustsol::types::{Primitive, Bytes, Address, Mapping, DynamicArray, StaticArray};
 use rustsol::types::{PrimitiveKey, BytesKey, AddressKey};
 use alloy_primitives::U256;
 #[derive(Debug)]
 pub struct UniswapV3Pool {
     __slot: U256,
+    __slot_getter: Option<Arc<dyn SlotsGetter>>,
     pub slot0: UniswapV3PoolSlot0,
     pub feeGrowthGlobal0X128: Primitive<32>,
     pub feeGrowthGlobal1X128: Primitive<32>,
@@ -69,6 +72,7 @@ impl UniswapV3Pool {
     pub fn from_position(slot: U256, offset: u8) -> Self {
         Self {
             __slot: slot,
+            __slot_getter: None,
             slot0: UniswapV3PoolSlot0::from_position(slot + U256::from(0), 0),
             feeGrowthGlobal0X128: Primitive::from_position(slot + U256::from(1), 0),
             feeGrowthGlobal1X128: Primitive::from_position(slot + U256::from(2), 0),
@@ -82,6 +86,18 @@ impl UniswapV3Pool {
             positions: Mapping::from_position(slot + U256::from(7), 0),
             observations: StaticArray::from_position(slot + U256::from(8), 0),
         }
+    }
+    pub fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>){
+        self.__slot_getter = Some(getter.clone());
+        // self.slot0.set_slots_getter(getter.clone());
+        self.feeGrowthGlobal0X128.set_slots_getter(getter.clone());
+        self.feeGrowthGlobal1X128.set_slots_getter(getter.clone());
+        // self.protocolFees.set_slots_getter();
+        // self.liquidity.set_slots_getter();
+        // self.ticks.set_slots_getter(getter.clone());
+        self.tickBitmap.set_slots_getter(getter.clone());
+        // self.positions.set_slots_getter();
+        // self.observations.set_slots_getter();
     }
     pub fn slot(&self) -> U256 {
         self.__slot

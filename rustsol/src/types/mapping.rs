@@ -1,8 +1,10 @@
+use std::fmt::Debug;
 use std::marker::PhantomData;
+use std::sync::Arc;
 use alloy_primitives::U256;
 use crate::utils::{bytes32_to_u256, keccak256_concat, u256_to_bytes32};
-use crate::types::keys::{BytesKey, PrimitiveKey};
-use crate::types::{AddressKey, Position};
+use crate::types::{PrimitiveKey, BytesKey, AddressKey};
+use crate::types::{Position, SlotsGetter, SlotsGetterSetter};
 
 // The value corresponding to a mapping key k is located at keccak256(h(k) . p) where . is
 // concatenation and h is a function that is applied to the key depending on its type:
@@ -12,6 +14,7 @@ use crate::types::{AddressKey, Position};
 pub struct Mapping<KeyType, Value> {
     __slot: U256,
     __marker: PhantomData<(KeyType, Value)>,
+    __slot_getter: Option<Arc<dyn SlotsGetter>>,
 }
 
 impl<KeyType, Value> Mapping<KeyType, Value> {
@@ -25,16 +28,23 @@ impl<KeyType, Value> Mapping<KeyType, Value> {
 
     fn get_value(&self, key: [u8; 32]) -> Value
         where
-            Value: Position,
+            Value: Position+ SlotsGetterSetter,
     {
         let value_slot_bytes = keccak256_concat(key, u256_to_bytes32(self.__slot));
-        Value::from_position(bytes32_to_u256(value_slot_bytes), 0)
+        let mut value = Value::from_position(bytes32_to_u256(value_slot_bytes), 0);
+        match &self.__slot_getter {
+            None => {panic!("No slots getter")}
+            Some(getter) => {
+                value.set_slots_getter(getter.clone());
+                value
+            }
+        }
     }
 }
 
 impl<KeyType, Value> Position for Mapping<KeyType, Value> {
     fn from_position(slot: U256, _: u8) -> Self {
-        Mapping::<KeyType, Value> { __slot: slot, __marker: PhantomData }
+        Mapping::<KeyType, Value> { __slot: slot, __marker: PhantomData, __slot_getter: None }
     }
 
     fn size() -> u64 {
@@ -47,7 +57,7 @@ impl<Value> Mapping<PrimitiveKey, Value> {
     pub fn get<T>(&self, key: T) -> Value
         where
             T: Into<PrimitiveKey>,
-            Value: Position,
+            Value: Position+ SlotsGetterSetter,
     {
         self.get_value(key.into().0)
     }
@@ -57,7 +67,7 @@ impl<Value> Mapping<BytesKey, Value> {
     pub fn get<T>(&self, key: T) -> Value
         where
             T: Into<BytesKey>,
-            Value: Position,
+            Value: Position+ SlotsGetterSetter,
     {
         self.get_value(key.into().0)
     }
@@ -67,8 +77,14 @@ impl<Value> Mapping<AddressKey, Value> {
     pub fn get<T>(&self, key: T) -> Value
         where
             T: Into<AddressKey>,
-            Value: Position,
+            Value: Position+ SlotsGetterSetter,
     {
         self.get_value(key.into().0)
+    }
+}
+
+impl<KeyType: Debug, ValueType: Debug> SlotsGetterSetter for Mapping<KeyType, ValueType> {
+    fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
+        self.__slot_getter = Some(getter);
     }
 }

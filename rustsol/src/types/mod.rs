@@ -9,7 +9,7 @@ mod mapping;
 mod dynamic_array;
 mod static_array;
 
-pub use traits::Position;
+pub use traits::{Position, SlotsGetter, SlotsGetterSetter};
 pub use primitive::Primitive;
 pub use bytes::Bytes;
 pub use address::Address;
