@@ -64,9 +64,9 @@ pub struct OracleObservation {
 }
 impl UniswapV3Pool {
     pub fn new() -> Self {
-        Self::new_from_position(U256::ZERO, 0)
+        Self::from_position(U256::ZERO, 0)
     }
-    pub fn new_from_position(slot: U256, offset: u8) -> Self {
+    pub fn from_position(slot: U256, offset: u8) -> Self {
         Self {
             __slot: slot,
             slot0: UniswapV3PoolSlot0::from_position(slot + U256::from(0), 0),
@@ -92,7 +92,7 @@ impl UniswapV3Pool {
 }
 impl Position for UniswapV3Pool {
     fn from_position(slot: U256, offset: u8) -> Self {
-        Self::new_from_position(slot, offset)
+        Self::from_position(slot, offset)
     }
     fn size() -> u64 {
         0
@@ -100,9 +100,9 @@ impl Position for UniswapV3Pool {
 }
 impl UniswapV3PoolSlot0 {
     pub fn new() -> Self {
-        Self::new_from_position(U256::ZERO, 0)
+        Self::from_position(U256::ZERO, 0)
     }
-    pub fn new_from_position(slot: U256, offset: u8) -> Self {
+    pub fn from_position(slot: U256, offset: u8) -> Self {
         Self {
             __slot: slot,
             sqrtPriceX96: Primitive::from_position(slot + U256::from(0), 0),
@@ -126,7 +126,7 @@ impl UniswapV3PoolSlot0 {
 }
 impl Position for UniswapV3PoolSlot0 {
     fn from_position(slot: U256, offset: u8) -> Self {
-        Self::new_from_position(slot, offset)
+        Self::from_position(slot, offset)
     }
     fn size() -> u64 {
         32
@@ -134,9 +134,9 @@ impl Position for UniswapV3PoolSlot0 {
 }
 impl UniswapV3PoolProtocolFees {
     pub fn new() -> Self {
-        Self::new_from_position(U256::ZERO, 0)
+        Self::from_position(U256::ZERO, 0)
     }
-    pub fn new_from_position(slot: U256, offset: u8) -> Self {
+    pub fn from_position(slot: U256, offset: u8) -> Self {
         Self {
             __slot: slot,
             token0: Primitive::from_position(slot + U256::from(0), 0),
@@ -152,7 +152,7 @@ impl UniswapV3PoolProtocolFees {
 }
 impl Position for UniswapV3PoolProtocolFees {
     fn from_position(slot: U256, offset: u8) -> Self {
-        Self::new_from_position(slot, offset)
+        Self::from_position(slot, offset)
     }
     fn size() -> u64 {
         32
@@ -160,9 +160,9 @@ impl Position for UniswapV3PoolProtocolFees {
 }
 impl TickInfo {
     pub fn new() -> Self {
-        Self::new_from_position(U256::ZERO, 0)
+        Self::from_position(U256::ZERO, 0)
     }
-    pub fn new_from_position(slot: U256, offset: u8) -> Self {
+    pub fn from_position(slot: U256, offset: u8) -> Self {
         Self {
             __slot: slot,
             liquidityGross: Primitive::from_position(slot + U256::from(0), 0),
@@ -187,7 +187,7 @@ impl TickInfo {
 }
 impl Position for TickInfo {
     fn from_position(slot: U256, offset: u8) -> Self {
-        Self::new_from_position(slot, offset)
+        Self::from_position(slot, offset)
     }
     fn size() -> u64 {
         128
@@ -195,9 +195,9 @@ impl Position for TickInfo {
 }
 impl PositionInfo {
     pub fn new() -> Self {
-        Self::new_from_position(U256::ZERO, 0)
+        Self::from_position(U256::ZERO, 0)
     }
-    pub fn new_from_position(slot: U256, offset: u8) -> Self {
+    pub fn from_position(slot: U256, offset: u8) -> Self {
         Self {
             __slot: slot,
             liquidity: Primitive::from_position(slot + U256::from(0), 0),
@@ -216,7 +216,7 @@ impl PositionInfo {
 }
 impl Position for PositionInfo {
     fn from_position(slot: U256, offset: u8) -> Self {
-        Self::new_from_position(slot, offset)
+        Self::from_position(slot, offset)
     }
     fn size() -> u64 {
         128
@@ -224,9 +224,9 @@ impl Position for PositionInfo {
 }
 impl OracleObservation {
     pub fn new() -> Self {
-        Self::new_from_position(U256::ZERO, 0)
+        Self::from_position(U256::ZERO, 0)
     }
-    pub fn new_from_position(slot: U256, offset: u8) -> Self {
+    pub fn from_position(slot: U256, offset: u8) -> Self {
         Self {
             __slot: slot,
             blockTimestamp: Primitive::from_position(slot + U256::from(0), 0),
@@ -247,7 +247,7 @@ impl OracleObservation {
 }
 impl Position for OracleObservation {
     fn from_position(slot: U256, offset: u8) -> Self {
-        Self::new_from_position(slot, offset)
+        Self::from_position(slot, offset)
     }
     fn size() -> u64 {
         32

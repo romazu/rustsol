@@ -44,9 +44,9 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                 let struct_implementation = quote! {
                     impl #struct_name {
                         pub fn new() -> Self {
-                            Self::new_from_position(U256::ZERO, 0)
+                            Self::from_position(U256::ZERO, 0)
                         }
-                        pub fn new_from_position(slot: U256, offset: u8) -> Self {
+                        pub fn from_position(slot: U256, offset: u8) -> Self {
                             Self {
                                 __slot: slot,
                                 #(#default_fields),*
@@ -61,7 +61,7 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                     }
                     impl Position for #struct_name {
                         fn from_position(slot: U256, offset: u8) -> Self {
-                            Self::new_from_position(slot, offset)
+                            Self::from_position(slot, offset)
                         }
                         fn size() -> u64 {
                             #number_of_bytes_literal
