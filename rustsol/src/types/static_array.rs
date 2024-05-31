@@ -52,7 +52,7 @@ impl<const SIZE: u64, Value> Position for StaticArray<SIZE, Value> {
 }
 
 impl<const SIZE: u64, Value> StaticArray<SIZE, Value> {
-    pub fn get_item(&self, index: usize) -> Value
+    pub fn get(&self, index: usize) -> Value
         where
             Value: Position,
     {

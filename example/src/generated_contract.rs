@@ -105,7 +105,7 @@ impl UniswapV3PoolSlot0 {
     pub fn new_from_position(slot: U256, offset: u8) -> Self {
         Self {
             __slot: slot,
-            sqrtPriceX96: Primitive::from_position(slot, 0),
+            sqrtPriceX96: Primitive::from_position(slot + U256::from(0), 0),
             tick: Primitive::from_position(slot + U256::from(0), 20),
             observationIndex: Primitive::from_position(slot + U256::from(0), 23),
             observationCardinality: Primitive::from_position(slot + U256::from(0), 25),

@@ -10,7 +10,7 @@ including objects stored in mappings and arrays.
 
 ```rust
 let contract = generated_contract::UniswapV3Pool::new();
-let (slot, offset, size_bytes) = contract.observations.get_item(42).tickCumulative.position();
+let (slot, offset, size_bytes) = contract.observations.get(42).tickCumulative.position();
 println!("slot={}, offset={}, size_bytes={}", slot, offset, size_bytes);
 // Output: slot=50, offset=4, size_bytes=7
 ```

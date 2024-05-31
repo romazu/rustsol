@@ -44,7 +44,7 @@ impl<KeyType, Value> Position for Mapping<KeyType, Value> {
 
 
 impl<Value> Mapping<PrimitiveKey, Value> {
-    pub fn get_item<T>(&self, key: T) -> Value
+    pub fn get<T>(&self, key: T) -> Value
         where
             T: Into<PrimitiveKey>,
             Value: Position,
@@ -54,7 +54,7 @@ impl<Value> Mapping<PrimitiveKey, Value> {
 }
 
 impl<Value> Mapping<BytesKey, Value> {
-    pub fn get_item<T>(&self, key: T) -> Value
+    pub fn get<T>(&self, key: T) -> Value
         where
             T: Into<BytesKey>,
             Value: Position,
@@ -64,7 +64,7 @@ impl<Value> Mapping<BytesKey, Value> {
 }
 
 impl<Value> Mapping<AddressKey, Value> {
-    pub fn get_item<T>(&self, key: T) -> Value
+    pub fn get<T>(&self, key: T) -> Value
         where
             T: Into<AddressKey>,
             Value: Position,

@@ -41,7 +41,7 @@ impl<Value> Position for DynamicArray<Value> {
 }
 
 impl<Value> DynamicArray<Value> {
-    pub fn get_item(&self, index: usize) -> Value
+    pub fn get(&self, index: usize) -> Value
         where
             Value: Position,
     {
