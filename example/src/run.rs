@@ -1,7 +1,7 @@
 #![allow(unused_imports)]
 
 use std::str::FromStr;
-use ethereum_types::{Address, H160, U256};
+use alloy_primitives::{Address, U256};
 
 mod generated_contract;
 
@@ -36,22 +36,16 @@ fn main() {
     // println!("myAddressMappingNested[addr]: {:?}", contract.myAddressMappingNested.get_item(address).position());
     // println!("myAddressMappingNested[addr][addr]: {:?}", contract.myAddressMappingNested.get_item(address).get_item(address).position());
 
-
     // Uniswap V3
     let contract = generated_contract::UniswapV3Pool::new();
-    println!("{:?}", contract.slot0);
-    println!("{:?}", contract.ticks);
-    println!("{:?}", contract.ticks.get_item(42u64).initialized.position());
-    println!("{:?}", contract.slot0.observationIndex.position());
-    println!("{:?}", contract.ticks.get_item(0).position());
-    println!("{:?}", contract.ticks.get_item(149150).position());
-    println!("{:?}", contract.ticks.get_item(887270).position());
-    println!("{:?}", contract.ticks.get_item(-92110).position());
-
-    // Check that PrimitiveKey accepts Address type input.
-    let address = Address::from_str("0x51A18333479472D1250Ee5063910079fc0B9b801").unwrap();
-    println!("AddressKey check (Address): {:?}", contract.ticks.get_item(address).position());
-    println!("AddressKey check (H160): {:?}", contract.ticks.get_item(H160::zero()).position());
+    println!("slot0 {:#?}", contract.slot0);
+    println!("ticks {:#?}", contract.ticks);
+    println!("ticks[42u64].initialized {:?}", contract.ticks.get_item(42u64).initialized.position());
+    println!("slot0.observationIndex   {:?}", contract.slot0.observationIndex.position());
+    println!("ticks[0]                 {:?}", contract.ticks.get_item(0).position());
+    println!("ticks[149150]            {:?}", contract.ticks.get_item(149150).position());
+    println!("ticks[887270]            {:?}", contract.ticks.get_item(887270).position());
+    println!("ticks[-92110]            {:?}", contract.ticks.get_item(-92110).position());
 
     let contract = generated_contract::UniswapV3Pool::new();
     let (slot, offset, size_bytes) = contract.observations.get_item(42).tickCumulative.position();

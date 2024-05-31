@@ -28,7 +28,7 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                     let member_slot_literal = syn::LitInt::new(&member_def.member_info.slot.to_string(), proc_macro2::Span::call_site());
                     let member_offset_literal = syn::LitInt::new(&member_def.member_info.offset.to_string(), proc_macro2::Span::call_site());
                     quote! {
-                        #field_name: #field_type::from_position(slot + #member_slot_literal, #member_offset_literal)
+                        #field_name: #field_type::from_position(slot + U256::from(#member_slot_literal), #member_offset_literal)
                     }
                 }).collect();
 
@@ -44,7 +44,7 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                 let struct_implementation = quote! {
                     impl #struct_name {
                         pub fn new() -> Self {
-                            Self::new_from_position(U256::zero(), 0)
+                            Self::new_from_position(U256::ZERO, 0)
                         }
                         pub fn new_from_position(slot: U256, offset: u8) -> Self {
                             Self {
@@ -82,7 +82,7 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
         parse_str("use rustsol::types::Position;").expect("Failed to parse"),
         parse_str("use rustsol::types::{Primitive, Bytes, Address, Mapping, DynamicArray, StaticArray};").expect("Failed to parse"),
         parse_str("use rustsol::types::{PrimitiveKey, BytesKey, AddressKey};").expect("Failed to parse"),
-        parse_str("use ethereum_types::U256;").expect("Failed to parse"),
+        parse_str("use alloy_primitives::U256;").expect("Failed to parse"),
     ];
     let imports_definition: TokenStream = imports_definition_items.into_iter().map(|item| item.into_token_stream()).collect();
 

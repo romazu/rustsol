@@ -1,6 +1,6 @@
 use sha3::{Digest, Keccak256};
 use std::convert::TryInto;
-use ethereum_types::{Address, U256};
+use alloy_primitives::{Address, U256};
 
 /// Computes the keccak256 hash of the concatenation of two 32-byte arrays
 pub fn keccak256<T: AsRef<[u8]>>(v: T) -> [u8; 32] {
@@ -29,20 +29,18 @@ pub fn bool_to_bytes32(value: bool) -> [u8; 32] {
 }
 
 pub fn u256_to_bytes32(num: U256) -> [u8; 32] {
-    let mut bytes = [0u8; 32];
-    num.to_big_endian(&mut bytes);
-    bytes
+    num.to_be_bytes()
 }
 
 pub fn address_to_bytes32(address: Address) -> [u8; 32] {
-    let bytes20 = address.to_fixed_bytes();
+    let bytes20 = address.as_slice();
     let mut bytes32 = [0u8; 32];
     bytes32[12..32].copy_from_slice(&bytes20);
     bytes32
 }
 
 pub fn bytes32_to_u256(bytes: [u8; 32]) -> U256 {
-    U256::from_big_endian(&bytes)
+    U256::from_be_bytes(bytes)
 }
 
 pub fn index_to_position(index: usize, packing_ratio_n: u64, packing_ratio_d: u64) -> (u64, u8) {

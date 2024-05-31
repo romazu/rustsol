@@ -1,5 +1,5 @@
 use std::marker::PhantomData;
-use ethereum_types::U256;
+use alloy_primitives::U256;
 use crate::types::Position;
 use crate::utils::{bytes32_to_u256, ceil_div, index_to_position, keccak256, u256_to_bytes32};
 
@@ -47,6 +47,6 @@ impl<Value> DynamicArray<Value> {
     {
         let (packing_n, packing_d) = self.packing_ratio(); // Currently in solidity always ratio_d == 1.
         let (index_slot, index_offset) = index_to_position(index, packing_n, packing_d);
-        Value::from_position(self.storage() + index_slot, index_offset)
+        Value::from_position(self.storage() + U256::from(index_slot), index_offset)
     }
 }

@@ -1,5 +1,5 @@
 use std::str::FromStr;
-use ethereum_types::{Address, U256};
+use alloy_primitives::{Address, U256};
 use crate::utils::{address_to_bytes32, bool_to_bytes32, keccak256, u256_to_bytes32};
 
 #[derive(Debug, Default)]

@@ -1,4 +1,4 @@
-use ethereum_types::U256;
+use alloy_primitives::U256;
 use crate::types::traits::Position;
 
 #[derive(Debug, Default)]

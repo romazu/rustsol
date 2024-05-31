@@ -1,6 +1,6 @@
 [package]
 name = "rustsol"
-version = "0.1.1"
+version = "0.2.0"
 authors = ["Roman Zubov <romazu@protonmail.com>"]
 edition = "2021"
 license = "MIT"
@@ -13,7 +13,7 @@ categories = ["api-bindings", "development-tools::ffi", "parser-implementations"
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-ethereum-types = "0.14"
+alloy-primitives = "0.7"
 sha3 = "0.10"
 
 syn = { version = "2", features = ["parsing", "printing"] }

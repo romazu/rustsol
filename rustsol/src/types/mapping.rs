@@ -1,5 +1,5 @@
 use std::marker::PhantomData;
-use ethereum_types::U256;
+use alloy_primitives::U256;
 use crate::utils::{bytes32_to_u256, keccak256_concat, u256_to_bytes32};
 use crate::types::keys::{BytesKey, PrimitiveKey};
 use crate::types::{AddressKey, Position};
