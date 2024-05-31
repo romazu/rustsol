@@ -1,12 +1,15 @@
+use std::fmt::Debug;
 use std::marker::PhantomData;
+use std::sync::Arc;
 use alloy_primitives::U256;
-use crate::types::Position;
+use crate::types::{Mapping, Position, SlotsGetter, SlotsGetterSetter};
 use crate::utils::{index_to_position, ceil_div};
 
 #[derive(Debug)]
 pub struct StaticArray<const SIZE: u64, Value> {
     __slot: U256,
     __marker: PhantomData<Value>,
+    __slot_getter: Option<Arc<dyn SlotsGetter>>,
 }
 
 impl<const SIZE: u64, Value: Position> StaticArray<SIZE, Value> {
@@ -43,7 +46,7 @@ impl<const SIZE: u64, Value: Position> StaticArray<SIZE, Value> {
 
 impl<const SIZE: u64, Value> Position for StaticArray<SIZE, Value> {
     fn from_position(slot: U256, _: u8) -> Self {
-        StaticArray::<SIZE, Value> { __slot: slot, __marker: PhantomData }
+        StaticArray::<SIZE, Value> { __slot: slot, __marker: PhantomData, __slot_getter: None }
     }
 
     fn size() -> u64 {
@@ -63,5 +66,12 @@ impl<const SIZE: u64, Value> StaticArray<SIZE, Value> {
         }
         let (index_slot, index_offset) = index_to_position(index, packing_n, packing_d);
         Value::from_position(self.storage() + U256::from(index_slot), index_offset)
+    }
+}
+
+
+impl<const SIZE: u64, Value: Debug> SlotsGetterSetter for StaticArray<SIZE, Value> {
+    fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
+        self.__slot_getter = Some(getter);
     }
 }

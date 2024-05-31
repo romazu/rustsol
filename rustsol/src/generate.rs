@@ -32,10 +32,18 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                     }
                 }).collect();
 
+                let set_slots_getter_fields: Vec<TokenStream> = members.iter().map(|member_def| {
+                    let field_name = Ident::new(&member_def.member_info.label, proc_macro2::Span::call_site());
+                    quote! {
+                        self.#field_name.set_slots_getter(getter.clone())
+                    }
+                }).collect();
+
                 let struct_definition = quote! {
                     #[derive(Debug)]
                     pub struct #struct_name {
                         __slot: U256,
+                        __slot_getter: Option<Arc<dyn SlotsGetter>>,
                         #(#fields),*
                     }
                 };
@@ -49,6 +57,7 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                         pub fn from_position(slot: U256, offset: u8) -> Self {
                             Self {
                                 __slot: slot,
+                                __slot_getter: None,
                                 #(#default_fields),*
                             }
                         }
@@ -58,6 +67,19 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                         pub fn position(&self) -> (U256, u8, u64) {
                             (self.__slot, 0, #number_of_bytes_literal)
                         }
+                        pub fn value(self) -> U256 {
+                            match self.__slot_getter {
+                                None => panic!("No slots getter"),
+                                Some(getter) => {
+                                    let slots = getter.get_slots(self.__slot, 1);
+                                    slots[0] // debug dummy
+                                },
+                            }
+                        }
+                        pub fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
+                            self.__slot_getter = Some(getter.clone());
+                            #(#set_slots_getter_fields);*
+                        }
                     }
                     impl Position for #struct_name {
                         fn from_position(slot: U256, offset: u8) -> Self {
@@ -65,6 +87,11 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                         }
                         fn size() -> u64 {
                             #number_of_bytes_literal
+                        }
+                    }
+                    impl SlotsGetterSetter for #struct_name {
+                        fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
+                            self.__slot_getter = Some(getter);
                         }
                     }
                 };
@@ -79,7 +106,8 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
         #![allow(unused_imports, non_snake_case, unused, dead_code)]
     };
     let imports_definition_items: Vec<Item> = vec![
-        parse_str("use rustsol::types::Position;").expect("Failed to parse"),
+        parse_str("use std::sync::Arc;").expect("Failed to parse"),
+        parse_str("use rustsol::types::{Position, SlotsGetter, SlotsGetterSetter};").expect("Failed to parse"),
         parse_str("use rustsol::types::{Primitive, Bytes, Address, Mapping, DynamicArray, StaticArray};").expect("Failed to parse"),
         parse_str("use rustsol::types::{PrimitiveKey, BytesKey, AddressKey};").expect("Failed to parse"),
         parse_str("use alloy_primitives::U256;").expect("Failed to parse"),

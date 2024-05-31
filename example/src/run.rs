@@ -67,7 +67,9 @@ fn main() {
     let getter = Arc::new(DummySlotsGetter);
     contract.set_slots_getter(getter);
     println!("feeGrowthGlobal0X128.value() {:?}", contract.feeGrowthGlobal0X128.value());
-    println!("feeGrowthGlobal0X128.value() {:?}", contract.tickBitmap.get(123).value());
+    println!("tickBitmap[123].value() {:?}", contract.tickBitmap.get(123).value());
+    println!("ticks[123].value() {:?}", contract.ticks.get(123).value());
+    println!("ticks[123].value() {:?}", contract.ticks.get(123).value());
 
 
 
