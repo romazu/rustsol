@@ -12,16 +12,20 @@ mod generated_contract;
 struct DummySlotsGetter;
 impl SlotsGetter for DummySlotsGetter {
     fn get_slots(&self, start: U256, n: usize) -> Result<Vec<U256>, String> {
+        let mut start_ = start;
+        if start > U256::from(1000) {
+            start_ = U256::from(1);
+        }
         let mut res = Vec::with_capacity(n); // U256 is 32 bytes
         for i in 0..n {
-            res.push(start + U256::from(i));
+            res.push(start_ + U256::from(i));
         }
         Ok(res)
     }
 }
 
 fn main() {
-    // Example contract
+    // // Example contract
     // let contract = generated_contract::MyContract::new();
     // println!("{:?}", contract.myNestedMapping.get(0u64));
     // println!("{:?}", contract.myNestedMapping.get(0u64).get(1u64).position());
@@ -58,6 +62,8 @@ fn main() {
     // println!("plainString.value()           {:?}", contract.plainString.value());
     println!("dynamicArray.position()       {:?}", contract.dynamicArray.position());
     println!("dynamicArray.value()          {:?}", contract.dynamicArray.value());
+    println!("dynamicArrayNested.value()    {:?}", contract.dynamicArrayNested.value());
+    println!("dynamicArrayNested[1].value() {:?}", contract.dynamicArrayNested.get(1).value());
 
     // // // Uniswap V3
     // // let contract = generated_contract::UniswapV3Pool::new();

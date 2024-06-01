@@ -59,7 +59,7 @@ impl<const SIZE: u64> Value for Primitive<SIZE> {
     // TODO: Change to concrete values type like u64 and bool.
     type ValueType = U256;
 
-    fn value_from_bytes(bytes: &[u8]) -> Self::ValueType {
-        U256::from_be_slice(bytes)
+    fn value_from_base_bytes(&self, bytes: &[u8]) -> Result<Self::ValueType, String> {
+        Ok(U256::from_be_slice(bytes))
     }
 }

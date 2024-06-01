@@ -95,6 +95,12 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                             self.__slot_getter = Some(getter);
                         }
                     }
+                    impl Value for #struct_name {
+                        type ValueType = u8; // dummy
+                        fn value_from_base_bytes(&self, bytes: &[u8]) -> Result<Self::ValueType, String> {
+                            panic!("Not implemented")
+                        }
+                    }
                 };
                 nested_struct_implementations.push(struct_implementation);
             }
@@ -108,7 +114,7 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
     };
     let imports_definition_items: Vec<Item> = vec![
         parse_str("use std::sync::Arc;").expect("Failed to parse"),
-        parse_str("use rustsol::types::{Position, SlotsGetter, SlotsGetterSetter};").expect("Failed to parse"),
+        parse_str("use rustsol::types::{Position, SlotsGetter, SlotsGetterSetter, Value};").expect("Failed to parse"),
         parse_str("use rustsol::types::{Primitive, Bytes, Address, Mapping, DynamicArray, StaticArray};").expect("Failed to parse"),
         parse_str("use rustsol::types::{PrimitiveKey, BytesKey, AddressKey};").expect("Failed to parse"),
         parse_str("use alloy_primitives::U256;").expect("Failed to parse"),

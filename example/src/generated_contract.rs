@@ -1,6 +1,6 @@
 #![allow(unused_imports, non_snake_case, unused, dead_code)]
 use std::sync::Arc;
-use rustsol::types::{Position, SlotsGetter, SlotsGetterSetter};
+use rustsol::types::{Position, SlotsGetter, SlotsGetterSetter, Value};
 use rustsol::types::{Primitive, Bytes, Address, Mapping, DynamicArray, StaticArray};
 use rustsol::types::{PrimitiveKey, BytesKey, AddressKey};
 use alloy_primitives::U256;
@@ -9,13 +9,14 @@ pub struct MyContract {
     __slot: U256,
     __slot_getter: Option<Arc<dyn SlotsGetter>>,
     pub plainUint112: Primitive<14>,
+    pub dynamicArray: DynamicArray<Primitive<32>>,
+    pub dynamicArrayNested: DynamicArray<DynamicArray<Primitive<32>>>,
     pub plainUint32: Primitive<4>,
     pub plainString: Bytes,
     pub myStructNested: MyContractMyStructNested,
     pub staticArray: StaticArray<160, Primitive<14>>,
     pub staticArrayLarge: StaticArray<128, MyContractMyStruct>,
     pub staticArrayNestedSmall: StaticArray<128, StaticArray<32, Primitive<1>>>,
-    pub dynamicArray: DynamicArray<Primitive<32>>,
     pub dynamicArrayStruct: DynamicArray<MyContractMyStructNested>,
     pub dynamicArraySmall: DynamicArray<MyContractMyStructSmall>,
     pub myMapping1: Mapping<PrimitiveKey, Primitive<32>>,
@@ -55,24 +56,25 @@ impl MyContract {
             __slot: slot,
             __slot_getter: None,
             plainUint112: Primitive::from_position(slot + U256::from(0), 0),
-            plainUint32: Primitive::from_position(slot + U256::from(0), 14),
-            plainString: Bytes::from_position(slot + U256::from(1), 0),
+            dynamicArray: DynamicArray::from_position(slot + U256::from(1), 0),
+            dynamicArrayNested: DynamicArray::from_position(slot + U256::from(2), 0),
+            plainUint32: Primitive::from_position(slot + U256::from(3), 0),
+            plainString: Bytes::from_position(slot + U256::from(4), 0),
             myStructNested: MyContractMyStructNested::from_position(
-                slot + U256::from(2),
+                slot + U256::from(5),
                 0,
             ),
-            staticArray: StaticArray::from_position(slot + U256::from(5), 0),
-            staticArrayLarge: StaticArray::from_position(slot + U256::from(10), 0),
-            staticArrayNestedSmall: StaticArray::from_position(slot + U256::from(14), 0),
-            dynamicArray: DynamicArray::from_position(slot + U256::from(18), 0),
-            dynamicArrayStruct: DynamicArray::from_position(slot + U256::from(19), 0),
-            dynamicArraySmall: DynamicArray::from_position(slot + U256::from(20), 0),
-            myMapping1: Mapping::from_position(slot + U256::from(21), 0),
-            myMapping2: Mapping::from_position(slot + U256::from(22), 0),
-            myMappingBool: Mapping::from_position(slot + U256::from(23), 0),
-            myAddressMappingNested: Mapping::from_position(slot + U256::from(24), 0),
-            myNestedMapping: Mapping::from_position(slot + U256::from(25), 0),
-            myEnum: Primitive::from_position(slot + U256::from(26), 0),
+            staticArray: StaticArray::from_position(slot + U256::from(8), 0),
+            staticArrayLarge: StaticArray::from_position(slot + U256::from(13), 0),
+            staticArrayNestedSmall: StaticArray::from_position(slot + U256::from(17), 0),
+            dynamicArrayStruct: DynamicArray::from_position(slot + U256::from(21), 0),
+            dynamicArraySmall: DynamicArray::from_position(slot + U256::from(22), 0),
+            myMapping1: Mapping::from_position(slot + U256::from(23), 0),
+            myMapping2: Mapping::from_position(slot + U256::from(24), 0),
+            myMappingBool: Mapping::from_position(slot + U256::from(25), 0),
+            myAddressMappingNested: Mapping::from_position(slot + U256::from(26), 0),
+            myNestedMapping: Mapping::from_position(slot + U256::from(27), 0),
+            myEnum: Primitive::from_position(slot + U256::from(28), 0),
         }
     }
     pub fn slot(&self) -> U256 {
@@ -95,13 +97,14 @@ impl MyContract {
     pub fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
         self.__slot_getter = Some(getter.clone());
         self.plainUint112.set_slots_getter(getter.clone());
+        self.dynamicArray.set_slots_getter(getter.clone());
+        self.dynamicArrayNested.set_slots_getter(getter.clone());
         self.plainUint32.set_slots_getter(getter.clone());
         self.plainString.set_slots_getter(getter.clone());
         self.myStructNested.set_slots_getter(getter.clone());
         self.staticArray.set_slots_getter(getter.clone());
         self.staticArrayLarge.set_slots_getter(getter.clone());
         self.staticArrayNestedSmall.set_slots_getter(getter.clone());
-        self.dynamicArray.set_slots_getter(getter.clone());
         self.dynamicArrayStruct.set_slots_getter(getter.clone());
         self.dynamicArraySmall.set_slots_getter(getter.clone());
         self.myMapping1.set_slots_getter(getter.clone());
@@ -123,6 +126,12 @@ impl Position for MyContract {
 impl SlotsGetterSetter for MyContract {
     fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
         self.__slot_getter = Some(getter);
+    }
+}
+impl Value for MyContract {
+    type ValueType = u8;
+    fn value_from_base_bytes(&self, bytes: &[u8]) -> Result<Self::ValueType, String> {
+        panic!("Not implemented")
     }
 }
 impl MyContractMyStructNested {
@@ -173,6 +182,12 @@ impl SlotsGetterSetter for MyContractMyStructNested {
         self.__slot_getter = Some(getter);
     }
 }
+impl Value for MyContractMyStructNested {
+    type ValueType = u8;
+    fn value_from_base_bytes(&self, bytes: &[u8]) -> Result<Self::ValueType, String> {
+        panic!("Not implemented")
+    }
+}
 impl MyContractMyStruct {
     pub fn new() -> Self {
         Self::from_position(U256::ZERO, 0)
@@ -221,6 +236,12 @@ impl SlotsGetterSetter for MyContractMyStruct {
         self.__slot_getter = Some(getter);
     }
 }
+impl Value for MyContractMyStruct {
+    type ValueType = u8;
+    fn value_from_base_bytes(&self, bytes: &[u8]) -> Result<Self::ValueType, String> {
+        panic!("Not implemented")
+    }
+}
 impl MyContractMyStructSmall {
     pub fn new() -> Self {
         Self::from_position(U256::ZERO, 0)
@@ -267,5 +288,11 @@ impl Position for MyContractMyStructSmall {
 impl SlotsGetterSetter for MyContractMyStructSmall {
     fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
         self.__slot_getter = Some(getter);
+    }
+}
+impl Value for MyContractMyStructSmall {
+    type ValueType = u8;
+    fn value_from_base_bytes(&self, bytes: &[u8]) -> Result<Self::ValueType, String> {
+        panic!("Not implemented")
     }
 }

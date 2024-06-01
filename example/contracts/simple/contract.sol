@@ -1,5 +1,9 @@
 contract MyContract {
     uint112 public plainUint112;
+
+    uint256[] public dynamicArray;
+    uint256[][] public dynamicArrayNested;
+
     uint32 public plainUint32;
     string public plainString;
 
@@ -20,7 +24,6 @@ contract MyContract {
     uint112[10] public staticArray;
     MyStruct[2] public staticArrayLarge;
     uint8[2][4] public staticArrayNestedSmall;
-    uint256[] public dynamicArray;
     MyStructNested[] public dynamicArrayStruct;
     MyStructSmall[] public dynamicArraySmall;
 

@@ -65,7 +65,7 @@ impl<const SIZE: u64, Value> StaticArray<SIZE, Value> {
             panic!("Index is outside array capacity: {} vs {}", index, capacity)
         }
         let (index_slot, index_offset) = index_to_position(index, packing_n, packing_d);
-        Value::from_position(self.storage() + U256::from(index_slot), index_offset)
+        Value::from_position(self.storage() + index_slot, index_offset)
     }
 }
 

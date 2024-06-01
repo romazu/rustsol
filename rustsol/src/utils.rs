@@ -65,8 +65,8 @@ pub fn vec_u256_to_vec_bytes(vec_u256: &Vec<U256>, start: usize, end: usize) -> 
     vec_bytes
 }
 
-pub fn index_to_position(index: usize, packing_ratio_n: u64, packing_ratio_d: u64) -> (u64, u8) {
+pub fn index_to_position(index: usize, packing_ratio_n: u64, packing_ratio_d: u64) -> (U256, u8) {
     let slot = index as u64 * packing_ratio_n / packing_ratio_d;
     let offset = (index as u64 * 32 * packing_ratio_n / packing_ratio_d % 32) as u8;  // guaranteed to fit in u8
-    (slot, offset)
+    (U256::from(slot), offset)
 }
