@@ -33,7 +33,8 @@ impl Bytes {
             None => panic!("No slots getter"),
             Some(getter) => {
                 let slots = getter.get_slots(self.__slot, 1);
-                slots[0] // debug dummy
+                let slot_value = slots[0];
+                slot_value // dummy value
             },
         }
     }

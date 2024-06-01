@@ -2,7 +2,7 @@ use std::fmt::Debug;
 use std::sync::Arc;
 use alloy_primitives::U256;
 use crate::types::{Mapping, SlotsGetterSetter};
-use crate::types::traits::{Position, SlotsGetter};
+use crate::types::traits::{Position, SlotsGetter, Value};
 
 #[derive(Debug, Default)]
 pub struct Primitive<const SIZE: u64> {
@@ -48,5 +48,14 @@ impl<const SIZE: u64> Position for Primitive<SIZE> {
 impl<const SIZE: u64> SlotsGetterSetter for Primitive<SIZE> {
     fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
         self.__slot_getter = Some(getter);
+    }
+}
+
+impl<const SIZE: u64> Value for Primitive<SIZE> {
+    // TODO: Change to concrete values type like u64 and bool.
+    type ValueType = U256;
+
+    fn value_from_bytes(bytes: &[u8]) -> Self::ValueType {
+        U256::from_be_slice(bytes)
     }
 }

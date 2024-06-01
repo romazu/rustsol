@@ -14,3 +14,8 @@ pub trait SlotsGetter: Debug {
 pub trait SlotsGetterSetter: Debug {
     fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>);
 }
+
+pub trait Value {
+    type ValueType;
+    fn value_from_bytes(bytes: &[u8]) -> Self::ValueType;
+}

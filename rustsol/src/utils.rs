@@ -1,5 +1,6 @@
 use sha3::{Digest, Keccak256};
 use std::convert::TryInto;
+use std::{u64, usize};
 use alloy_primitives::{Address, U256};
 
 /// Computes the keccak256 hash of the concatenation of two 32-byte arrays
@@ -41,6 +42,27 @@ pub fn address_to_bytes32(address: Address) -> [u8; 32] {
 
 pub fn bytes32_to_u256(bytes: [u8; 32]) -> U256 {
     U256::from_be_bytes(bytes)
+}
+
+pub fn u256_to_u64(value: U256) -> u64 {
+    let bytes = value.to_be_bytes::<{ U256::BYTES }>(); // Assuming it returns [u8; 32]
+
+    // Check if the upper 24 bytes are all zeros, which means it fits into u64
+    // TODO: Use the correct byte size of usize on a machine.
+    if bytes[..24] == [0u8; 24] {
+        let lower_u64 = u64::from_be_bytes(bytes[24..32].try_into().expect("slice with incorrect length"));
+        lower_u64
+    } else {
+        panic!("Value does not fit in u64")
+    }
+}
+
+pub fn vec_u256_to_vec_bytes(vec_u256: &Vec<U256>, start: usize, end: usize) -> Vec<u8> {
+    let mut vec_bytes = Vec::with_capacity((end - start) * 32); // U256 is 32 bytes
+    for u256 in &vec_u256[start..end] {
+        vec_bytes.extend_from_slice(&u256.to_be_bytes::<{ U256::BYTES }>());
+    }
+    vec_bytes
 }
 
 pub fn index_to_position(index: usize, packing_ratio_n: u64, packing_ratio_d: u64) -> (u64, u8) {
