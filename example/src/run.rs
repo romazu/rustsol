@@ -64,6 +64,7 @@ fn main() {
     println!("dynamicArray.value()          {:?}", contract.dynamicArray.value());
     println!("dynamicArrayNested.value()    {:?}", contract.dynamicArrayNested.value());
     println!("dynamicArrayNested[1].value() {:?}", contract.dynamicArrayNested.get(1).value());
+    println!("plainAddress.value()          {:?}", contract.plainAddress.value());
 
     // // // Uniswap V3
     // // let contract = generated_contract::UniswapV3Pool::new();

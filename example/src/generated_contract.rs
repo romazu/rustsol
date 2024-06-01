@@ -13,6 +13,7 @@ pub struct MyContract {
     pub dynamicArrayNested: DynamicArray<DynamicArray<Primitive<32>>>,
     pub plainUint32: Primitive<4>,
     pub plainString: Bytes,
+    pub plainAddress: Address,
     pub myStructNested: MyContractMyStructNested,
     pub staticArray: StaticArray<160, Primitive<14>>,
     pub staticArrayLarge: StaticArray<128, MyContractMyStruct>,
@@ -60,21 +61,22 @@ impl MyContract {
             dynamicArrayNested: DynamicArray::from_position(slot + U256::from(2), 0),
             plainUint32: Primitive::from_position(slot + U256::from(3), 0),
             plainString: Bytes::from_position(slot + U256::from(4), 0),
+            plainAddress: Address::from_position(slot + U256::from(5), 0),
             myStructNested: MyContractMyStructNested::from_position(
-                slot + U256::from(5),
+                slot + U256::from(6),
                 0,
             ),
-            staticArray: StaticArray::from_position(slot + U256::from(8), 0),
-            staticArrayLarge: StaticArray::from_position(slot + U256::from(13), 0),
-            staticArrayNestedSmall: StaticArray::from_position(slot + U256::from(17), 0),
-            dynamicArrayStruct: DynamicArray::from_position(slot + U256::from(21), 0),
-            dynamicArraySmall: DynamicArray::from_position(slot + U256::from(22), 0),
-            myMapping1: Mapping::from_position(slot + U256::from(23), 0),
-            myMapping2: Mapping::from_position(slot + U256::from(24), 0),
-            myMappingBool: Mapping::from_position(slot + U256::from(25), 0),
-            myAddressMappingNested: Mapping::from_position(slot + U256::from(26), 0),
-            myNestedMapping: Mapping::from_position(slot + U256::from(27), 0),
-            myEnum: Primitive::from_position(slot + U256::from(28), 0),
+            staticArray: StaticArray::from_position(slot + U256::from(9), 0),
+            staticArrayLarge: StaticArray::from_position(slot + U256::from(14), 0),
+            staticArrayNestedSmall: StaticArray::from_position(slot + U256::from(18), 0),
+            dynamicArrayStruct: DynamicArray::from_position(slot + U256::from(22), 0),
+            dynamicArraySmall: DynamicArray::from_position(slot + U256::from(23), 0),
+            myMapping1: Mapping::from_position(slot + U256::from(24), 0),
+            myMapping2: Mapping::from_position(slot + U256::from(25), 0),
+            myMappingBool: Mapping::from_position(slot + U256::from(26), 0),
+            myAddressMappingNested: Mapping::from_position(slot + U256::from(27), 0),
+            myNestedMapping: Mapping::from_position(slot + U256::from(28), 0),
+            myEnum: Primitive::from_position(slot + U256::from(29), 0),
         }
     }
     pub fn slot(&self) -> U256 {
@@ -101,6 +103,7 @@ impl MyContract {
         self.dynamicArrayNested.set_slots_getter(getter.clone());
         self.plainUint32.set_slots_getter(getter.clone());
         self.plainString.set_slots_getter(getter.clone());
+        self.plainAddress.set_slots_getter(getter.clone());
         self.myStructNested.set_slots_getter(getter.clone());
         self.staticArray.set_slots_getter(getter.clone());
         self.staticArrayLarge.set_slots_getter(getter.clone());

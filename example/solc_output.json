@@ -45,100 +45,108 @@
               "type": "t_string_storage"
             },
             {
-              "astId": 32,
+              "astId": 15,
+              "contract": "contract.sol:MyContract",
+              "label": "plainAddress",
+              "offset": 0,
+              "slot": "5",
+              "type": "t_address"
+            },
+            {
+              "astId": 34,
               "contract": "contract.sol:MyContract",
               "label": "myStructNested",
               "offset": 0,
-              "slot": "5",
-              "type": "t_struct(MyStructNested)24_storage"
+              "slot": "6",
+              "type": "t_struct(MyStructNested)26_storage"
             },
             {
-              "astId": 36,
+              "astId": 38,
               "contract": "contract.sol:MyContract",
               "label": "staticArray",
               "offset": 0,
-              "slot": "8",
+              "slot": "9",
               "type": "t_array(t_uint112)10_storage"
             },
             {
-              "astId": 41,
+              "astId": 43,
               "contract": "contract.sol:MyContract",
               "label": "staticArrayLarge",
               "offset": 0,
-              "slot": "13",
-              "type": "t_array(t_struct(MyStruct)18_storage)2_storage"
+              "slot": "14",
+              "type": "t_array(t_struct(MyStruct)20_storage)2_storage"
             },
             {
-              "astId": 47,
+              "astId": 49,
               "contract": "contract.sol:MyContract",
               "label": "staticArrayNestedSmall",
               "offset": 0,
-              "slot": "17",
+              "slot": "18",
               "type": "t_array(t_array(t_uint8)2_storage)4_storage"
             },
             {
-              "astId": 51,
+              "astId": 53,
               "contract": "contract.sol:MyContract",
               "label": "dynamicArrayStruct",
               "offset": 0,
-              "slot": "21",
-              "type": "t_array(t_struct(MyStructNested)24_storage)dyn_storage"
+              "slot": "22",
+              "type": "t_array(t_struct(MyStructNested)26_storage)dyn_storage"
             },
             {
-              "astId": 55,
+              "astId": 57,
               "contract": "contract.sol:MyContract",
               "label": "dynamicArraySmall",
               "offset": 0,
-              "slot": "22",
-              "type": "t_array(t_struct(MyStructSmall)29_storage)dyn_storage"
+              "slot": "23",
+              "type": "t_array(t_struct(MyStructSmall)31_storage)dyn_storage"
             },
             {
-              "astId": 59,
+              "astId": 61,
               "contract": "contract.sol:MyContract",
               "label": "myMapping1",
               "offset": 0,
-              "slot": "23",
+              "slot": "24",
               "type": "t_mapping(t_uint256,t_uint256)"
             },
             {
-              "astId": 63,
+              "astId": 65,
               "contract": "contract.sol:MyContract",
               "label": "myMapping2",
               "offset": 0,
-              "slot": "24",
+              "slot": "25",
               "type": "t_mapping(t_string_memory_ptr,t_uint256)"
             },
             {
-              "astId": 67,
+              "astId": 69,
               "contract": "contract.sol:MyContract",
               "label": "myMappingBool",
               "offset": 0,
-              "slot": "25",
+              "slot": "26",
               "type": "t_mapping(t_bool,t_bool)"
             },
             {
-              "astId": 73,
+              "astId": 75,
               "contract": "contract.sol:MyContract",
               "label": "myAddressMappingNested",
               "offset": 0,
-              "slot": "26",
+              "slot": "27",
               "type": "t_mapping(t_address,t_mapping(t_address,t_address))"
             },
             {
-              "astId": 79,
+              "astId": 81,
               "contract": "contract.sol:MyContract",
               "label": "myNestedMapping",
               "offset": 0,
-              "slot": "27",
+              "slot": "28",
               "type": "t_mapping(t_uint256,t_mapping(t_uint256,t_uint256))"
             },
             {
-              "astId": 85,
+              "astId": 87,
               "contract": "contract.sol:MyContract",
               "label": "myEnum",
               "offset": 0,
-              "slot": "28",
-              "type": "t_enum(MyEnum)82"
+              "slot": "29",
+              "type": "t_enum(MyEnum)84"
             }
           ],
           "types": {
@@ -159,20 +167,20 @@
               "label": "uint8[2][4]",
               "numberOfBytes": "128"
             },
-            "t_array(t_struct(MyStruct)18_storage)2_storage": {
-              "base": "t_struct(MyStruct)18_storage",
+            "t_array(t_struct(MyStruct)20_storage)2_storage": {
+              "base": "t_struct(MyStruct)20_storage",
               "encoding": "inplace",
               "label": "struct MyContract.MyStruct[2]",
               "numberOfBytes": "128"
             },
-            "t_array(t_struct(MyStructNested)24_storage)dyn_storage": {
-              "base": "t_struct(MyStructNested)24_storage",
+            "t_array(t_struct(MyStructNested)26_storage)dyn_storage": {
+              "base": "t_struct(MyStructNested)26_storage",
               "encoding": "dynamic_array",
               "label": "struct MyContract.MyStructNested[]",
               "numberOfBytes": "32"
             },
-            "t_array(t_struct(MyStructSmall)29_storage)dyn_storage": {
-              "base": "t_struct(MyStructSmall)29_storage",
+            "t_array(t_struct(MyStructSmall)31_storage)dyn_storage": {
+              "base": "t_struct(MyStructSmall)31_storage",
               "encoding": "dynamic_array",
               "label": "struct MyContract.MyStructSmall[]",
               "numberOfBytes": "32"
@@ -200,7 +208,7 @@
               "label": "bool",
               "numberOfBytes": "1"
             },
-            "t_enum(MyEnum)82": {
+            "t_enum(MyEnum)84": {
               "encoding": "inplace",
               "label": "enum MyContract.MyEnum",
               "numberOfBytes": "1"
@@ -257,12 +265,12 @@
               "label": "string",
               "numberOfBytes": "32"
             },
-            "t_struct(MyStruct)18_storage": {
+            "t_struct(MyStruct)20_storage": {
               "encoding": "inplace",
               "label": "struct MyContract.MyStruct",
               "members": [
                 {
-                  "astId": 15,
+                  "astId": 17,
                   "contract": "contract.sol:MyContract",
                   "label": "myAddress",
                   "offset": 0,
@@ -270,7 +278,7 @@
                   "type": "t_address"
                 },
                 {
-                  "astId": 17,
+                  "astId": 19,
                   "contract": "contract.sol:MyContract",
                   "label": "myUint",
                   "offset": 0,
@@ -280,12 +288,12 @@
               ],
               "numberOfBytes": "64"
             },
-            "t_struct(MyStructNested)24_storage": {
+            "t_struct(MyStructNested)26_storage": {
               "encoding": "inplace",
               "label": "struct MyContract.MyStructNested",
               "members": [
                 {
-                  "astId": 20,
+                  "astId": 22,
                   "contract": "contract.sol:MyContract",
                   "label": "myAddress",
                   "offset": 0,
@@ -293,22 +301,22 @@
                   "type": "t_address"
                 },
                 {
-                  "astId": 23,
+                  "astId": 25,
                   "contract": "contract.sol:MyContract",
                   "label": "myStruct",
                   "offset": 0,
                   "slot": "1",
-                  "type": "t_struct(MyStruct)18_storage"
+                  "type": "t_struct(MyStruct)20_storage"
                 }
               ],
               "numberOfBytes": "96"
             },
-            "t_struct(MyStructSmall)29_storage": {
+            "t_struct(MyStructSmall)31_storage": {
               "encoding": "inplace",
               "label": "struct MyContract.MyStructSmall",
               "members": [
                 {
-                  "astId": 26,
+                  "astId": 28,
                   "contract": "contract.sol:MyContract",
                   "label": "smallInt1",
                   "offset": 0,
@@ -316,7 +324,7 @@
                   "type": "t_uint32"
                 },
                 {
-                  "astId": 28,
+                  "astId": 30,
                   "contract": "contract.sol:MyContract",
                   "label": "smallInt2",
                   "offset": 4,

@@ -6,6 +6,7 @@ contract MyContract {
 
     uint32 public plainUint32;
     string public plainString;
+    address public plainAddress;
 
     struct MyStruct {
         address myAddress;
