@@ -28,17 +28,20 @@ impl<KeyType, Value> Mapping<KeyType, Value> {
 
     fn get_value(&self, key: [u8; 32]) -> Value
         where
-            Value: Position+ SlotsGetterSetter,
+            Value: Position + SlotsGetterSetter,
     {
         let value_slot_bytes = keccak256_concat(key, u256_to_bytes32(self.__slot));
         let mut value = Value::from_position(bytes32_to_u256(value_slot_bytes), 0);
         match &self.__slot_getter {
-            None => {panic!("No slots getter")}
+            None => {
+                // No slots getter to pass to children.
+            }
             Some(getter) => {
+                // Set child's slots getter.
                 value.set_slots_getter(getter.clone());
-                value
             }
         }
+        value
     }
 }
 
@@ -57,7 +60,7 @@ impl<Value> Mapping<PrimitiveKey, Value> {
     pub fn get<T>(&self, key: T) -> Value
         where
             T: Into<PrimitiveKey>,
-            Value: Position+ SlotsGetterSetter,
+            Value: Position + SlotsGetterSetter,
     {
         self.get_value(key.into().0)
     }
@@ -67,7 +70,7 @@ impl<Value> Mapping<BytesKey, Value> {
     pub fn get<T>(&self, key: T) -> Value
         where
             T: Into<BytesKey>,
-            Value: Position+ SlotsGetterSetter,
+            Value: Position + SlotsGetterSetter,
     {
         self.get_value(key.into().0)
     }
@@ -77,7 +80,7 @@ impl<Value> Mapping<AddressKey, Value> {
     pub fn get<T>(&self, key: T) -> Value
         where
             T: Into<AddressKey>,
-            Value: Position+ SlotsGetterSetter,
+            Value: Position + SlotsGetterSetter,
     {
         self.get_value(key.into().0)
     }
