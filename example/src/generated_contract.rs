@@ -5,71 +5,48 @@ use rustsol::types::{Primitive, Bytes, Address, Mapping, DynamicArray, StaticArr
 use rustsol::types::{PrimitiveKey, BytesKey, AddressKey};
 use alloy_primitives::U256;
 #[derive(Debug)]
-pub struct UniswapV3Pool {
+pub struct MyContract {
     __slot: U256,
     __slot_getter: Option<Arc<dyn SlotsGetter>>,
-    pub slot0: UniswapV3PoolSlot0,
-    pub feeGrowthGlobal0X128: Primitive<32>,
-    pub feeGrowthGlobal1X128: Primitive<32>,
-    pub protocolFees: UniswapV3PoolProtocolFees,
-    pub liquidity: Primitive<16>,
-    pub ticks: Mapping<PrimitiveKey, TickInfo>,
-    pub tickBitmap: Mapping<PrimitiveKey, Primitive<32>>,
-    pub positions: Mapping<PrimitiveKey, PositionInfo>,
-    pub observations: StaticArray<2097120, OracleObservation>,
+    pub plainUint112: Primitive<14>,
+    pub plainUint32: Primitive<4>,
+    pub plainString: Bytes,
+    pub myStructNested: MyContractMyStructNested,
+    pub staticArray: StaticArray<160, Primitive<14>>,
+    pub staticArrayLarge: StaticArray<128, MyContractMyStruct>,
+    pub staticArrayNestedSmall: StaticArray<128, StaticArray<32, Primitive<1>>>,
+    pub dynamicArray: DynamicArray<Primitive<32>>,
+    pub dynamicArrayStruct: DynamicArray<MyContractMyStructNested>,
+    pub dynamicArraySmall: DynamicArray<MyContractMyStructSmall>,
+    pub myMapping1: Mapping<PrimitiveKey, Primitive<32>>,
+    pub myMapping2: Mapping<BytesKey, Primitive<32>>,
+    pub myMappingBool: Mapping<PrimitiveKey, Primitive<1>>,
+    pub myAddressMappingNested: Mapping<AddressKey, Mapping<AddressKey, Address>>,
+    pub myNestedMapping: Mapping<PrimitiveKey, Mapping<PrimitiveKey, Primitive<32>>>,
+    pub myEnum: Primitive<1>,
 }
 #[derive(Debug)]
-pub struct UniswapV3PoolSlot0 {
+pub struct MyContractMyStructNested {
     __slot: U256,
     __slot_getter: Option<Arc<dyn SlotsGetter>>,
-    pub sqrtPriceX96: Primitive<20>,
-    pub tick: Primitive<3>,
-    pub observationIndex: Primitive<2>,
-    pub observationCardinality: Primitive<2>,
-    pub observationCardinalityNext: Primitive<2>,
-    pub feeProtocol: Primitive<1>,
-    pub unlocked: Primitive<1>,
+    pub myAddress: Address,
+    pub myStruct: MyContractMyStruct,
 }
 #[derive(Debug)]
-pub struct UniswapV3PoolProtocolFees {
+pub struct MyContractMyStruct {
     __slot: U256,
     __slot_getter: Option<Arc<dyn SlotsGetter>>,
-    pub token0: Primitive<16>,
-    pub token1: Primitive<16>,
+    pub myAddress: Address,
+    pub myUint: Primitive<32>,
 }
 #[derive(Debug)]
-pub struct TickInfo {
+pub struct MyContractMyStructSmall {
     __slot: U256,
     __slot_getter: Option<Arc<dyn SlotsGetter>>,
-    pub liquidityGross: Primitive<16>,
-    pub liquidityNet: Primitive<16>,
-    pub feeGrowthOutside0X128: Primitive<32>,
-    pub feeGrowthOutside1X128: Primitive<32>,
-    pub tickCumulativeOutside: Primitive<7>,
-    pub secondsPerLiquidityOutsideX128: Primitive<20>,
-    pub secondsOutside: Primitive<4>,
-    pub initialized: Primitive<1>,
+    pub smallInt1: Primitive<4>,
+    pub smallInt2: Primitive<4>,
 }
-#[derive(Debug)]
-pub struct PositionInfo {
-    __slot: U256,
-    __slot_getter: Option<Arc<dyn SlotsGetter>>,
-    pub liquidity: Primitive<16>,
-    pub feeGrowthInside0LastX128: Primitive<32>,
-    pub feeGrowthInside1LastX128: Primitive<32>,
-    pub tokensOwed0: Primitive<16>,
-    pub tokensOwed1: Primitive<16>,
-}
-#[derive(Debug)]
-pub struct OracleObservation {
-    __slot: U256,
-    __slot_getter: Option<Arc<dyn SlotsGetter>>,
-    pub blockTimestamp: Primitive<4>,
-    pub tickCumulative: Primitive<7>,
-    pub secondsPerLiquidityCumulativeX128: Primitive<20>,
-    pub initialized: Primitive<1>,
-}
-impl UniswapV3Pool {
+impl MyContract {
     pub fn new() -> Self {
         Self::from_position(U256::ZERO, 0)
     }
@@ -77,18 +54,25 @@ impl UniswapV3Pool {
         Self {
             __slot: slot,
             __slot_getter: None,
-            slot0: UniswapV3PoolSlot0::from_position(slot + U256::from(0), 0),
-            feeGrowthGlobal0X128: Primitive::from_position(slot + U256::from(1), 0),
-            feeGrowthGlobal1X128: Primitive::from_position(slot + U256::from(2), 0),
-            protocolFees: UniswapV3PoolProtocolFees::from_position(
-                slot + U256::from(3),
+            plainUint112: Primitive::from_position(slot + U256::from(0), 0),
+            plainUint32: Primitive::from_position(slot + U256::from(0), 14),
+            plainString: Bytes::from_position(slot + U256::from(1), 0),
+            myStructNested: MyContractMyStructNested::from_position(
+                slot + U256::from(2),
                 0,
             ),
-            liquidity: Primitive::from_position(slot + U256::from(4), 0),
-            ticks: Mapping::from_position(slot + U256::from(5), 0),
-            tickBitmap: Mapping::from_position(slot + U256::from(6), 0),
-            positions: Mapping::from_position(slot + U256::from(7), 0),
-            observations: StaticArray::from_position(slot + U256::from(8), 0),
+            staticArray: StaticArray::from_position(slot + U256::from(5), 0),
+            staticArrayLarge: StaticArray::from_position(slot + U256::from(10), 0),
+            staticArrayNestedSmall: StaticArray::from_position(slot + U256::from(14), 0),
+            dynamicArray: DynamicArray::from_position(slot + U256::from(18), 0),
+            dynamicArrayStruct: DynamicArray::from_position(slot + U256::from(19), 0),
+            dynamicArraySmall: DynamicArray::from_position(slot + U256::from(20), 0),
+            myMapping1: Mapping::from_position(slot + U256::from(21), 0),
+            myMapping2: Mapping::from_position(slot + U256::from(22), 0),
+            myMappingBool: Mapping::from_position(slot + U256::from(23), 0),
+            myAddressMappingNested: Mapping::from_position(slot + U256::from(24), 0),
+            myNestedMapping: Mapping::from_position(slot + U256::from(25), 0),
+            myEnum: Primitive::from_position(slot + U256::from(26), 0),
         }
     }
     pub fn slot(&self) -> U256 {
@@ -108,18 +92,25 @@ impl UniswapV3Pool {
     }
     pub fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
         self.__slot_getter = Some(getter.clone());
-        self.slot0.set_slots_getter(getter.clone());
-        self.feeGrowthGlobal0X128.set_slots_getter(getter.clone());
-        self.feeGrowthGlobal1X128.set_slots_getter(getter.clone());
-        self.protocolFees.set_slots_getter(getter.clone());
-        self.liquidity.set_slots_getter(getter.clone());
-        self.ticks.set_slots_getter(getter.clone());
-        self.tickBitmap.set_slots_getter(getter.clone());
-        self.positions.set_slots_getter(getter.clone());
-        self.observations.set_slots_getter(getter.clone())
+        self.plainUint112.set_slots_getter(getter.clone());
+        self.plainUint32.set_slots_getter(getter.clone());
+        self.plainString.set_slots_getter(getter.clone());
+        self.myStructNested.set_slots_getter(getter.clone());
+        self.staticArray.set_slots_getter(getter.clone());
+        self.staticArrayLarge.set_slots_getter(getter.clone());
+        self.staticArrayNestedSmall.set_slots_getter(getter.clone());
+        self.dynamicArray.set_slots_getter(getter.clone());
+        self.dynamicArrayStruct.set_slots_getter(getter.clone());
+        self.dynamicArraySmall.set_slots_getter(getter.clone());
+        self.myMapping1.set_slots_getter(getter.clone());
+        self.myMapping2.set_slots_getter(getter.clone());
+        self.myMappingBool.set_slots_getter(getter.clone());
+        self.myAddressMappingNested.set_slots_getter(getter.clone());
+        self.myNestedMapping.set_slots_getter(getter.clone());
+        self.myEnum.set_slots_getter(getter.clone())
     }
 }
-impl Position for UniswapV3Pool {
+impl Position for MyContract {
     fn from_position(slot: U256, offset: u8) -> Self {
         Self::from_position(slot, offset)
     }
@@ -127,12 +118,12 @@ impl Position for UniswapV3Pool {
         0
     }
 }
-impl SlotsGetterSetter for UniswapV3Pool {
+impl SlotsGetterSetter for MyContract {
     fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
         self.__slot_getter = Some(getter);
     }
 }
-impl UniswapV3PoolSlot0 {
+impl MyContractMyStructNested {
     pub fn new() -> Self {
         Self::from_position(U256::ZERO, 0)
     }
@@ -140,16 +131,100 @@ impl UniswapV3PoolSlot0 {
         Self {
             __slot: slot,
             __slot_getter: None,
-            sqrtPriceX96: Primitive::from_position(slot + U256::from(0), 0),
-            tick: Primitive::from_position(slot + U256::from(0), 20),
-            observationIndex: Primitive::from_position(slot + U256::from(0), 23),
-            observationCardinality: Primitive::from_position(slot + U256::from(0), 25),
-            observationCardinalityNext: Primitive::from_position(
-                slot + U256::from(0),
-                27,
-            ),
-            feeProtocol: Primitive::from_position(slot + U256::from(0), 29),
-            unlocked: Primitive::from_position(slot + U256::from(0), 30),
+            myAddress: Address::from_position(slot + U256::from(0), 0),
+            myStruct: MyContractMyStruct::from_position(slot + U256::from(1), 0),
+        }
+    }
+    pub fn slot(&self) -> U256 {
+        self.__slot
+    }
+    pub fn position(&self) -> (U256, u8, u64) {
+        (self.__slot, 0, 96)
+    }
+    pub fn value(self) -> U256 {
+        match self.__slot_getter {
+            None => panic!("No slots getter"),
+            Some(getter) => {
+                let slots = getter.get_slots(self.__slot, 1);
+                slots[0]
+            }
+        }
+    }
+    pub fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
+        self.__slot_getter = Some(getter.clone());
+        self.myAddress.set_slots_getter(getter.clone());
+        self.myStruct.set_slots_getter(getter.clone())
+    }
+}
+impl Position for MyContractMyStructNested {
+    fn from_position(slot: U256, offset: u8) -> Self {
+        Self::from_position(slot, offset)
+    }
+    fn size() -> u64 {
+        96
+    }
+}
+impl SlotsGetterSetter for MyContractMyStructNested {
+    fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
+        self.__slot_getter = Some(getter);
+    }
+}
+impl MyContractMyStruct {
+    pub fn new() -> Self {
+        Self::from_position(U256::ZERO, 0)
+    }
+    pub fn from_position(slot: U256, offset: u8) -> Self {
+        Self {
+            __slot: slot,
+            __slot_getter: None,
+            myAddress: Address::from_position(slot + U256::from(0), 0),
+            myUint: Primitive::from_position(slot + U256::from(1), 0),
+        }
+    }
+    pub fn slot(&self) -> U256 {
+        self.__slot
+    }
+    pub fn position(&self) -> (U256, u8, u64) {
+        (self.__slot, 0, 64)
+    }
+    pub fn value(self) -> U256 {
+        match self.__slot_getter {
+            None => panic!("No slots getter"),
+            Some(getter) => {
+                let slots = getter.get_slots(self.__slot, 1);
+                slots[0]
+            }
+        }
+    }
+    pub fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
+        self.__slot_getter = Some(getter.clone());
+        self.myAddress.set_slots_getter(getter.clone());
+        self.myUint.set_slots_getter(getter.clone())
+    }
+}
+impl Position for MyContractMyStruct {
+    fn from_position(slot: U256, offset: u8) -> Self {
+        Self::from_position(slot, offset)
+    }
+    fn size() -> u64 {
+        64
+    }
+}
+impl SlotsGetterSetter for MyContractMyStruct {
+    fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
+        self.__slot_getter = Some(getter);
+    }
+}
+impl MyContractMyStructSmall {
+    pub fn new() -> Self {
+        Self::from_position(U256::ZERO, 0)
+    }
+    pub fn from_position(slot: U256, offset: u8) -> Self {
+        Self {
+            __slot: slot,
+            __slot_getter: None,
+            smallInt1: Primitive::from_position(slot + U256::from(0), 0),
+            smallInt2: Primitive::from_position(slot + U256::from(0), 4),
         }
     }
     pub fn slot(&self) -> U256 {
@@ -169,16 +244,11 @@ impl UniswapV3PoolSlot0 {
     }
     pub fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
         self.__slot_getter = Some(getter.clone());
-        self.sqrtPriceX96.set_slots_getter(getter.clone());
-        self.tick.set_slots_getter(getter.clone());
-        self.observationIndex.set_slots_getter(getter.clone());
-        self.observationCardinality.set_slots_getter(getter.clone());
-        self.observationCardinalityNext.set_slots_getter(getter.clone());
-        self.feeProtocol.set_slots_getter(getter.clone());
-        self.unlocked.set_slots_getter(getter.clone())
+        self.smallInt1.set_slots_getter(getter.clone());
+        self.smallInt2.set_slots_getter(getter.clone())
     }
 }
-impl Position for UniswapV3PoolSlot0 {
+impl Position for MyContractMyStructSmall {
     fn from_position(slot: U256, offset: u8) -> Self {
         Self::from_position(slot, offset)
     }
@@ -186,219 +256,7 @@ impl Position for UniswapV3PoolSlot0 {
         32
     }
 }
-impl SlotsGetterSetter for UniswapV3PoolSlot0 {
-    fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
-        self.__slot_getter = Some(getter);
-    }
-}
-impl UniswapV3PoolProtocolFees {
-    pub fn new() -> Self {
-        Self::from_position(U256::ZERO, 0)
-    }
-    pub fn from_position(slot: U256, offset: u8) -> Self {
-        Self {
-            __slot: slot,
-            __slot_getter: None,
-            token0: Primitive::from_position(slot + U256::from(0), 0),
-            token1: Primitive::from_position(slot + U256::from(0), 16),
-        }
-    }
-    pub fn slot(&self) -> U256 {
-        self.__slot
-    }
-    pub fn position(&self) -> (U256, u8, u64) {
-        (self.__slot, 0, 32)
-    }
-    pub fn value(self) -> U256 {
-        match self.__slot_getter {
-            None => panic!("No slots getter"),
-            Some(getter) => {
-                let slots = getter.get_slots(self.__slot, 1);
-                slots[0]
-            }
-        }
-    }
-    pub fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
-        self.__slot_getter = Some(getter.clone());
-        self.token0.set_slots_getter(getter.clone());
-        self.token1.set_slots_getter(getter.clone())
-    }
-}
-impl Position for UniswapV3PoolProtocolFees {
-    fn from_position(slot: U256, offset: u8) -> Self {
-        Self::from_position(slot, offset)
-    }
-    fn size() -> u64 {
-        32
-    }
-}
-impl SlotsGetterSetter for UniswapV3PoolProtocolFees {
-    fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
-        self.__slot_getter = Some(getter);
-    }
-}
-impl TickInfo {
-    pub fn new() -> Self {
-        Self::from_position(U256::ZERO, 0)
-    }
-    pub fn from_position(slot: U256, offset: u8) -> Self {
-        Self {
-            __slot: slot,
-            __slot_getter: None,
-            liquidityGross: Primitive::from_position(slot + U256::from(0), 0),
-            liquidityNet: Primitive::from_position(slot + U256::from(0), 16),
-            feeGrowthOutside0X128: Primitive::from_position(slot + U256::from(1), 0),
-            feeGrowthOutside1X128: Primitive::from_position(slot + U256::from(2), 0),
-            tickCumulativeOutside: Primitive::from_position(slot + U256::from(3), 0),
-            secondsPerLiquidityOutsideX128: Primitive::from_position(
-                slot + U256::from(3),
-                7,
-            ),
-            secondsOutside: Primitive::from_position(slot + U256::from(3), 27),
-            initialized: Primitive::from_position(slot + U256::from(3), 31),
-        }
-    }
-    pub fn slot(&self) -> U256 {
-        self.__slot
-    }
-    pub fn position(&self) -> (U256, u8, u64) {
-        (self.__slot, 0, 128)
-    }
-    pub fn value(self) -> U256 {
-        match self.__slot_getter {
-            None => panic!("No slots getter"),
-            Some(getter) => {
-                let slots = getter.get_slots(self.__slot, 1);
-                slots[0]
-            }
-        }
-    }
-    pub fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
-        self.__slot_getter = Some(getter.clone());
-        self.liquidityGross.set_slots_getter(getter.clone());
-        self.liquidityNet.set_slots_getter(getter.clone());
-        self.feeGrowthOutside0X128.set_slots_getter(getter.clone());
-        self.feeGrowthOutside1X128.set_slots_getter(getter.clone());
-        self.tickCumulativeOutside.set_slots_getter(getter.clone());
-        self.secondsPerLiquidityOutsideX128.set_slots_getter(getter.clone());
-        self.secondsOutside.set_slots_getter(getter.clone());
-        self.initialized.set_slots_getter(getter.clone())
-    }
-}
-impl Position for TickInfo {
-    fn from_position(slot: U256, offset: u8) -> Self {
-        Self::from_position(slot, offset)
-    }
-    fn size() -> u64 {
-        128
-    }
-}
-impl SlotsGetterSetter for TickInfo {
-    fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
-        self.__slot_getter = Some(getter);
-    }
-}
-impl PositionInfo {
-    pub fn new() -> Self {
-        Self::from_position(U256::ZERO, 0)
-    }
-    pub fn from_position(slot: U256, offset: u8) -> Self {
-        Self {
-            __slot: slot,
-            __slot_getter: None,
-            liquidity: Primitive::from_position(slot + U256::from(0), 0),
-            feeGrowthInside0LastX128: Primitive::from_position(slot + U256::from(1), 0),
-            feeGrowthInside1LastX128: Primitive::from_position(slot + U256::from(2), 0),
-            tokensOwed0: Primitive::from_position(slot + U256::from(3), 0),
-            tokensOwed1: Primitive::from_position(slot + U256::from(3), 16),
-        }
-    }
-    pub fn slot(&self) -> U256 {
-        self.__slot
-    }
-    pub fn position(&self) -> (U256, u8, u64) {
-        (self.__slot, 0, 128)
-    }
-    pub fn value(self) -> U256 {
-        match self.__slot_getter {
-            None => panic!("No slots getter"),
-            Some(getter) => {
-                let slots = getter.get_slots(self.__slot, 1);
-                slots[0]
-            }
-        }
-    }
-    pub fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
-        self.__slot_getter = Some(getter.clone());
-        self.liquidity.set_slots_getter(getter.clone());
-        self.feeGrowthInside0LastX128.set_slots_getter(getter.clone());
-        self.feeGrowthInside1LastX128.set_slots_getter(getter.clone());
-        self.tokensOwed0.set_slots_getter(getter.clone());
-        self.tokensOwed1.set_slots_getter(getter.clone())
-    }
-}
-impl Position for PositionInfo {
-    fn from_position(slot: U256, offset: u8) -> Self {
-        Self::from_position(slot, offset)
-    }
-    fn size() -> u64 {
-        128
-    }
-}
-impl SlotsGetterSetter for PositionInfo {
-    fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
-        self.__slot_getter = Some(getter);
-    }
-}
-impl OracleObservation {
-    pub fn new() -> Self {
-        Self::from_position(U256::ZERO, 0)
-    }
-    pub fn from_position(slot: U256, offset: u8) -> Self {
-        Self {
-            __slot: slot,
-            __slot_getter: None,
-            blockTimestamp: Primitive::from_position(slot + U256::from(0), 0),
-            tickCumulative: Primitive::from_position(slot + U256::from(0), 4),
-            secondsPerLiquidityCumulativeX128: Primitive::from_position(
-                slot + U256::from(0),
-                11,
-            ),
-            initialized: Primitive::from_position(slot + U256::from(0), 31),
-        }
-    }
-    pub fn slot(&self) -> U256 {
-        self.__slot
-    }
-    pub fn position(&self) -> (U256, u8, u64) {
-        (self.__slot, 0, 32)
-    }
-    pub fn value(self) -> U256 {
-        match self.__slot_getter {
-            None => panic!("No slots getter"),
-            Some(getter) => {
-                let slots = getter.get_slots(self.__slot, 1);
-                slots[0]
-            }
-        }
-    }
-    pub fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
-        self.__slot_getter = Some(getter.clone());
-        self.blockTimestamp.set_slots_getter(getter.clone());
-        self.tickCumulative.set_slots_getter(getter.clone());
-        self.secondsPerLiquidityCumulativeX128.set_slots_getter(getter.clone());
-        self.initialized.set_slots_getter(getter.clone())
-    }
-}
-impl Position for OracleObservation {
-    fn from_position(slot: U256, offset: u8) -> Self {
-        Self::from_position(slot, offset)
-    }
-    fn size() -> u64 {
-        32
-    }
-}
-impl SlotsGetterSetter for OracleObservation {
+impl SlotsGetterSetter for MyContractMyStructSmall {
     fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
         self.__slot_getter = Some(getter);
     }
