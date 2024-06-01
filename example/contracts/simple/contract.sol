@@ -5,7 +5,6 @@ contract MyContract {
     uint256[][] public dynamicArrayNested;
 
     uint32 public plainUint32;
-    string public plainString;
     address public plainAddress;
 
     struct MyStruct {
@@ -36,4 +35,7 @@ contract MyContract {
 //    mapping(uint256 => mapping(uint256 => MyStruct)) public myNestedMapping;
     enum MyEnum {Enum1, Enum2}
     MyEnum myEnum;
+//    uint8[31] public ___gap___;
+    uint256[39] public ___gap___;
+    string public plainString;
 }

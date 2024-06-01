@@ -12,7 +12,6 @@ pub struct MyContract {
     pub dynamicArray: DynamicArray<Primitive<32>>,
     pub dynamicArrayNested: DynamicArray<DynamicArray<Primitive<32>>>,
     pub plainUint32: Primitive<4>,
-    pub plainString: Bytes,
     pub plainAddress: Address,
     pub myStructNested: MyContractMyStructNested,
     pub staticArray: StaticArray<160, Primitive<14>>,
@@ -26,6 +25,8 @@ pub struct MyContract {
     pub myAddressMappingNested: Mapping<AddressKey, Mapping<AddressKey, Address>>,
     pub myNestedMapping: Mapping<PrimitiveKey, Mapping<PrimitiveKey, Primitive<32>>>,
     pub myEnum: Primitive<1>,
+    pub ___gap___: StaticArray<1248, Primitive<32>>,
+    pub plainString: Bytes,
 }
 #[derive(Debug)]
 pub struct MyContractMyStructNested {
@@ -60,23 +61,24 @@ impl MyContract {
             dynamicArray: DynamicArray::from_position(slot + U256::from(1), 0),
             dynamicArrayNested: DynamicArray::from_position(slot + U256::from(2), 0),
             plainUint32: Primitive::from_position(slot + U256::from(3), 0),
-            plainString: Bytes::from_position(slot + U256::from(4), 0),
-            plainAddress: Address::from_position(slot + U256::from(5), 0),
+            plainAddress: Address::from_position(slot + U256::from(3), 4),
             myStructNested: MyContractMyStructNested::from_position(
-                slot + U256::from(6),
+                slot + U256::from(4),
                 0,
             ),
-            staticArray: StaticArray::from_position(slot + U256::from(9), 0),
-            staticArrayLarge: StaticArray::from_position(slot + U256::from(14), 0),
-            staticArrayNestedSmall: StaticArray::from_position(slot + U256::from(18), 0),
-            dynamicArrayStruct: DynamicArray::from_position(slot + U256::from(22), 0),
-            dynamicArraySmall: DynamicArray::from_position(slot + U256::from(23), 0),
-            myMapping1: Mapping::from_position(slot + U256::from(24), 0),
-            myMapping2: Mapping::from_position(slot + U256::from(25), 0),
-            myMappingBool: Mapping::from_position(slot + U256::from(26), 0),
-            myAddressMappingNested: Mapping::from_position(slot + U256::from(27), 0),
-            myNestedMapping: Mapping::from_position(slot + U256::from(28), 0),
-            myEnum: Primitive::from_position(slot + U256::from(29), 0),
+            staticArray: StaticArray::from_position(slot + U256::from(7), 0),
+            staticArrayLarge: StaticArray::from_position(slot + U256::from(12), 0),
+            staticArrayNestedSmall: StaticArray::from_position(slot + U256::from(16), 0),
+            dynamicArrayStruct: DynamicArray::from_position(slot + U256::from(20), 0),
+            dynamicArraySmall: DynamicArray::from_position(slot + U256::from(21), 0),
+            myMapping1: Mapping::from_position(slot + U256::from(22), 0),
+            myMapping2: Mapping::from_position(slot + U256::from(23), 0),
+            myMappingBool: Mapping::from_position(slot + U256::from(24), 0),
+            myAddressMappingNested: Mapping::from_position(slot + U256::from(25), 0),
+            myNestedMapping: Mapping::from_position(slot + U256::from(26), 0),
+            myEnum: Primitive::from_position(slot + U256::from(27), 0),
+            ___gap___: StaticArray::from_position(slot + U256::from(28), 0),
+            plainString: Bytes::from_position(slot + U256::from(67), 0),
         }
     }
     pub fn slot(&self) -> U256 {
@@ -102,7 +104,6 @@ impl MyContract {
         self.dynamicArray.set_slots_getter(getter.clone());
         self.dynamicArrayNested.set_slots_getter(getter.clone());
         self.plainUint32.set_slots_getter(getter.clone());
-        self.plainString.set_slots_getter(getter.clone());
         self.plainAddress.set_slots_getter(getter.clone());
         self.myStructNested.set_slots_getter(getter.clone());
         self.staticArray.set_slots_getter(getter.clone());
@@ -115,7 +116,9 @@ impl MyContract {
         self.myMappingBool.set_slots_getter(getter.clone());
         self.myAddressMappingNested.set_slots_getter(getter.clone());
         self.myNestedMapping.set_slots_getter(getter.clone());
-        self.myEnum.set_slots_getter(getter.clone())
+        self.myEnum.set_slots_getter(getter.clone());
+        self.___gap___.set_slots_getter(getter.clone());
+        self.plainString.set_slots_getter(getter.clone())
     }
 }
 impl Position for MyContract {

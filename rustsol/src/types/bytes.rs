@@ -1,7 +1,7 @@
 use std::sync::Arc;
-use alloy_primitives::U256;
-use crate::utils::{bytes32_to_u256, keccak256, u256_to_bytes32};
-use crate::types::{Primitive};
+use alloy_primitives::{FixedBytes, U256};
+use crate::utils::{bytes32_to_u256, ceil_div, keccak256, u256_to_bytes32, vec_u256_to_vec_bytes};
+use crate::types::{Address, Primitive, Value};
 use crate::types::{Position, SlotsGetter, SlotsGetterSetter};
 
 // In particular: if the data is at most 31 bytes long, the elements are stored in the higher-order
@@ -28,16 +28,12 @@ impl Bytes {
         bytes32_to_u256(keccak256(u256_to_bytes32(self.__slot)))
     }
 
-    // pub fn value(self) -> U256 {
-    //     match self.__slot_getter {
-    //         None => panic!("No slots getter"),
-    //         Some(getter) => {
-    //             let slots = getter.get_slots(self.__slot, 1);
-    //             let slot_value = slots[0];
-    //             slot_value // dummy value
-    //         },
-    //     }
-    // }
+    pub fn value(self) -> Result<Vec<u8>, String> {
+        let getter = self.__slot_getter.as_ref().expect("No slots getter");
+        let base_slot_value = getter.get_slots(self.__slot, 1)
+            .map_err(|err| format!("Failed to get slot values: {}", err))?[0];
+        self.value_from_base_bytes(&base_slot_value.to_be_bytes::<{ U256::BYTES }>())
+    }
 }
 
 impl Position for Bytes {
@@ -53,5 +49,28 @@ impl Position for Bytes {
 impl SlotsGetterSetter for Bytes {
     fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
         self.__slot_getter = Some(getter);
+    }
+}
+
+impl Value for Bytes {
+    type ValueType = Vec<u8>;
+
+    fn value_from_base_bytes(&self, bytes: &[u8]) -> Result<Self::ValueType, String> {
+        let getter = self.__slot_getter.as_ref().expect("No slots getter");
+        let base_slot_value = U256::from_be_slice(bytes);
+        let is_long = base_slot_value.bit(0);
+        if is_long {
+            let string_len_bytes = (base_slot_value.byte(0) - 1) / 2;
+            let string_len_slots = ceil_div(string_len_bytes as u64, 32) as usize;
+            let slots = getter.get_slots(self.storage(), string_len_slots)
+                .map_err(|err| format!("Failed to get slot values: {}", err))?;
+            let bytes = vec_u256_to_vec_bytes(&slots, 0, string_len_slots);
+            Ok(bytes[0..string_len_bytes as usize].to_vec())
+        } else {
+            let string_len = base_slot_value.byte(0) / 2;
+            // let bytes = Vec::from(&bytes[0..string_len as usize]);
+            let bytes = bytes[0..string_len as usize].to_vec();
+            Ok(bytes)
+        }
     }
 }
