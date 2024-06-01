@@ -28,16 +28,16 @@ impl Bytes {
         bytes32_to_u256(keccak256(u256_to_bytes32(self.__slot)))
     }
 
-    pub fn value(self) -> U256 {
-        match self.__slot_getter {
-            None => panic!("No slots getter"),
-            Some(getter) => {
-                let slots = getter.get_slots(self.__slot, 1);
-                let slot_value = slots[0];
-                slot_value // dummy value
-            },
-        }
-    }
+    // pub fn value(self) -> U256 {
+    //     match self.__slot_getter {
+    //         None => panic!("No slots getter"),
+    //         Some(getter) => {
+    //             let slots = getter.get_slots(self.__slot, 1);
+    //             let slot_value = slots[0];
+    //             slot_value // dummy value
+    //         },
+    //     }
+    // }
 }
 
 impl Position for Bytes {

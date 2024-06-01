@@ -24,13 +24,17 @@ impl<const SIZE: u64> Primitive<SIZE> {
         (self.__slot, self.__offset, SIZE)
     }
 
-    pub fn value(self) -> U256 {
+    pub fn value(self) -> Result<U256, String> {
         match self.__slot_getter {
             None => panic!("No slots getter"),
             Some(getter) => {
-                let slots = getter.get_slots(self.__slot, 1);
-                slots[0] // debug dummy
-            },
+                let result = getter.get_slots(self.__slot, 1);
+                if let Ok(slots) = result {
+                    Ok(slots[0])
+                } else {
+                    Err("Failed to get slot values".into())
+                }
+            }
         }
     }
 }

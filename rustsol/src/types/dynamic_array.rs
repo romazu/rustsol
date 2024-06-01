@@ -33,15 +33,17 @@ impl<ElementType: Position+Value> DynamicArray<ElementType> {
         (ceil_div(ElementType::size(), 32), 1)
     }
 
-    pub fn value(&self) -> Vec<<ElementType as Value>::ValueType> {
+    pub fn value(&self) -> Result<Vec<<ElementType as Value>::ValueType>, String> {
         match &self.__slot_getter {
             None => panic!("No slots getter"),
             Some(getter) => {
-                let base_slot_value = getter.get_slots(self.__slot, 1);
-                let array_len = u256_to_u64(base_slot_value[0]);
+                let base_slot_value = getter.get_slots(U256::from(self.__slot), 1)
+                    .map_err(|err| format!("Failed to get slot values: {}", err))?[0];
+                let array_len = u256_to_u64(base_slot_value);
                 let (packing_n, packing_d) = self.packing_ratio();
                 let array_size_slots = array_len * packing_n / packing_d;
-                let slot_values = getter.get_slots(self.storage(), array_size_slots as usize);
+                let slot_values = getter.get_slots(self.storage(), array_size_slots as usize)
+                    .map_err(|err| format!("Failed to get slot values: {}", err))?;
                 let mut values = Vec::new();
                 for i in 0..array_len as usize {
                     // Simple assumption (holds in Solidity) that element occupying several slots cannot have offset.
@@ -52,7 +54,7 @@ impl<ElementType: Position+Value> DynamicArray<ElementType> {
                     let value = ElementType::value_from_bytes(elements_bytes);
                     values.push(value);
                 }
-                values
+                Ok(values)
             },
         }
     }

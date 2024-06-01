@@ -81,12 +81,14 @@ impl MyContract {
     pub fn position(&self) -> (U256, u8, u64) {
         (self.__slot, 0, 0)
     }
-    pub fn value(self) -> U256 {
+    pub fn value(self) -> Result<U256, String> {
         match self.__slot_getter {
             None => panic!("No slots getter"),
             Some(getter) => {
-                let slots = getter.get_slots(self.__slot, 1);
-                slots[0]
+                let slots = getter
+                    .get_slots(self.__slot, 1)
+                    .map_err(|err| format!("Failed to get slot values: {}", err))?;
+                Ok(slots[0])
             }
         }
     }
@@ -141,12 +143,14 @@ impl MyContractMyStructNested {
     pub fn position(&self) -> (U256, u8, u64) {
         (self.__slot, 0, 96)
     }
-    pub fn value(self) -> U256 {
+    pub fn value(self) -> Result<U256, String> {
         match self.__slot_getter {
             None => panic!("No slots getter"),
             Some(getter) => {
-                let slots = getter.get_slots(self.__slot, 1);
-                slots[0]
+                let slots = getter
+                    .get_slots(self.__slot, 1)
+                    .map_err(|err| format!("Failed to get slot values: {}", err))?;
+                Ok(slots[0])
             }
         }
     }
@@ -187,12 +191,14 @@ impl MyContractMyStruct {
     pub fn position(&self) -> (U256, u8, u64) {
         (self.__slot, 0, 64)
     }
-    pub fn value(self) -> U256 {
+    pub fn value(self) -> Result<U256, String> {
         match self.__slot_getter {
             None => panic!("No slots getter"),
             Some(getter) => {
-                let slots = getter.get_slots(self.__slot, 1);
-                slots[0]
+                let slots = getter
+                    .get_slots(self.__slot, 1)
+                    .map_err(|err| format!("Failed to get slot values: {}", err))?;
+                Ok(slots[0])
             }
         }
     }
@@ -233,12 +239,14 @@ impl MyContractMyStructSmall {
     pub fn position(&self) -> (U256, u8, u64) {
         (self.__slot, 0, 32)
     }
-    pub fn value(self) -> U256 {
+    pub fn value(self) -> Result<U256, String> {
         match self.__slot_getter {
             None => panic!("No slots getter"),
             Some(getter) => {
-                let slots = getter.get_slots(self.__slot, 1);
-                slots[0]
+                let slots = getter
+                    .get_slots(self.__slot, 1)
+                    .map_err(|err| format!("Failed to get slot values: {}", err))?;
+                Ok(slots[0])
             }
         }
     }

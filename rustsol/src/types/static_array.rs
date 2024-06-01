@@ -69,7 +69,6 @@ impl<const SIZE: u64, Value> StaticArray<SIZE, Value> {
     }
 }
 
-
 impl<const SIZE: u64, Value: Debug> SlotsGetterSetter for StaticArray<SIZE, Value> {
     fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
         self.__slot_getter = Some(getter);
