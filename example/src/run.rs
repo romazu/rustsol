@@ -57,16 +57,20 @@ fn main() {
     let mut contract = generated_contract::MyContract::new();
     let getter = Arc::new(DummySlotsGetter);
     contract.set_slots_getter(getter);
-    println!("plainUint112.value()          {:?}", contract.plainUint112.value());
-    println!("myNestedMapping[0][1].value() {:?}", contract.myNestedMapping.get(0).get(1).value());
-    // println!("plainString.value()           {:?}", contract.plainString.value());
-    println!("dynamicArray.position()       {:?}", contract.dynamicArray.position());
-    println!("dynamicArray.value()          {:?}", contract.dynamicArray.value());
-    println!("dynamicArrayNested.value()    {:?}", contract.dynamicArrayNested.value());
-    println!("dynamicArrayNested[1].value() {:?}", contract.dynamicArrayNested.get(1).value());
-    println!("plainAddress.value()          {:?}", contract.plainAddress.value());
-    println!("plainString.position()        {:?}", contract.plainString.position());
-    println!("plainString.value()           {:?}", contract.plainString.value());
+    println!("plainUint112.value()              {:?}", contract.plainUint112.value());
+    println!("myNestedMapping[0][1].value()     {:?}", contract.myNestedMapping.get(0).get(1).value());
+    // println!("plainString.value()               {:?}", contract.plainString.value());
+    println!("dynamicArray.position()           {:?}", contract.dynamicArray.position());
+    println!("dynamicArray.value()              {:?}", contract.dynamicArray.value());
+    println!("dynamicArrayNested.value()        {:?}", contract.dynamicArrayNested.value());
+    println!("dynamicArrayNested[1].value()     {:?}", contract.dynamicArrayNested.get(1).value());
+    println!("plainAddress.value()              {:?}", contract.plainAddress.value());
+    println!("plainString.position()            {:?}", contract.plainString.position());
+    println!("plainString.value()               {:?}", contract.plainString.value());
+    println!("staticArray.position()            {:?}", contract.staticArray.position());
+    println!("staticArray.value()               {:?}", contract.staticArray.value());
+    println!("staticArrayNestedSmall.position() {:?}", contract.staticArrayNestedSmall.position());
+    println!("staticArrayNestedSmall.value()    {:?}", contract.staticArrayNestedSmall.value());
 
     // // // Uniswap V3
     // // let contract = generated_contract::UniswapV3Pool::new();

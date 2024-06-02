@@ -68,6 +68,7 @@ impl<ElementType: Debug + Position + Value> DynamicArray<ElementType> {
         }
         element
     }
+
     pub fn get(&self, index: usize) -> ElementType
         where ElementType: Debug + Position + Value + SlotsGetterSetter,
     {
@@ -94,16 +95,14 @@ impl<ElementType: Debug + Position + Value + SlotsGetterSetter> Value for Dynami
         let slot_values = getter.get_slots(self.storage(), array_size_slots as usize)
             .map_err(|err| format!("Failed to get slot values: {}", err))?;
         let mut values = Vec::new();
-        let storage_slot = self.storage();
+        // These zeros are enough because we need element only to get its value.
+        let element = self.new_element(U256::ZERO, 0);
         for i in 0..array_len as usize {
             // Simple assumption (holds in Solidity) that element occupying several slots cannot have offset.
             // TODO: Write general element_size_slots estimator.
             let element_size_slots = packing_n;
             let (element_slot, element_offset) = index_to_position(i, packing_n, packing_d);
-            let element = self.new_element(storage_slot + element_slot, element_offset);
-            // TODO: Test this:
-            // This zeros are enough because we need element only to get its value.
-            // let element = self.new_element(U256::ZERO, 0);
+            // let element = self.new_element(storage_slot + element_slot, element_offset);
             let element_bytes = &vec_u256_to_vec_bytes(&slot_values, i, i + element_size_slots as usize)[element_offset as usize..];
             let value = element.value_from_base_bytes(element_bytes)?;
             values.push(value);
