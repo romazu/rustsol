@@ -132,13 +132,80 @@ impl SlotsGetterSetter for MyContract {
         self.plainString.set_slots_getter(getter.clone())
     }
 }
+#[derive(Debug)]
+pub struct MyContractValue {
+    pub plainUint112: U256,
+    pub dynamicArray: Vec<U256>,
+    pub dynamicArrayNested: Vec<Vec<U256>>,
+    pub plainUint32: U256,
+    pub plainAddress: alloy_primitives::Address,
+    pub myStructNested: MyContractMyStructNestedValue,
+    pub staticArray: Vec<U256>,
+    pub staticArrayLarge: Vec<MyContractMyStructValue>,
+    pub staticArrayNestedSmall: Vec<Vec<U256>>,
+    pub dynamicArrayStruct: Vec<MyContractMyStructNestedValue>,
+    pub dynamicArraySmall: Vec<MyContractMyStructSmallValue>,
+    pub myMapping1: Mapping<PrimitiveKey, Primitive<32>>,
+    pub myMapping2: Mapping<BytesKey, Primitive<32>>,
+    pub myMappingBool: Mapping<PrimitiveKey, Primitive<1>>,
+    pub myAddressMappingNested: Mapping<AddressKey, Mapping<AddressKey, Address>>,
+    pub myNestedMapping: Mapping<PrimitiveKey, Mapping<PrimitiveKey, Primitive<32>>>,
+    pub myEnum: U256,
+    pub ___gap___: Vec<U256>,
+    pub plainString: Vec<u8>,
+}
 impl Value for MyContract {
-    type ValueType = U256;
+    type ValueType = MyContractValue;
     fn value_from_slots(
         &self,
         slot_values: Vec<U256>,
     ) -> Result<Self::ValueType, String> {
-        panic!("Not implemented")
+        let getter = self.__slots_getter.as_ref().expect("No slots getter");
+        Ok(MyContractValue {
+            plainUint112: self
+                .plainUint112
+                .value_from_slots(slot_values[0..1].to_vec())?,
+            dynamicArray: self
+                .dynamicArray
+                .value_from_slots(slot_values[1..2].to_vec())?,
+            dynamicArrayNested: self
+                .dynamicArrayNested
+                .value_from_slots(slot_values[2..3].to_vec())?,
+            plainUint32: self.plainUint32.value_from_slots(slot_values[3..4].to_vec())?,
+            plainAddress: self
+                .plainAddress
+                .value_from_slots(slot_values[3..4].to_vec())?,
+            myStructNested: self
+                .myStructNested
+                .value_from_slots(slot_values[4..7].to_vec())?,
+            staticArray: self.staticArray.value_from_slots(slot_values[7..12].to_vec())?,
+            staticArrayLarge: self
+                .staticArrayLarge
+                .value_from_slots(slot_values[12..16].to_vec())?,
+            staticArrayNestedSmall: self
+                .staticArrayNestedSmall
+                .value_from_slots(slot_values[16..20].to_vec())?,
+            dynamicArrayStruct: self
+                .dynamicArrayStruct
+                .value_from_slots(slot_values[20..21].to_vec())?,
+            dynamicArraySmall: self
+                .dynamicArraySmall
+                .value_from_slots(slot_values[21..22].to_vec())?,
+            myMapping1: self.myMapping1.value_from_slots(slot_values[22..23].to_vec())?,
+            myMapping2: self.myMapping2.value_from_slots(slot_values[23..24].to_vec())?,
+            myMappingBool: self
+                .myMappingBool
+                .value_from_slots(slot_values[24..25].to_vec())?,
+            myAddressMappingNested: self
+                .myAddressMappingNested
+                .value_from_slots(slot_values[25..26].to_vec())?,
+            myNestedMapping: self
+                .myNestedMapping
+                .value_from_slots(slot_values[26..27].to_vec())?,
+            myEnum: self.myEnum.value_from_slots(slot_values[27..28].to_vec())?,
+            ___gap___: self.___gap___.value_from_slots(slot_values[28..67].to_vec())?,
+            plainString: self.plainString.value_from_slots(slot_values[67..68].to_vec())?,
+        })
     }
 }
 impl MyContractMyStructNested {
@@ -178,13 +245,22 @@ impl SlotsGetterSetter for MyContractMyStructNested {
         self.myStruct.set_slots_getter(getter.clone())
     }
 }
+#[derive(Debug)]
+pub struct MyContractMyStructNestedValue {
+    pub myAddress: alloy_primitives::Address,
+    pub myStruct: MyContractMyStructValue,
+}
 impl Value for MyContractMyStructNested {
-    type ValueType = U256;
+    type ValueType = MyContractMyStructNestedValue;
     fn value_from_slots(
         &self,
         slot_values: Vec<U256>,
     ) -> Result<Self::ValueType, String> {
-        panic!("Not implemented")
+        let getter = self.__slots_getter.as_ref().expect("No slots getter");
+        Ok(MyContractMyStructNestedValue {
+            myAddress: self.myAddress.value_from_slots(slot_values[0..1].to_vec())?,
+            myStruct: self.myStruct.value_from_slots(slot_values[1..3].to_vec())?,
+        })
     }
 }
 impl MyContractMyStruct {
@@ -224,13 +300,22 @@ impl SlotsGetterSetter for MyContractMyStruct {
         self.myUint.set_slots_getter(getter.clone())
     }
 }
+#[derive(Debug)]
+pub struct MyContractMyStructValue {
+    pub myAddress: alloy_primitives::Address,
+    pub myUint: U256,
+}
 impl Value for MyContractMyStruct {
-    type ValueType = U256;
+    type ValueType = MyContractMyStructValue;
     fn value_from_slots(
         &self,
         slot_values: Vec<U256>,
     ) -> Result<Self::ValueType, String> {
-        panic!("Not implemented")
+        let getter = self.__slots_getter.as_ref().expect("No slots getter");
+        Ok(MyContractMyStructValue {
+            myAddress: self.myAddress.value_from_slots(slot_values[0..1].to_vec())?,
+            myUint: self.myUint.value_from_slots(slot_values[1..2].to_vec())?,
+        })
     }
 }
 impl MyContractMyStructSmall {
@@ -270,12 +355,21 @@ impl SlotsGetterSetter for MyContractMyStructSmall {
         self.smallInt2.set_slots_getter(getter.clone())
     }
 }
+#[derive(Debug)]
+pub struct MyContractMyStructSmallValue {
+    pub smallInt1: U256,
+    pub smallInt2: U256,
+}
 impl Value for MyContractMyStructSmall {
-    type ValueType = U256;
+    type ValueType = MyContractMyStructSmallValue;
     fn value_from_slots(
         &self,
         slot_values: Vec<U256>,
     ) -> Result<Self::ValueType, String> {
-        panic!("Not implemented")
+        let getter = self.__slots_getter.as_ref().expect("No slots getter");
+        Ok(MyContractMyStructSmallValue {
+            smallInt1: self.smallInt1.value_from_slots(slot_values[0..1].to_vec())?,
+            smallInt2: self.smallInt2.value_from_slots(slot_values[0..1].to_vec())?,
+        })
     }
 }

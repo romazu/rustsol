@@ -2,6 +2,7 @@ use proc_macro2::{Ident, TokenStream};
 use quote::{quote, ToTokens};
 use syn::{Item, parse_str};
 use crate::layout::NestedType;
+use crate::utils::ceil_div;
 
 
 pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
@@ -36,6 +37,26 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                     let field_name = Ident::new(&member_def.member_info.label, proc_macro2::Span::call_site());
                     quote! {
                         self.#field_name.set_slots_getter(getter.clone())
+                    }
+                }).collect();
+
+                let value_struct_ident = Ident::new(&format!("{}Value", struct_name), proc_macro2::Span::call_site());
+
+                let value_fields: Vec<TokenStream> = members.iter().map(|member_def| {
+                    let field_name = Ident::new(&member_def.member_info.label, proc_macro2::Span::call_site());
+                    let value_type = get_value_type_name(&member_def.type_def);
+                    quote! {
+                        pub #field_name: #value_type
+                    }
+                }).collect();
+
+                let value_from_slots_fields: Vec<TokenStream> = members.iter().map(|member_def| {
+                    let field_name = Ident::new(&member_def.member_info.label, proc_macro2::Span::call_site());
+                    let size_slots = ceil_div(get_type_size(&member_def.type_def) as usize, 32) as u64;
+                    let member_slot_start_literal = syn::LitInt::new(&member_def.member_info.slot.to_string(), proc_macro2::Span::call_site());
+                    let member_slot_end_literal = syn::LitInt::new(&(member_def.member_info.slot + size_slots).to_string(), proc_macro2::Span::call_site());
+                    quote! {
+                        #field_name: self.#field_name.value_from_slots(slot_values[#member_slot_start_literal..#member_slot_end_literal].to_vec())?
                     }
                 }).collect();
 
@@ -91,10 +112,17 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                             #(#set_slots_getter_fields);*
                         }
                     }
+                    #[derive(Debug)]
+                    pub struct #value_struct_ident {
+                        #(#value_fields),*
+                    }
                     impl Value for #struct_name {
-                        type ValueType = U256; // dummy
+                        type ValueType = #value_struct_ident;
                         fn value_from_slots(&self, slot_values: Vec<U256>) -> Result<Self::ValueType, String> {
-                            panic!("Not implemented")
+                            let getter = self.__slots_getter.as_ref().expect("No slots getter");
+                            Ok(#value_struct_ident {
+                                #(#value_from_slots_fields),*
+                            })
                         }
                     }
                 };
@@ -140,6 +168,45 @@ fn get_type_name(nested_type: &NestedType) -> TokenStream {
     };
     let ident = syn::Ident::new(type_name, proc_macro2::Span::call_site());
     quote! { #ident }
+}
+
+fn get_type_size(nested_type: &NestedType) -> u64 {
+    match nested_type {
+        NestedType::Primitive { number_of_bytes } => {*number_of_bytes}
+        NestedType::Bytes => {32}
+        NestedType::Address => {20}
+        NestedType::Mapping { .. } => {32}
+        NestedType::Struct { label: _, members: _, number_of_bytes } => {*number_of_bytes}
+        NestedType::DynamicArray { .. } => {32}
+        NestedType::StaticArray { value: _, number_of_bytes } => {*number_of_bytes}
+    }
+}
+
+fn get_value_type_name(nested_type: &NestedType) -> TokenStream {
+    let type_name = match nested_type {
+        NestedType::Primitive { .. } => quote! {U256},
+        NestedType::Bytes => quote! {Vec<u8>},
+        NestedType::Address => quote! {alloy_primitives::Address},
+        NestedType::Mapping { .. } => {
+            // Mapping value type is Mapping itself.
+            get_nested_type(nested_type)
+        }
+        NestedType::Struct { label, .. } => {
+            let name = format!("{}Value", label);
+            let ident = syn::Ident::new(&name, proc_macro2::Span::call_site());
+            quote! { #ident }
+        }
+        NestedType::DynamicArray { value } => {
+            let element_value_type_name = get_value_type_name(value);
+            quote! {Vec<#element_value_type_name>}
+        }
+        NestedType::StaticArray { value, ..} => {
+            let element_value_type_name = get_value_type_name(value);
+            quote! {Vec<#element_value_type_name>}
+        }
+    };
+    type_name
+    // let ident = syn::Ident::new(&type_name, proc_macro2::Span::call_site());
 }
 
 fn get_nested_type(nested_type: &NestedType) -> TokenStream {

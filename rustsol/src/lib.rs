@@ -15,6 +15,7 @@ pub fn generate_storage_bindings(storage_layout_path: String, contract_path: Str
 
     let nested_types = storage_layout.traverse(contract_name);
     let generated_tokens = generate::generate_structs(nested_types);
+    // println!("{}", generated_tokens);
 
     let syntax_tree = syn::parse_file(&generated_tokens.to_string()).expect("Failed to parse TokenStream");
     let pretty_formatted_code = prettyplease::unparse(&syntax_tree);
