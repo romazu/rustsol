@@ -4,6 +4,7 @@ use rustsol::types::Derivative;
 use rustsol::types::{Position, SlotsGetter, SlotsGetterSetter, Value};
 use rustsol::types::{Primitive, Bytes, Address, Mapping, DynamicArray, StaticArray};
 use rustsol::types::{PrimitiveKey, BytesKey, AddressKey};
+use alloy_primitives;
 use alloy_primitives::U256;
 #[derive(Derivative)]
 #[derivative(Debug)]
@@ -97,7 +98,11 @@ impl MyContract {
         (self.__slot, 0, 0)
     }
     pub fn value(&self) -> Result<<Self as Value>::ValueType, String> {
-        panic!("Not implemented")
+        let getter = self.__slots_getter.as_ref().expect("No slots getter");
+        let slot_values = getter
+            .get_slots(self.__slot, 0)
+            .map_err(|err| format!("Failed to get slot values: {}", err))?;
+        self.value_from_slots(slot_values)
     }
 }
 impl Position for MyContract {
@@ -227,7 +232,11 @@ impl MyContractMyStructNested {
         (self.__slot, 0, 96)
     }
     pub fn value(&self) -> Result<<Self as Value>::ValueType, String> {
-        panic!("Not implemented")
+        let getter = self.__slots_getter.as_ref().expect("No slots getter");
+        let slot_values = getter
+            .get_slots(self.__slot, 3)
+            .map_err(|err| format!("Failed to get slot values: {}", err))?;
+        self.value_from_slots(slot_values)
     }
 }
 impl Position for MyContractMyStructNested {
@@ -282,7 +291,11 @@ impl MyContractMyStruct {
         (self.__slot, 0, 64)
     }
     pub fn value(&self) -> Result<<Self as Value>::ValueType, String> {
-        panic!("Not implemented")
+        let getter = self.__slots_getter.as_ref().expect("No slots getter");
+        let slot_values = getter
+            .get_slots(self.__slot, 2)
+            .map_err(|err| format!("Failed to get slot values: {}", err))?;
+        self.value_from_slots(slot_values)
     }
 }
 impl Position for MyContractMyStruct {
@@ -337,7 +350,11 @@ impl MyContractMyStructSmall {
         (self.__slot, 0, 32)
     }
     pub fn value(&self) -> Result<<Self as Value>::ValueType, String> {
-        panic!("Not implemented")
+        let getter = self.__slots_getter.as_ref().expect("No slots getter");
+        let slot_values = getter
+            .get_slots(self.__slot, 1)
+            .map_err(|err| format!("Failed to get slot values: {}", err))?;
+        self.value_from_slots(slot_values)
     }
 }
 impl Position for MyContractMyStructSmall {

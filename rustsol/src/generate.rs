@@ -10,7 +10,7 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
     let mut nested_struct_implementations: Vec<TokenStream> = Vec::new();
 
     for nested_type in nested_types {
-        match nested_type {
+        match &nested_type {
             NestedType::Struct { label, members, number_of_bytes } => {
                 let struct_name = Ident::new(&label, proc_macro2::Span::call_site());
                 let number_of_bytes_literal = syn::LitInt::new(&number_of_bytes.to_string(), proc_macro2::Span::call_site());
@@ -49,6 +49,9 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                         pub #field_name: #value_type
                     }
                 }).collect();
+
+                let struct_size_slots = ceil_div(get_type_size(&nested_type) as usize, 32) as u64;
+                let struct_size_slots_literal = syn::LitInt::new(&struct_size_slots.to_string(), proc_macro2::Span::call_site());
 
                 let value_from_slots_fields: Vec<TokenStream> = members.iter().map(|member_def| {
                     let field_name = Ident::new(&member_def.member_info.label, proc_macro2::Span::call_site());
@@ -91,11 +94,10 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                             (self.__slot, 0, #number_of_bytes_literal)
                         }
                         pub fn value(&self) -> Result<<Self as Value>::ValueType, String> {
-                            panic!("Not implemented")
-                            // let getter = self.__slots_getter.as_ref().expect("No slots getter");
-                            // let slots = getter.get_slots(self.__slot, 1)
-                            //     .map_err(|err| format!("Failed to get slot values: {}", err))?;
-                            // Ok(slots[0]) // debug dummy
+                            let getter = self.__slots_getter.as_ref().expect("No slots getter");
+                            let slot_values = getter.get_slots(self.__slot, #struct_size_slots_literal)
+                                .map_err(|err| format!("Failed to get slot values: {}", err))?;
+                            self.value_from_slots(slot_values)
                         }
                     }
                     impl Position for #struct_name {
@@ -142,6 +144,7 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
         parse_str("use rustsol::types::{Position, SlotsGetter, SlotsGetterSetter, Value};").expect("Failed to parse"),
         parse_str("use rustsol::types::{Primitive, Bytes, Address, Mapping, DynamicArray, StaticArray};").expect("Failed to parse"),
         parse_str("use rustsol::types::{PrimitiveKey, BytesKey, AddressKey};").expect("Failed to parse"),
+        parse_str("use alloy_primitives;").expect("Failed to parse"),
         parse_str("use alloy_primitives::U256;").expect("Failed to parse"),
     ];
     let imports_definition: TokenStream = imports_definition_items.into_iter().map(|item| item.into_token_stream()).collect();
