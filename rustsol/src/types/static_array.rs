@@ -48,10 +48,10 @@ impl<const SIZE: usize, ElementType: Debug + Position + Value + SlotsGetterSette
         capacity as usize
     }
 
-    pub fn value(&self) -> Result<Vec<<ElementType as Value>::ValueType>, String> {
+    pub fn value(&self) -> Result<<Self as Value>::ValueType, String> {
         let getter = self.__slots_getter.as_ref().expect("No slots getter");
         let array_size_slots = SIZE / 32;
-        let slot_values = getter.get_slots(self.__slot, array_size_slots as usize)
+        let slot_values = getter.get_slots(self.__slot, array_size_slots)
             .map_err(|err| format!("Failed to get slot values: {}", err))?;
         self.value_from_slots(slot_values)
     }

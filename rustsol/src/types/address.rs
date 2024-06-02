@@ -21,7 +21,7 @@ impl Address {
         (self.__slot, 0, 20)
     }
 
-    pub fn value(&self) -> Result<alloy_primitives::Address, String> {
+    pub fn value(&self) -> Result<<Self as Value>::ValueType, String> {
         let getter = self.__slots_getter.as_ref().expect("No slots getter");
         let slot_values = getter.get_slots(self.__slot, 1)
             .map_err(|err| format!("Failed to get slot values: {}", err))?;

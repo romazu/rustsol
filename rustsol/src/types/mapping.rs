@@ -3,8 +3,8 @@ use std::marker::PhantomData;
 use std::sync::Arc;
 use alloy_primitives::U256;
 use derivative::Derivative;
-use crate::utils::{bytes32_to_u256, keccak256_concat, u256_to_bytes32};
-use crate::types::{PrimitiveKey, BytesKey, AddressKey};
+use crate::utils::{bytes32_to_u256, index_to_position, keccak256_concat, u256_to_bytes32, u256_to_u64};
+use crate::types::{PrimitiveKey, BytesKey, AddressKey, Value, DynamicArray};
 use crate::types::{Position, SlotsGetter, SlotsGetterSetter};
 
 // The value corresponding to a mapping key k is located at keccak256(h(k) . p) where . is
@@ -53,6 +53,10 @@ impl<KeyType, ElementType> Mapping<KeyType, ElementType> {
         let element_slot = bytes32_to_u256(value_slot_bytes);
         self.new_element(element_slot, 0)
     }
+
+    pub fn value(&self) -> Result<(), String> {
+        panic!("Not implemented")
+    }
 }
 
 impl<KeyType, ElementType> Position for Mapping<KeyType, ElementType> {
@@ -99,5 +103,14 @@ impl<ElementType> Mapping<AddressKey, ElementType> {
 impl<KeyType: Debug, ElementType: Debug> SlotsGetterSetter for Mapping<KeyType, ElementType> {
     fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
         self.__slots_getter = Some(getter);
+    }
+}
+
+
+impl<KeyType, ElementType: Debug + Position + Value + SlotsGetterSetter> Value for Mapping<KeyType, ElementType> {
+    type ValueType = U256; // Dummy.
+
+    fn value_from_slots(&self, _: Vec<U256>) -> Result<Self::ValueType, String> {
+        panic!("Not implemented")
     }
 }

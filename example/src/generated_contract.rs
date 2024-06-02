@@ -96,12 +96,8 @@ impl MyContract {
     pub fn position(&self) -> (U256, usize, usize) {
         (self.__slot, 0, 0)
     }
-    pub fn value(&self) -> Result<U256, String> {
-        let getter = self.__slots_getter.as_ref().expect("No slots getter");
-        let slots = getter
-            .get_slots(self.__slot, 1)
-            .map_err(|err| format!("Failed to get slot values: {}", err))?;
-        Ok(slots[0])
+    pub fn value(&self) -> Result<<Self as Value>::ValueType, String> {
+        panic!("Not implemented")
     }
 }
 impl Position for MyContract {
@@ -137,7 +133,7 @@ impl SlotsGetterSetter for MyContract {
     }
 }
 impl Value for MyContract {
-    type ValueType = u8;
+    type ValueType = U256;
     fn value_from_slots(
         &self,
         slot_values: Vec<U256>,
@@ -163,12 +159,8 @@ impl MyContractMyStructNested {
     pub fn position(&self) -> (U256, usize, usize) {
         (self.__slot, 0, 96)
     }
-    pub fn value(&self) -> Result<U256, String> {
-        let getter = self.__slots_getter.as_ref().expect("No slots getter");
-        let slots = getter
-            .get_slots(self.__slot, 1)
-            .map_err(|err| format!("Failed to get slot values: {}", err))?;
-        Ok(slots[0])
+    pub fn value(&self) -> Result<<Self as Value>::ValueType, String> {
+        panic!("Not implemented")
     }
 }
 impl Position for MyContractMyStructNested {
@@ -187,7 +179,7 @@ impl SlotsGetterSetter for MyContractMyStructNested {
     }
 }
 impl Value for MyContractMyStructNested {
-    type ValueType = u8;
+    type ValueType = U256;
     fn value_from_slots(
         &self,
         slot_values: Vec<U256>,
@@ -213,12 +205,8 @@ impl MyContractMyStruct {
     pub fn position(&self) -> (U256, usize, usize) {
         (self.__slot, 0, 64)
     }
-    pub fn value(&self) -> Result<U256, String> {
-        let getter = self.__slots_getter.as_ref().expect("No slots getter");
-        let slots = getter
-            .get_slots(self.__slot, 1)
-            .map_err(|err| format!("Failed to get slot values: {}", err))?;
-        Ok(slots[0])
+    pub fn value(&self) -> Result<<Self as Value>::ValueType, String> {
+        panic!("Not implemented")
     }
 }
 impl Position for MyContractMyStruct {
@@ -237,7 +225,7 @@ impl SlotsGetterSetter for MyContractMyStruct {
     }
 }
 impl Value for MyContractMyStruct {
-    type ValueType = u8;
+    type ValueType = U256;
     fn value_from_slots(
         &self,
         slot_values: Vec<U256>,
@@ -263,12 +251,8 @@ impl MyContractMyStructSmall {
     pub fn position(&self) -> (U256, usize, usize) {
         (self.__slot, 0, 32)
     }
-    pub fn value(&self) -> Result<U256, String> {
-        let getter = self.__slots_getter.as_ref().expect("No slots getter");
-        let slots = getter
-            .get_slots(self.__slot, 1)
-            .map_err(|err| format!("Failed to get slot values: {}", err))?;
-        Ok(slots[0])
+    pub fn value(&self) -> Result<<Self as Value>::ValueType, String> {
+        panic!("Not implemented")
     }
 }
 impl Position for MyContractMyStructSmall {
@@ -287,7 +271,7 @@ impl SlotsGetterSetter for MyContractMyStructSmall {
     }
 }
 impl Value for MyContractMyStructSmall {
-    type ValueType = u8;
+    type ValueType = U256;
     fn value_from_slots(
         &self,
         slot_values: Vec<U256>,

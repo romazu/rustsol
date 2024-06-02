@@ -26,7 +26,7 @@ impl SlotsGetter for DummySlotsGetter {
 
 fn main() {
     // // Example contract
-    // let contract = generated_contract::MyContract::new();
+    let contract = generated_contract::MyContract::new();
     // println!("{:?}", contract.myNestedMapping.at(0u64));
     // println!("{:?}", contract.myNestedMapping.at(0u64).at(1u64).position());
     // println!("myMapping2[\"some\"] {:?}", contract.myMapping2.at("some").position());
@@ -49,10 +49,10 @@ fn main() {
     // println!("myMappingBool[false] {:?}", contract.myMappingBool.at(false).position());
     // println!("myMappingBool[true] {:?}", contract.myMappingBool.at(true).position());
     //
-    // let address = Address::from_str("0x51A18333479472D1250Ee5063910079fc0B9b801").unwrap();
+    let address = Address::from_str("0x51A18333479472D1250Ee5063910079fc0B9b801").unwrap();
     // println!("myAddressMappingNested {:?}", contract.myAddressMappingNested.position());
     // println!("myAddressMappingNested[addr]: {:?}", contract.myAddressMappingNested.at(address).position());
-    // println!("myAddressMappingNested[addr][addr]: {:?}", contract.myAddressMappingNested.at(address).at(address).position());
+    println!("myAddressMappingNested[addr][addr]: {:?}", contract.myAddressMappingNested.at(address).at(address).position());
 
     let mut contract = generated_contract::MyContract::new();
     let getter = Arc::new(DummySlotsGetter);

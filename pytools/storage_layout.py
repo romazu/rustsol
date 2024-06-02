@@ -48,3 +48,4 @@ if __name__ == '__main__':
 
     generate_storage_layout("../example/contracts/simple", output_path, "v0.8.26")
     # generate_storage_layout("../example/contracts/uniswap3pool", output_path, "v0.7.6")
+    # generate_storage_layout("../example/contracts/augur", output_path, "v0.5.15")

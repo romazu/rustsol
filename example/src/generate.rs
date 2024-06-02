@@ -4,6 +4,7 @@ fn main() {
 
     let (contract_path, contract_name) = ("contract.sol", "MyContract");
     // let (contract_path, contract_name) = ("UniswapV3Pool.sol", "UniswapV3Pool");
+    // let (contract_path, contract_name) = ("Augur.sol", "Augur");
 
     rustsol::generate_storage_bindings(
         storage_layout_path.into(),

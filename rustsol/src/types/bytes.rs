@@ -31,7 +31,7 @@ impl Bytes {
         bytes32_to_u256(keccak256(u256_to_bytes32(self.__slot)))
     }
 
-    pub fn value(&self) -> Result<Vec<u8>, String> {
+    pub fn value(&self) -> Result<<Self as Value>::ValueType, String> {
         let getter = self.__slots_getter.as_ref().expect("No slots getter");
         let slot_values = getter.get_slots(self.__slot, 1)
             .map_err(|err| format!("Failed to get slot values: {}", err))?;

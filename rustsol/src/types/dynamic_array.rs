@@ -37,9 +37,9 @@ impl<ElementType: Debug + Position + Value + SlotsGetterSetter> DynamicArray<Ele
         (ceil_div(ElementType::size(), 32), 1)
     }
 
-    pub fn value(&self) -> Result<Vec<<ElementType as Value>::ValueType>, String> {
+    pub fn value(&self) -> Result<<Self as Value>::ValueType, String> {
         let getter = self.__slots_getter.as_ref().expect("No slots getter");
-        let slot_values = getter.get_slots(U256::from(self.__slot), 1)
+        let slot_values = getter.get_slots(self.__slot, 1)
             .map_err(|err| format!("Failed to get slot values: {}", err))?;
         self.value_from_slots(slot_values)
     }

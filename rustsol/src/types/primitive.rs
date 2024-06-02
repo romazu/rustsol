@@ -28,9 +28,10 @@ impl<const SIZE: usize> Primitive<SIZE> {
         (self.__slot, self.__offset, SIZE)
     }
 
-    pub fn value(&self) -> Result<U256, String> {
+    pub fn value(&self) -> Result<<Self as Value>::ValueType, String> {
         let getter = self.__slots_getter.as_ref().expect("No slots getter");
-        let slot_values = getter.get_slots(self.__slot, 1)?;
+        let slot_values = getter.get_slots(self.__slot, 1)
+            .map_err(|err| format!("Failed to get slot values: {}", err))?;
         self.value_from_slots(slot_values)
     }
 }
