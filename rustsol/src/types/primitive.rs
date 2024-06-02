@@ -12,7 +12,7 @@ pub struct Primitive<const SIZE: usize> {
     __slot: U256,
     __offset: usize,
     #[derivative(Debug = "ignore")]
-    __slot_getter: Option<Arc<dyn SlotsGetter>>,
+    __slots_getter: Option<Arc<dyn SlotsGetter>>,
 }
 
 impl<const SIZE: usize> Primitive<SIZE> {
@@ -29,7 +29,7 @@ impl<const SIZE: usize> Primitive<SIZE> {
     }
 
     pub fn value(&self) -> Result<U256, String> {
-        let getter = self.__slot_getter.as_ref().expect("No slots getter");
+        let getter = self.__slots_getter.as_ref().expect("No slots getter");
         let slot_values = getter.get_slots(self.__slot, 1)?;
         self.value_from_slots(slot_values)
     }
@@ -37,7 +37,7 @@ impl<const SIZE: usize> Primitive<SIZE> {
 
 impl<const SIZE: usize> Position for Primitive<SIZE> {
     fn from_position(slot: U256, offset: usize) -> Self {
-        Primitive { __slot: slot, __offset: offset, __slot_getter: None }  // Use the conversion from U256 to u64
+        Primitive { __slot: slot, __offset: offset, __slots_getter: None }  // Use the conversion from U256 to u64
     }
 
     fn size() -> usize {
@@ -47,7 +47,7 @@ impl<const SIZE: usize> Position for Primitive<SIZE> {
 
 impl<const SIZE: usize> SlotsGetterSetter for Primitive<SIZE> {
     fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
-        self.__slot_getter = Some(getter);
+        self.__slots_getter = Some(getter);
     }
 }
 

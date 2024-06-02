@@ -10,7 +10,7 @@ use alloy_primitives::U256;
 pub struct MyContract {
     __slot: U256,
     #[derivative(Debug = "ignore")]
-    __slot_getter: Option<Arc<dyn SlotsGetter>>,
+    __slots_getter: Option<Arc<dyn SlotsGetter>>,
     pub plainUint112: Primitive<14>,
     pub dynamicArray: DynamicArray<Primitive<32>>,
     pub dynamicArrayNested: DynamicArray<DynamicArray<Primitive<32>>>,
@@ -36,7 +36,7 @@ pub struct MyContract {
 pub struct MyContractMyStructNested {
     __slot: U256,
     #[derivative(Debug = "ignore")]
-    __slot_getter: Option<Arc<dyn SlotsGetter>>,
+    __slots_getter: Option<Arc<dyn SlotsGetter>>,
     pub myAddress: Address,
     pub myStruct: MyContractMyStruct,
 }
@@ -45,7 +45,7 @@ pub struct MyContractMyStructNested {
 pub struct MyContractMyStruct {
     __slot: U256,
     #[derivative(Debug = "ignore")]
-    __slot_getter: Option<Arc<dyn SlotsGetter>>,
+    __slots_getter: Option<Arc<dyn SlotsGetter>>,
     pub myAddress: Address,
     pub myUint: Primitive<32>,
 }
@@ -54,7 +54,7 @@ pub struct MyContractMyStruct {
 pub struct MyContractMyStructSmall {
     __slot: U256,
     #[derivative(Debug = "ignore")]
-    __slot_getter: Option<Arc<dyn SlotsGetter>>,
+    __slots_getter: Option<Arc<dyn SlotsGetter>>,
     pub smallInt1: Primitive<4>,
     pub smallInt2: Primitive<4>,
 }
@@ -65,7 +65,7 @@ impl MyContract {
     pub fn from_position(slot: U256, offset: usize) -> Self {
         Self {
             __slot: slot,
-            __slot_getter: None,
+            __slots_getter: None,
             plainUint112: Primitive::from_position(slot + U256::from(0), 0),
             dynamicArray: DynamicArray::from_position(slot + U256::from(1), 0),
             dynamicArrayNested: DynamicArray::from_position(slot + U256::from(2), 0),
@@ -96,16 +96,12 @@ impl MyContract {
     pub fn position(&self) -> (U256, usize, usize) {
         (self.__slot, 0, 0)
     }
-    pub fn value(self) -> Result<U256, String> {
-        match self.__slot_getter {
-            None => panic!("No slots getter"),
-            Some(getter) => {
-                let slots = getter
-                    .get_slots(self.__slot, 1)
-                    .map_err(|err| format!("Failed to get slot values: {}", err))?;
-                Ok(slots[0])
-            }
-        }
+    pub fn value(&self) -> Result<U256, String> {
+        let getter = self.__slots_getter.as_ref().expect("No slots getter");
+        let slots = getter
+            .get_slots(self.__slot, 1)
+            .map_err(|err| format!("Failed to get slot values: {}", err))?;
+        Ok(slots[0])
     }
 }
 impl Position for MyContract {
@@ -118,7 +114,7 @@ impl Position for MyContract {
 }
 impl SlotsGetterSetter for MyContract {
     fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
-        self.__slot_getter = Some(getter.clone());
+        self.__slots_getter = Some(getter.clone());
         self.plainUint112.set_slots_getter(getter.clone());
         self.dynamicArray.set_slots_getter(getter.clone());
         self.dynamicArrayNested.set_slots_getter(getter.clone());
@@ -156,7 +152,7 @@ impl MyContractMyStructNested {
     pub fn from_position(slot: U256, offset: usize) -> Self {
         Self {
             __slot: slot,
-            __slot_getter: None,
+            __slots_getter: None,
             myAddress: Address::from_position(slot + U256::from(0), 0),
             myStruct: MyContractMyStruct::from_position(slot + U256::from(1), 0),
         }
@@ -167,16 +163,12 @@ impl MyContractMyStructNested {
     pub fn position(&self) -> (U256, usize, usize) {
         (self.__slot, 0, 96)
     }
-    pub fn value(self) -> Result<U256, String> {
-        match self.__slot_getter {
-            None => panic!("No slots getter"),
-            Some(getter) => {
-                let slots = getter
-                    .get_slots(self.__slot, 1)
-                    .map_err(|err| format!("Failed to get slot values: {}", err))?;
-                Ok(slots[0])
-            }
-        }
+    pub fn value(&self) -> Result<U256, String> {
+        let getter = self.__slots_getter.as_ref().expect("No slots getter");
+        let slots = getter
+            .get_slots(self.__slot, 1)
+            .map_err(|err| format!("Failed to get slot values: {}", err))?;
+        Ok(slots[0])
     }
 }
 impl Position for MyContractMyStructNested {
@@ -189,7 +181,7 @@ impl Position for MyContractMyStructNested {
 }
 impl SlotsGetterSetter for MyContractMyStructNested {
     fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
-        self.__slot_getter = Some(getter.clone());
+        self.__slots_getter = Some(getter.clone());
         self.myAddress.set_slots_getter(getter.clone());
         self.myStruct.set_slots_getter(getter.clone())
     }
@@ -210,7 +202,7 @@ impl MyContractMyStruct {
     pub fn from_position(slot: U256, offset: usize) -> Self {
         Self {
             __slot: slot,
-            __slot_getter: None,
+            __slots_getter: None,
             myAddress: Address::from_position(slot + U256::from(0), 0),
             myUint: Primitive::from_position(slot + U256::from(1), 0),
         }
@@ -221,16 +213,12 @@ impl MyContractMyStruct {
     pub fn position(&self) -> (U256, usize, usize) {
         (self.__slot, 0, 64)
     }
-    pub fn value(self) -> Result<U256, String> {
-        match self.__slot_getter {
-            None => panic!("No slots getter"),
-            Some(getter) => {
-                let slots = getter
-                    .get_slots(self.__slot, 1)
-                    .map_err(|err| format!("Failed to get slot values: {}", err))?;
-                Ok(slots[0])
-            }
-        }
+    pub fn value(&self) -> Result<U256, String> {
+        let getter = self.__slots_getter.as_ref().expect("No slots getter");
+        let slots = getter
+            .get_slots(self.__slot, 1)
+            .map_err(|err| format!("Failed to get slot values: {}", err))?;
+        Ok(slots[0])
     }
 }
 impl Position for MyContractMyStruct {
@@ -243,7 +231,7 @@ impl Position for MyContractMyStruct {
 }
 impl SlotsGetterSetter for MyContractMyStruct {
     fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
-        self.__slot_getter = Some(getter.clone());
+        self.__slots_getter = Some(getter.clone());
         self.myAddress.set_slots_getter(getter.clone());
         self.myUint.set_slots_getter(getter.clone())
     }
@@ -264,7 +252,7 @@ impl MyContractMyStructSmall {
     pub fn from_position(slot: U256, offset: usize) -> Self {
         Self {
             __slot: slot,
-            __slot_getter: None,
+            __slots_getter: None,
             smallInt1: Primitive::from_position(slot + U256::from(0), 0),
             smallInt2: Primitive::from_position(slot + U256::from(0), 4),
         }
@@ -275,16 +263,12 @@ impl MyContractMyStructSmall {
     pub fn position(&self) -> (U256, usize, usize) {
         (self.__slot, 0, 32)
     }
-    pub fn value(self) -> Result<U256, String> {
-        match self.__slot_getter {
-            None => panic!("No slots getter"),
-            Some(getter) => {
-                let slots = getter
-                    .get_slots(self.__slot, 1)
-                    .map_err(|err| format!("Failed to get slot values: {}", err))?;
-                Ok(slots[0])
-            }
-        }
+    pub fn value(&self) -> Result<U256, String> {
+        let getter = self.__slots_getter.as_ref().expect("No slots getter");
+        let slots = getter
+            .get_slots(self.__slot, 1)
+            .map_err(|err| format!("Failed to get slot values: {}", err))?;
+        Ok(slots[0])
     }
 }
 impl Position for MyContractMyStructSmall {
@@ -297,7 +281,7 @@ impl Position for MyContractMyStructSmall {
 }
 impl SlotsGetterSetter for MyContractMyStructSmall {
     fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
-        self.__slot_getter = Some(getter.clone());
+        self.__slots_getter = Some(getter.clone());
         self.smallInt1.set_slots_getter(getter.clone());
         self.smallInt2.set_slots_getter(getter.clone())
     }

@@ -15,7 +15,7 @@ use crate::types::{Position, SlotsGetter, SlotsGetterSetter};
 pub struct Bytes {
     __slot: U256,
     #[derivative(Debug = "ignore")]
-    __slot_getter: Option<Arc<dyn SlotsGetter>>,
+    __slots_getter: Option<Arc<dyn SlotsGetter>>,
 }
 
 impl Bytes {
@@ -32,7 +32,7 @@ impl Bytes {
     }
 
     pub fn value(&self) -> Result<Vec<u8>, String> {
-        let getter = self.__slot_getter.as_ref().expect("No slots getter");
+        let getter = self.__slots_getter.as_ref().expect("No slots getter");
         let slot_values = getter.get_slots(self.__slot, 1)
             .map_err(|err| format!("Failed to get slot values: {}", err))?;
         self.value_from_slots(slot_values)
@@ -41,7 +41,7 @@ impl Bytes {
 
 impl Position for Bytes {
     fn from_position(slot: U256, _: usize) -> Self {
-        Bytes { __slot: slot, __slot_getter: None }
+        Bytes { __slot: slot, __slots_getter: None }
     }
 
     fn size() -> usize {
@@ -51,7 +51,7 @@ impl Position for Bytes {
 
 impl SlotsGetterSetter for Bytes {
     fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
-        self.__slot_getter = Some(getter);
+        self.__slots_getter = Some(getter);
     }
 }
 
@@ -59,7 +59,7 @@ impl Value for Bytes {
     type ValueType = Vec<u8>;
 
     fn value_from_slots(&self, slot_values: Vec<U256>) -> Result<Self::ValueType, String> {
-        let getter = self.__slot_getter.as_ref().expect("No slots getter");
+        let getter = self.__slots_getter.as_ref().expect("No slots getter");
         let base_slot_value = slot_values[0];
         let is_long = base_slot_value.bit(0);
         if is_long {

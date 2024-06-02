@@ -17,7 +17,7 @@ pub struct Mapping<KeyType, Value> {
     __slot: U256,
     __marker: PhantomData<(KeyType, Value)>,
     #[derivative(Debug = "ignore")]
-    __slot_getter: Option<Arc<dyn SlotsGetter>>,
+    __slots_getter: Option<Arc<dyn SlotsGetter>>,
 }
 
 impl<KeyType, Value> Mapping<KeyType, Value> {
@@ -35,7 +35,7 @@ impl<KeyType, Value> Mapping<KeyType, Value> {
     {
         let value_slot_bytes = keccak256_concat(key, u256_to_bytes32(self.__slot));
         let mut value = Value::from_position(bytes32_to_u256(value_slot_bytes), 0);
-        match &self.__slot_getter {
+        match &self.__slots_getter {
             None => {
                 // No slots getter to pass to children.
             }
@@ -50,7 +50,7 @@ impl<KeyType, Value> Mapping<KeyType, Value> {
 
 impl<KeyType, Value> Position for Mapping<KeyType, Value> {
     fn from_position(slot: U256, _: usize) -> Self {
-        Mapping::<KeyType, Value> { __slot: slot, __marker: PhantomData, __slot_getter: None }
+        Mapping::<KeyType, Value> { __slot: slot, __marker: PhantomData, __slots_getter: None }
     }
 
     fn size() -> usize {
@@ -91,6 +91,6 @@ impl<Value> Mapping<AddressKey, Value> {
 
 impl<KeyType: Debug, ValueType: Debug> SlotsGetterSetter for Mapping<KeyType, ValueType> {
     fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
-        self.__slot_getter = Some(getter);
+        self.__slots_getter = Some(getter);
     }
 }

@@ -14,7 +14,7 @@ pub struct StaticArray<const SIZE: usize, ElementType>
     __slot: U256,
     __marker: PhantomData<ElementType>,
     #[derivative(Debug = "ignore")]
-    __slot_getter: Option<Arc<dyn SlotsGetter>>,
+    __slots_getter: Option<Arc<dyn SlotsGetter>>,
 }
 
 impl<const SIZE: usize, ElementType: Debug + Position + Value + SlotsGetterSetter> StaticArray<SIZE, ElementType> {
@@ -49,7 +49,7 @@ impl<const SIZE: usize, ElementType: Debug + Position + Value + SlotsGetterSette
     }
 
     pub fn value(&self) -> Result<Vec<<ElementType as Value>::ValueType>, String> {
-        let getter = self.__slot_getter.as_ref().expect("No slots getter");
+        let getter = self.__slots_getter.as_ref().expect("No slots getter");
         let array_size_slots = SIZE / 32;
         let slot_values = getter.get_slots(self.__slot, array_size_slots as usize)
             .map_err(|err| format!("Failed to get slot values: {}", err))?;
@@ -59,7 +59,7 @@ impl<const SIZE: usize, ElementType: Debug + Position + Value + SlotsGetterSette
 
 impl<const SIZE: usize, ElementType: Debug + Value + Position> Position for StaticArray<SIZE, ElementType> {
     fn from_position(slot: U256, _: usize) -> Self {
-        StaticArray::<SIZE, ElementType> { __slot: slot, __marker: PhantomData, __slot_getter: None }
+        StaticArray::<SIZE, ElementType> { __slot: slot, __marker: PhantomData, __slots_getter: None }
     }
 
     fn size() -> usize {
@@ -72,7 +72,7 @@ impl<const SIZE: usize, ElementType: Debug + Value + Position + SlotsGetterSette
         where ElementType: Debug + Position + Value + SlotsGetterSetter,
     {
         let mut element = ElementType::from_position(slot, offset);
-        match &self.__slot_getter {
+        match &self.__slots_getter {
             None => {
                 // No slots getter to pass to children.
             }
@@ -100,7 +100,7 @@ impl<const SIZE: usize, ElementType: Debug + Value + Position + SlotsGetterSette
 
 impl<const SIZE: usize, ElementType: Debug + Value + Position> SlotsGetterSetter for StaticArray<SIZE, ElementType> {
     fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
-        self.__slot_getter = Some(getter);
+        self.__slots_getter = Some(getter);
     }
 }
 

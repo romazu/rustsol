@@ -9,7 +9,7 @@ use crate::types::{Position, SlotsGetter, SlotsGetterSetter};
 pub struct Address {
     __slot: U256,
     #[derivative(Debug = "ignore")]
-    __slot_getter: Option<Arc<dyn SlotsGetter>>,
+    __slots_getter: Option<Arc<dyn SlotsGetter>>,
 }
 
 impl Address {
@@ -22,7 +22,7 @@ impl Address {
     }
 
     pub fn value(&self) -> Result<alloy_primitives::Address, String> {
-        let getter = self.__slot_getter.as_ref().expect("No slots getter");
+        let getter = self.__slots_getter.as_ref().expect("No slots getter");
         let slot_values = getter.get_slots(self.__slot, 1)
             .map_err(|err| format!("Failed to get slot values: {}", err))?;
         self.value_from_slots(slot_values)
@@ -31,7 +31,7 @@ impl Address {
 
 impl Position for Address {
     fn from_position(slot: U256, _: usize) -> Self {
-        Address { __slot: slot, __slot_getter: None }  // Use the conversion from U256 to u64
+        Address { __slot: slot, __slots_getter: None }  // Use the conversion from U256 to u64
     }
 
     fn size() -> usize {
@@ -41,7 +41,7 @@ impl Position for Address {
 
 impl SlotsGetterSetter for Address {
     fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
-        self.__slot_getter = Some(getter);
+        self.__slots_getter = Some(getter);
     }
 }
 

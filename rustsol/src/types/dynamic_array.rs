@@ -14,7 +14,7 @@ pub struct DynamicArray<ElementType>
     __slot: U256,
     __marker: PhantomData<ElementType>,
     #[derivative(Debug = "ignore")]
-    __slot_getter: Option<Arc<dyn SlotsGetter>>,
+    __slots_getter: Option<Arc<dyn SlotsGetter>>,
 }
 
 impl<ElementType: Debug + Position + Value + SlotsGetterSetter> DynamicArray<ElementType> {
@@ -38,7 +38,7 @@ impl<ElementType: Debug + Position + Value + SlotsGetterSetter> DynamicArray<Ele
     }
 
     pub fn value(&self) -> Result<Vec<<ElementType as Value>::ValueType>, String> {
-        let getter = self.__slot_getter.as_ref().expect("No slots getter");
+        let getter = self.__slots_getter.as_ref().expect("No slots getter");
         let slot_values = getter.get_slots(U256::from(self.__slot), 1)
             .map_err(|err| format!("Failed to get slot values: {}", err))?;
         self.value_from_slots(slot_values)
@@ -47,7 +47,7 @@ impl<ElementType: Debug + Position + Value + SlotsGetterSetter> DynamicArray<Ele
 
 impl<ElementType: Debug + Position + Value> Position for DynamicArray<ElementType> {
     fn from_position(slot: U256, _: usize) -> Self {
-        DynamicArray::<ElementType> { __slot: slot, __marker: PhantomData, __slot_getter: None }
+        DynamicArray::<ElementType> { __slot: slot, __marker: PhantomData, __slots_getter: None }
     }
 
     fn size() -> usize {
@@ -60,7 +60,7 @@ impl<ElementType: Debug + Position + Value> DynamicArray<ElementType> {
         where ElementType: Debug + Position + Value + SlotsGetterSetter,
     {
         let mut element = ElementType::from_position(slot, offset);
-        match &self.__slot_getter {
+        match &self.__slots_getter {
             None => {
                 // No slots getter to pass to children.
             }
@@ -83,7 +83,7 @@ impl<ElementType: Debug + Position + Value> DynamicArray<ElementType> {
 
 impl<ElementType: Debug + Position + Value> SlotsGetterSetter for DynamicArray<ElementType> {
     fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
-        self.__slot_getter = Some(getter);
+        self.__slots_getter = Some(getter);
     }
 }
 
@@ -91,7 +91,7 @@ impl<ElementType: Debug + Position + Value + SlotsGetterSetter> Value for Dynami
     type ValueType = Vec<<ElementType as Value>::ValueType>;
 
     fn value_from_slots(&self, slot_values: Vec<U256>) -> Result<Self::ValueType, String> {
-        let getter = self.__slot_getter.as_ref().expect("No slots getter");
+        let getter = self.__slots_getter.as_ref().expect("No slots getter");
         let array_len = u256_to_u64(slot_values[0]);
         let (packing_n, packing_d) = self.packing_ratio();
         let array_size_slots = array_len as usize * packing_n / packing_d;

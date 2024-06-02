@@ -45,7 +45,7 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                     pub struct #struct_name {
                         __slot: U256,
                         #[derivative(Debug = "ignore")]
-                        __slot_getter: Option<Arc<dyn SlotsGetter>>,
+                        __slots_getter: Option<Arc<dyn SlotsGetter>>,
                         #(#fields),*
                     }
                 };
@@ -59,7 +59,7 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                         pub fn from_position(slot: U256, offset: usize) -> Self {
                             Self {
                                 __slot: slot,
-                                __slot_getter: None,
+                                __slots_getter: None,
                                 #(#default_fields),*
                             }
                         }
@@ -70,7 +70,7 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                             (self.__slot, 0, #number_of_bytes_literal)
                         }
                         pub fn value(&self) -> Result<U256, String> {
-                            let getter = self.__slot_getter.as_ref().expect("No slots getter");
+                            let getter = self.__slots_getter.as_ref().expect("No slots getter");
                             let slots = getter.get_slots(self.__slot, 1)
                                 .map_err(|err| format!("Failed to get slot values: {}", err))?;
                             Ok(slots[0]) // debug dummy
@@ -86,7 +86,7 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                     }
                     impl SlotsGetterSetter for #struct_name {
                         fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
-                            self.__slot_getter = Some(getter.clone());
+                            self.__slots_getter = Some(getter.clone());
                             #(#set_slots_getter_fields);*
                         }
                     }
