@@ -29,7 +29,7 @@ impl<KeyType, Value> Mapping<KeyType, Value> {
         (self.__slot, 0, 32)
     }
 
-    fn get_value(&self, key: [u8; 32]) -> Value
+    fn at_bytes_key(&self, key: [u8; 32]) -> Value
         where
             Value: Position + SlotsGetterSetter,
     {
@@ -60,32 +60,32 @@ impl<KeyType, Value> Position for Mapping<KeyType, Value> {
 
 
 impl<Value> Mapping<PrimitiveKey, Value> {
-    pub fn get<T>(&self, key: T) -> Value
+    pub fn at<T>(&self, key: T) -> Value
         where
             T: Into<PrimitiveKey>,
             Value: Position + SlotsGetterSetter,
     {
-        self.get_value(key.into().0)
+        self.at_bytes_key(key.into().0)
     }
 }
 
 impl<Value> Mapping<BytesKey, Value> {
-    pub fn get<T>(&self, key: T) -> Value
+    pub fn at<T>(&self, key: T) -> Value
         where
             T: Into<BytesKey>,
             Value: Position + SlotsGetterSetter,
     {
-        self.get_value(key.into().0)
+        self.at_bytes_key(key.into().0)
     }
 }
 
 impl<Value> Mapping<AddressKey, Value> {
-    pub fn get<T>(&self, key: T) -> Value
+    pub fn at<T>(&self, key: T) -> Value
         where
             T: Into<AddressKey>,
             Value: Position + SlotsGetterSetter,
     {
-        self.get_value(key.into().0)
+        self.at_bytes_key(key.into().0)
     }
 }
 

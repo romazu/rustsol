@@ -72,7 +72,7 @@ impl<ElementType: Debug + Position + Value> DynamicArray<ElementType> {
         element
     }
 
-    pub fn get(&self, index: usize) -> ElementType
+    pub fn at(&self, index: usize) -> ElementType
         where ElementType: Debug + Position + Value + SlotsGetterSetter,
     {
         let (packing_n, packing_d) = self.packing_ratio(); // Currently in solidity always ratio_d == 1.

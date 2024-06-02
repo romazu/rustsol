@@ -84,7 +84,7 @@ impl<const SIZE: usize, ElementType: Debug + Value + Position + SlotsGetterSette
         element
     }
 
-    pub fn get(&self, index: usize) -> ElementType
+    pub fn at(&self, index: usize) -> ElementType
         where
             ElementType: Position,
     {
