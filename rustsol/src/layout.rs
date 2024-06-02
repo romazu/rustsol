@@ -105,6 +105,8 @@ impl<'de> Deserialize<'de> for MemberType {
                     })
                 } else if intermediate.label == "address" {
                     Ok(MemberType::Address)
+                } else if intermediate.label.starts_with("contract ") {
+                    Ok(MemberType::Address)
                 } else {
                     Ok(MemberType::Primitive {
                         label: intermediate.label,
