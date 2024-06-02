@@ -2,15 +2,18 @@ use std::fmt::Debug;
 use std::marker::PhantomData;
 use std::sync::Arc;
 use alloy_primitives::U256;
+use derivative::Derivative;
 use crate::types::{DynamicArray, Mapping, Position, SlotsGetter, SlotsGetterSetter, Value};
 use crate::utils::{index_to_position, ceil_div, u256_to_u64, vec_u256_to_vec_bytes, u256_to_bytes32};
 
-#[derive(Debug)]
+#[derive(Derivative)]
+#[derivative(Debug)]
 pub struct StaticArray<const SIZE: u64, ElementType>
     where ElementType: Debug + Value + Position
 {
     __slot: U256,
     __marker: PhantomData<ElementType>,
+    #[derivative(Debug = "ignore")]
     __slot_getter: Option<Arc<dyn SlotsGetter>>,
 }
 
@@ -91,7 +94,7 @@ impl<const SIZE: u64, ElementType: Debug + Value + Position + SlotsGetterSetter>
             panic!("Index is outside array capacity: {} vs {}", index, capacity)
         }
         let (index_slot, index_offset) = index_to_position(index, packing_n, packing_d);
-        ElementType::from_position(self.storage() + index_slot, index_offset)
+        self.new_element(self.storage() + index_slot, index_offset)
     }
 }
 

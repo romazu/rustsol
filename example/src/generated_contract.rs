@@ -1,12 +1,15 @@
 #![allow(unused_imports, non_snake_case, unused, dead_code)]
 use std::sync::Arc;
+use rustsol::types::Derivative;
 use rustsol::types::{Position, SlotsGetter, SlotsGetterSetter, Value};
 use rustsol::types::{Primitive, Bytes, Address, Mapping, DynamicArray, StaticArray};
 use rustsol::types::{PrimitiveKey, BytesKey, AddressKey};
 use alloy_primitives::U256;
-#[derive(Debug)]
+#[derive(Derivative)]
+#[derivative(Debug)]
 pub struct MyContract {
     __slot: U256,
+    #[derivative(Debug = "ignore")]
     __slot_getter: Option<Arc<dyn SlotsGetter>>,
     pub plainUint112: Primitive<14>,
     pub dynamicArray: DynamicArray<Primitive<32>>,
@@ -28,23 +31,29 @@ pub struct MyContract {
     pub ___gap___: StaticArray<1248, Primitive<32>>,
     pub plainString: Bytes,
 }
-#[derive(Debug)]
+#[derive(Derivative)]
+#[derivative(Debug)]
 pub struct MyContractMyStructNested {
     __slot: U256,
+    #[derivative(Debug = "ignore")]
     __slot_getter: Option<Arc<dyn SlotsGetter>>,
     pub myAddress: Address,
     pub myStruct: MyContractMyStruct,
 }
-#[derive(Debug)]
+#[derive(Derivative)]
+#[derivative(Debug)]
 pub struct MyContractMyStruct {
     __slot: U256,
+    #[derivative(Debug = "ignore")]
     __slot_getter: Option<Arc<dyn SlotsGetter>>,
     pub myAddress: Address,
     pub myUint: Primitive<32>,
 }
-#[derive(Debug)]
+#[derive(Derivative)]
+#[derivative(Debug)]
 pub struct MyContractMyStructSmall {
     __slot: U256,
+    #[derivative(Debug = "ignore")]
     __slot_getter: Option<Arc<dyn SlotsGetter>>,
     pub smallInt1: Primitive<4>,
     pub smallInt2: Primitive<4>,
@@ -98,7 +107,17 @@ impl MyContract {
             }
         }
     }
-    pub fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
+}
+impl Position for MyContract {
+    fn from_position(slot: U256, offset: u8) -> Self {
+        Self::from_position(slot, offset)
+    }
+    fn size() -> u64 {
+        0
+    }
+}
+impl SlotsGetterSetter for MyContract {
+    fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
         self.__slot_getter = Some(getter.clone());
         self.plainUint112.set_slots_getter(getter.clone());
         self.dynamicArray.set_slots_getter(getter.clone());
@@ -119,19 +138,6 @@ impl MyContract {
         self.myEnum.set_slots_getter(getter.clone());
         self.___gap___.set_slots_getter(getter.clone());
         self.plainString.set_slots_getter(getter.clone())
-    }
-}
-impl Position for MyContract {
-    fn from_position(slot: U256, offset: u8) -> Self {
-        Self::from_position(slot, offset)
-    }
-    fn size() -> u64 {
-        0
-    }
-}
-impl SlotsGetterSetter for MyContract {
-    fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
-        self.__slot_getter = Some(getter);
     }
 }
 impl Value for MyContract {
@@ -169,11 +175,6 @@ impl MyContractMyStructNested {
             }
         }
     }
-    pub fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
-        self.__slot_getter = Some(getter.clone());
-        self.myAddress.set_slots_getter(getter.clone());
-        self.myStruct.set_slots_getter(getter.clone())
-    }
 }
 impl Position for MyContractMyStructNested {
     fn from_position(slot: U256, offset: u8) -> Self {
@@ -185,7 +186,9 @@ impl Position for MyContractMyStructNested {
 }
 impl SlotsGetterSetter for MyContractMyStructNested {
     fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
-        self.__slot_getter = Some(getter);
+        self.__slot_getter = Some(getter.clone());
+        self.myAddress.set_slots_getter(getter.clone());
+        self.myStruct.set_slots_getter(getter.clone())
     }
 }
 impl Value for MyContractMyStructNested {
@@ -223,11 +226,6 @@ impl MyContractMyStruct {
             }
         }
     }
-    pub fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
-        self.__slot_getter = Some(getter.clone());
-        self.myAddress.set_slots_getter(getter.clone());
-        self.myUint.set_slots_getter(getter.clone())
-    }
 }
 impl Position for MyContractMyStruct {
     fn from_position(slot: U256, offset: u8) -> Self {
@@ -239,7 +237,9 @@ impl Position for MyContractMyStruct {
 }
 impl SlotsGetterSetter for MyContractMyStruct {
     fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
-        self.__slot_getter = Some(getter);
+        self.__slot_getter = Some(getter.clone());
+        self.myAddress.set_slots_getter(getter.clone());
+        self.myUint.set_slots_getter(getter.clone())
     }
 }
 impl Value for MyContractMyStruct {
@@ -277,11 +277,6 @@ impl MyContractMyStructSmall {
             }
         }
     }
-    pub fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
-        self.__slot_getter = Some(getter.clone());
-        self.smallInt1.set_slots_getter(getter.clone());
-        self.smallInt2.set_slots_getter(getter.clone())
-    }
 }
 impl Position for MyContractMyStructSmall {
     fn from_position(slot: U256, offset: u8) -> Self {
@@ -293,7 +288,9 @@ impl Position for MyContractMyStructSmall {
 }
 impl SlotsGetterSetter for MyContractMyStructSmall {
     fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
-        self.__slot_getter = Some(getter);
+        self.__slot_getter = Some(getter.clone());
+        self.smallInt1.set_slots_getter(getter.clone());
+        self.smallInt2.set_slots_getter(getter.clone())
     }
 }
 impl Value for MyContractMyStructSmall {

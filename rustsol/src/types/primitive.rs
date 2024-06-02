@@ -3,11 +3,15 @@ use std::sync::Arc;
 use alloy_primitives::U256;
 use crate::types::{Mapping, SlotsGetterSetter};
 use crate::types::traits::{Position, SlotsGetter, Value};
+use derivative::Derivative;
+use crate::utils::vec_u256_to_vec_bytes;
 
-#[derive(Debug, Default)]
+#[derive(Derivative, Default)]
+#[derivative(Debug)]
 pub struct Primitive<const SIZE: u64> {
     __slot: U256,
     __offset: u8,
+    #[derivative(Debug = "ignore")]
     __slot_getter: Option<Arc<dyn SlotsGetter>>,
 }
 
@@ -25,17 +29,13 @@ impl<const SIZE: u64> Primitive<SIZE> {
     }
 
     pub fn value(self) -> Result<U256, String> {
-        match self.__slot_getter {
-            None => panic!("No slots getter"),
-            Some(getter) => {
-                let result = getter.get_slots(self.__slot, 1);
-                if let Ok(slots) = result {
-                    Ok(slots[0])
-                } else {
-                    Err("Failed to get slot values".into())
-                }
-            }
-        }
+        let getter = self.__slot_getter.as_ref().expect("No slots getter");
+        let slot_values = getter.get_slots(self.__slot, 1)?;
+        let end = 32 - self.__offset as usize;
+        let start = end - SIZE as usize;
+        let element_bytes = &vec_u256_to_vec_bytes(&slot_values, 0, 1)[start..end];
+        let value = self.value_from_base_bytes(element_bytes)?;
+        Ok(value)
     }
 }
 

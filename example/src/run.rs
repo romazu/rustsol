@@ -3,7 +3,7 @@
 use std::str::FromStr;
 use std::sync::Arc;
 use alloy_primitives::{Address, U256};
-use rustsol::types::SlotsGetter;
+use rustsol::types::{SlotsGetter, SlotsGetterSetter};
 
 mod generated_contract;
 

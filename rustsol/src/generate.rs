@@ -40,9 +40,11 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                 }).collect();
 
                 let struct_definition = quote! {
-                    #[derive(Debug)]
+                    #[derive(Derivative)]
+                    #[derivative(Debug)]
                     pub struct #struct_name {
                         __slot: U256,
+                        #[derivative(Debug = "ignore")]
                         __slot_getter: Option<Arc<dyn SlotsGetter>>,
                         #(#fields),*
                     }
@@ -77,10 +79,6 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                                 },
                             }
                         }
-                        pub fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
-                            self.__slot_getter = Some(getter.clone());
-                            #(#set_slots_getter_fields);*
-                        }
                     }
                     impl Position for #struct_name {
                         fn from_position(slot: U256, offset: u8) -> Self {
@@ -92,7 +90,8 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                     }
                     impl SlotsGetterSetter for #struct_name {
                         fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
-                            self.__slot_getter = Some(getter);
+                            self.__slot_getter = Some(getter.clone());
+                            #(#set_slots_getter_fields);*
                         }
                     }
                     impl Value for #struct_name {
@@ -114,6 +113,7 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
     };
     let imports_definition_items: Vec<Item> = vec![
         parse_str("use std::sync::Arc;").expect("Failed to parse"),
+        parse_str("use rustsol::types::Derivative;").expect("Failed to parse"),
         parse_str("use rustsol::types::{Position, SlotsGetter, SlotsGetterSetter, Value};").expect("Failed to parse"),
         parse_str("use rustsol::types::{Primitive, Bytes, Address, Mapping, DynamicArray, StaticArray};").expect("Failed to parse"),
         parse_str("use rustsol::types::{PrimitiveKey, BytesKey, AddressKey};").expect("Failed to parse"),

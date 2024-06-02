@@ -7,7 +7,7 @@ pub trait Position {
     fn size() -> u64;
 }
 
-pub trait SlotsGetter: Debug {
+pub trait SlotsGetter {
     fn get_slots(&self, start: U256, n: usize) -> Result<Vec<U256>, String>;
 }
 

@@ -1,5 +1,6 @@
 use std::sync::Arc;
 use alloy_primitives::{FixedBytes, U256};
+use derivative::Derivative;
 use crate::utils::{bytes32_to_u256, ceil_div, keccak256, u256_to_bytes32, vec_u256_to_vec_bytes};
 use crate::types::{Address, Primitive, Value};
 use crate::types::{Position, SlotsGetter, SlotsGetterSetter};
@@ -9,9 +10,11 @@ use crate::types::{Position, SlotsGetter, SlotsGetterSetter};
 // store data which is 32 or more bytes long, the main slot p stores length * 2 + 1 and the data is
 // stored as usual in keccak256(p). This means that you can distinguish a short array from a long
 // array by checking if the lowest bit is set: short (not set) and long (set).
-#[derive(Debug, Default)]
+#[derive(Derivative, Default)]
+#[derivative(Debug)]
 pub struct Bytes {
     __slot: U256,
+    #[derivative(Debug = "ignore")]
     __slot_getter: Option<Arc<dyn SlotsGetter>>,
 }
 

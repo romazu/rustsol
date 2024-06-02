@@ -1,11 +1,14 @@
 use std::sync::Arc;
 use alloy_primitives::{FixedBytes, U256};
+use derivative::Derivative;
 use crate::types::{Bytes, Primitive, Value};
 use crate::types::{Position, SlotsGetter, SlotsGetterSetter};
 
-#[derive(Debug, Default)]
+#[derive(Derivative, Default)]
+#[derivative(Debug)]
 pub struct Address {
     __slot: U256,
+    #[derivative(Debug = "ignore")]
     __slot_getter: Option<Arc<dyn SlotsGetter>>,
 }
 

@@ -2,15 +2,18 @@ use std::fmt::Debug;
 use std::marker::PhantomData;
 use std::sync::Arc;
 use alloy_primitives::U256;
+use derivative::Derivative;
 use crate::types::{Position, Primitive};
 use crate::types::{SlotsGetter, SlotsGetterSetter, Value};
 use crate::utils::{bytes32_to_u256, ceil_div, index_to_position, keccak256, u256_to_bytes32, u256_to_u64, vec_u256_to_vec_bytes};
 
-#[derive(Debug)]
+#[derive(Derivative)]
+#[derivative(Debug)]
 pub struct DynamicArray<ElementType>
     where ElementType: Debug + Value + Position {
     __slot: U256,
     __marker: PhantomData<ElementType>,
+    #[derivative(Debug = "ignore")]
     __slot_getter: Option<Arc<dyn SlotsGetter>>,
 }
 

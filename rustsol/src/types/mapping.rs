@@ -2,6 +2,7 @@ use std::fmt::Debug;
 use std::marker::PhantomData;
 use std::sync::Arc;
 use alloy_primitives::U256;
+use derivative::Derivative;
 use crate::utils::{bytes32_to_u256, keccak256_concat, u256_to_bytes32};
 use crate::types::{PrimitiveKey, BytesKey, AddressKey};
 use crate::types::{Position, SlotsGetter, SlotsGetterSetter};
@@ -10,10 +11,12 @@ use crate::types::{Position, SlotsGetter, SlotsGetterSetter};
 // concatenation and h is a function that is applied to the key depending on its type:
 // - for value types, h pads the value to 32 bytes in the same way as when storing the value in memory.
 // - for strings and byte arrays, h computes the keccak256 hash of the unpadded data.
-#[derive(Debug)]
+#[derive(Derivative)]
+#[derivative(Debug)]
 pub struct Mapping<KeyType, Value> {
     __slot: U256,
     __marker: PhantomData<(KeyType, Value)>,
+    #[derivative(Debug = "ignore")]
     __slot_getter: Option<Arc<dyn SlotsGetter>>,
 }
 
