@@ -8,7 +8,7 @@ use crate::utils::{index_to_position, ceil_div, u256_to_u64, vec_u256_to_vec_byt
 
 #[derive(Derivative)]
 #[derivative(Debug)]
-pub struct StaticArray<const SIZE: u64, ElementType>
+pub struct StaticArray<const SIZE: usize, ElementType>
     where ElementType: Debug + Value + Position
 {
     __slot: U256,
@@ -17,12 +17,12 @@ pub struct StaticArray<const SIZE: u64, ElementType>
     __slot_getter: Option<Arc<dyn SlotsGetter>>,
 }
 
-impl<const SIZE: u64, ElementType: Debug + Position + Value + SlotsGetterSetter> StaticArray<SIZE, ElementType> {
+impl<const SIZE: usize, ElementType: Debug + Position + Value + SlotsGetterSetter> StaticArray<SIZE, ElementType> {
     pub fn slot(&self) -> U256 {
         self.__slot
     }
 
-    pub fn position(&self) -> (U256, u8, u64) {
+    pub fn position(&self) -> (U256, usize, usize) {
         (self.__slot, 0, SIZE)
     }
 
@@ -33,7 +33,7 @@ impl<const SIZE: u64, ElementType: Debug + Position + Value + SlotsGetterSetter>
     // Return the packing ratio: (n, d).
     // This means that packing is "n slot per d elements"
     // In the current solidity implementation one element of the pair is always one.
-    pub fn packing_ratio(&self) -> (u64, u64) {
+    pub fn packing_ratio(&self) -> (usize, usize) {
         let element_size = ElementType::size();
         if element_size > 32 {
             (ceil_div(element_size, 32), 1)
@@ -57,18 +57,18 @@ impl<const SIZE: u64, ElementType: Debug + Position + Value + SlotsGetterSetter>
     }
 }
 
-impl<const SIZE: u64, ElementType: Debug + Value + Position> Position for StaticArray<SIZE, ElementType> {
-    fn from_position(slot: U256, _: u8) -> Self {
+impl<const SIZE: usize, ElementType: Debug + Value + Position> Position for StaticArray<SIZE, ElementType> {
+    fn from_position(slot: U256, _: usize) -> Self {
         StaticArray::<SIZE, ElementType> { __slot: slot, __marker: PhantomData, __slot_getter: None }
     }
 
-    fn size() -> u64 {
+    fn size() -> usize {
         SIZE
     }
 }
 
-impl<const SIZE: u64, ElementType: Debug + Value + Position + SlotsGetterSetter> StaticArray<SIZE, ElementType> {
-    fn new_element(&self, slot: U256, offset: u8) -> ElementType
+impl<const SIZE: usize, ElementType: Debug + Value + Position + SlotsGetterSetter> StaticArray<SIZE, ElementType> {
+    fn new_element(&self, slot: U256, offset: usize) -> ElementType
         where ElementType: Debug + Position + Value + SlotsGetterSetter,
     {
         let mut element = ElementType::from_position(slot, offset);
@@ -98,13 +98,13 @@ impl<const SIZE: u64, ElementType: Debug + Value + Position + SlotsGetterSetter>
     }
 }
 
-impl<const SIZE: u64, ElementType: Debug + Value + Position> SlotsGetterSetter for StaticArray<SIZE, ElementType> {
+impl<const SIZE: usize, ElementType: Debug + Value + Position> SlotsGetterSetter for StaticArray<SIZE, ElementType> {
     fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
         self.__slot_getter = Some(getter);
     }
 }
 
-impl<const SIZE: u64, ElementType: Debug + Position + Value + SlotsGetterSetter> Value for StaticArray<SIZE, ElementType> {
+impl<const SIZE: usize, ElementType: Debug + Position + Value + SlotsGetterSetter> Value for StaticArray<SIZE, ElementType> {
     type ValueType = Vec<<ElementType as Value>::ValueType>;
 
     fn value_from_base_bytes(&self, bytes: &[u8]) -> Result<Self::ValueType, String> {

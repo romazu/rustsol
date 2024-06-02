@@ -17,7 +17,7 @@ pub fn keccak256_concat(a: [u8; 32], b: [u8; 32]) -> [u8; 32] {
     hasher.finalize().as_slice().try_into().expect("Wrong length")
 }
 
-pub fn ceil_div(a: u64, b: u64) -> u64 {
+pub fn ceil_div(a: usize, b: usize) -> usize {
     (a + b - 1) / b
 }
 
@@ -65,8 +65,8 @@ pub fn vec_u256_to_vec_bytes(vec_u256: &Vec<U256>, start: usize, end: usize) -> 
     vec_bytes
 }
 
-pub fn index_to_position(index: usize, packing_ratio_n: u64, packing_ratio_d: u64) -> (U256, u8) {
-    let slot = index as u64 * packing_ratio_n / packing_ratio_d;
-    let offset = (index as u64 * 32 * packing_ratio_n / packing_ratio_d % 32) as u8;  // guaranteed to fit in u8
+pub fn index_to_position(index: usize, packing_ratio_n: usize, packing_ratio_d: usize) -> (U256, usize) {
+    let slot = index * packing_ratio_n / packing_ratio_d;
+    let offset = index * 32 * packing_ratio_n / packing_ratio_d % 32;
     (U256::from(slot), offset)
 }

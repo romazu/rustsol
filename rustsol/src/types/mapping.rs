@@ -25,7 +25,7 @@ impl<KeyType, Value> Mapping<KeyType, Value> {
         self.__slot
     }
 
-    pub fn position(&self) -> (U256, u8, u64) {
+    pub fn position(&self) -> (U256, usize, usize) {
         (self.__slot, 0, 32)
     }
 
@@ -49,11 +49,11 @@ impl<KeyType, Value> Mapping<KeyType, Value> {
 }
 
 impl<KeyType, Value> Position for Mapping<KeyType, Value> {
-    fn from_position(slot: U256, _: u8) -> Self {
+    fn from_position(slot: U256, _: usize) -> Self {
         Mapping::<KeyType, Value> { __slot: slot, __marker: PhantomData, __slot_getter: None }
     }
 
-    fn size() -> u64 {
+    fn size() -> usize {
         32
     }
 }

@@ -3,8 +3,8 @@ use std::sync::Arc;
 use alloy_primitives::U256;
 
 pub trait Position {
-    fn from_position(slot: U256, offset: u8) -> Self;
-    fn size() -> u64;
+    fn from_position(slot: U256, offset: usize) -> Self;
+    fn size() -> usize;
 }
 
 pub trait SlotsGetter {

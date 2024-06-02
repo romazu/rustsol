@@ -17,7 +17,7 @@ impl Address {
         self.__slot
     }
 
-    pub fn position(&self) -> (U256, u8, u64) {
+    pub fn position(&self) -> (U256, usize, usize) {
         (self.__slot, 0, 20)
     }
 
@@ -30,11 +30,11 @@ impl Address {
 }
 
 impl Position for Address {
-    fn from_position(slot: U256, _: u8) -> Self {
+    fn from_position(slot: U256, _: usize) -> Self {
         Address { __slot: slot, __slot_getter: None }  // Use the conversion from U256 to u64
     }
 
-    fn size() -> u64 {
+    fn size() -> usize {
         20
     }
 }

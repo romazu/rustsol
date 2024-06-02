@@ -23,7 +23,7 @@ impl Bytes {
         self.__slot
     }
 
-    pub fn position(&self) -> (U256, u8, u64) {
+    pub fn position(&self) -> (U256, usize, usize) {
         (self.__slot, 0, 32)
     }
 
@@ -40,11 +40,11 @@ impl Bytes {
 }
 
 impl Position for Bytes {
-    fn from_position(slot: U256, _: u8) -> Self {
+    fn from_position(slot: U256, _: usize) -> Self {
         Bytes { __slot: slot, __slot_getter: None }
     }
 
-    fn size() -> u64 {
+    fn size() -> usize {
         32
     }
 }
@@ -64,7 +64,7 @@ impl Value for Bytes {
         let is_long = base_slot_value.bit(0);
         if is_long {
             let string_len_bytes = (base_slot_value.byte(0) - 1) / 2;
-            let string_len_slots = ceil_div(string_len_bytes as u64, 32) as usize;
+            let string_len_slots = ceil_div(string_len_bytes as usize, 32);
             let slots = getter.get_slots(self.storage(), string_len_slots)
                 .map_err(|err| format!("Failed to get slot values: {}", err))?;
             let bytes = vec_u256_to_vec_bytes(&slots, 0, string_len_slots);

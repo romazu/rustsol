@@ -62,7 +62,7 @@ impl MyContract {
     pub fn new() -> Self {
         Self::from_position(U256::ZERO, 0)
     }
-    pub fn from_position(slot: U256, offset: u8) -> Self {
+    pub fn from_position(slot: U256, offset: usize) -> Self {
         Self {
             __slot: slot,
             __slot_getter: None,
@@ -93,7 +93,7 @@ impl MyContract {
     pub fn slot(&self) -> U256 {
         self.__slot
     }
-    pub fn position(&self) -> (U256, u8, u64) {
+    pub fn position(&self) -> (U256, usize, usize) {
         (self.__slot, 0, 0)
     }
     pub fn value(self) -> Result<U256, String> {
@@ -109,10 +109,10 @@ impl MyContract {
     }
 }
 impl Position for MyContract {
-    fn from_position(slot: U256, offset: u8) -> Self {
+    fn from_position(slot: U256, offset: usize) -> Self {
         Self::from_position(slot, offset)
     }
-    fn size() -> u64 {
+    fn size() -> usize {
         0
     }
 }
@@ -150,7 +150,7 @@ impl MyContractMyStructNested {
     pub fn new() -> Self {
         Self::from_position(U256::ZERO, 0)
     }
-    pub fn from_position(slot: U256, offset: u8) -> Self {
+    pub fn from_position(slot: U256, offset: usize) -> Self {
         Self {
             __slot: slot,
             __slot_getter: None,
@@ -161,7 +161,7 @@ impl MyContractMyStructNested {
     pub fn slot(&self) -> U256 {
         self.__slot
     }
-    pub fn position(&self) -> (U256, u8, u64) {
+    pub fn position(&self) -> (U256, usize, usize) {
         (self.__slot, 0, 96)
     }
     pub fn value(self) -> Result<U256, String> {
@@ -177,10 +177,10 @@ impl MyContractMyStructNested {
     }
 }
 impl Position for MyContractMyStructNested {
-    fn from_position(slot: U256, offset: u8) -> Self {
+    fn from_position(slot: U256, offset: usize) -> Self {
         Self::from_position(slot, offset)
     }
-    fn size() -> u64 {
+    fn size() -> usize {
         96
     }
 }
@@ -201,7 +201,7 @@ impl MyContractMyStruct {
     pub fn new() -> Self {
         Self::from_position(U256::ZERO, 0)
     }
-    pub fn from_position(slot: U256, offset: u8) -> Self {
+    pub fn from_position(slot: U256, offset: usize) -> Self {
         Self {
             __slot: slot,
             __slot_getter: None,
@@ -212,7 +212,7 @@ impl MyContractMyStruct {
     pub fn slot(&self) -> U256 {
         self.__slot
     }
-    pub fn position(&self) -> (U256, u8, u64) {
+    pub fn position(&self) -> (U256, usize, usize) {
         (self.__slot, 0, 64)
     }
     pub fn value(self) -> Result<U256, String> {
@@ -228,10 +228,10 @@ impl MyContractMyStruct {
     }
 }
 impl Position for MyContractMyStruct {
-    fn from_position(slot: U256, offset: u8) -> Self {
+    fn from_position(slot: U256, offset: usize) -> Self {
         Self::from_position(slot, offset)
     }
-    fn size() -> u64 {
+    fn size() -> usize {
         64
     }
 }
@@ -252,7 +252,7 @@ impl MyContractMyStructSmall {
     pub fn new() -> Self {
         Self::from_position(U256::ZERO, 0)
     }
-    pub fn from_position(slot: U256, offset: u8) -> Self {
+    pub fn from_position(slot: U256, offset: usize) -> Self {
         Self {
             __slot: slot,
             __slot_getter: None,
@@ -263,7 +263,7 @@ impl MyContractMyStructSmall {
     pub fn slot(&self) -> U256 {
         self.__slot
     }
-    pub fn position(&self) -> (U256, u8, u64) {
+    pub fn position(&self) -> (U256, usize, usize) {
         (self.__slot, 0, 32)
     }
     pub fn value(self) -> Result<U256, String> {
@@ -279,10 +279,10 @@ impl MyContractMyStructSmall {
     }
 }
 impl Position for MyContractMyStructSmall {
-    fn from_position(slot: U256, offset: u8) -> Self {
+    fn from_position(slot: U256, offset: usize) -> Self {
         Self::from_position(slot, offset)
     }
-    fn size() -> u64 {
+    fn size() -> usize {
         32
     }
 }

@@ -22,7 +22,7 @@ impl<ElementType: Debug + Position + Value + SlotsGetterSetter> DynamicArray<Ele
         self.__slot
     }
 
-    pub fn position(&self) -> (U256, u8, u64) {
+    pub fn position(&self) -> (U256, usize, usize) {
         (self.__slot, 0, 32)
     }
 
@@ -33,7 +33,7 @@ impl<ElementType: Debug + Position + Value + SlotsGetterSetter> DynamicArray<Ele
     // Return the packing ratio: (n, d).
     // This means that packing is "n slot per d elements"
     // For dynamic array d is always one, i.e., values are not tightly packed.
-    pub fn packing_ratio(&self) -> (u64, u64) {
+    pub fn packing_ratio(&self) -> (usize, usize) {
         (ceil_div(ElementType::size(), 32), 1)
     }
 
@@ -46,17 +46,17 @@ impl<ElementType: Debug + Position + Value + SlotsGetterSetter> DynamicArray<Ele
 }
 
 impl<ElementType: Debug + Position + Value> Position for DynamicArray<ElementType> {
-    fn from_position(slot: U256, _: u8) -> Self {
+    fn from_position(slot: U256, _: usize) -> Self {
         DynamicArray::<ElementType> { __slot: slot, __marker: PhantomData, __slot_getter: None }
     }
 
-    fn size() -> u64 {
+    fn size() -> usize {
         32
     }
 }
 
 impl<ElementType: Debug + Position + Value> DynamicArray<ElementType> {
-    fn new_element(&self, slot: U256, offset: u8) -> ElementType
+    fn new_element(&self, slot: U256, offset: usize) -> ElementType
         where ElementType: Debug + Position + Value + SlotsGetterSetter,
     {
         let mut element = ElementType::from_position(slot, offset);
@@ -94,7 +94,7 @@ impl<ElementType: Debug + Position + Value + SlotsGetterSetter> Value for Dynami
         let getter = self.__slot_getter.as_ref().expect("No slots getter");
         let array_len = u256_to_u64(U256::from_be_slice(bytes)); // TODO: More effective conversion?
         let (packing_n, packing_d) = self.packing_ratio();
-        let array_size_slots = array_len * packing_n / packing_d;
+        let array_size_slots = array_len as usize * packing_n / packing_d;
         let slot_values = getter.get_slots(self.storage(), array_size_slots as usize)
             .map_err(|err| format!("Failed to get slot values: {}", err))?;
         let mut values = Vec::new();
