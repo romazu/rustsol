@@ -3,7 +3,7 @@ use std::marker::PhantomData;
 use std::sync::Arc;
 use alloy_primitives::U256;
 use derivative::Derivative;
-use crate::utils::{bytes32_to_u256, index_to_position, keccak256_concat, u256_to_bytes32, u256_to_u64};
+use crate::utils::{bytes32_to_u256, ceil_div, index_to_position, keccak256_concat, u256_to_bytes32, u256_to_u64};
 use crate::types::{PrimitiveKey, BytesKey, AddressKey, Value, DynamicArray};
 use crate::types::{Position, SlotsGetter, SlotsGetterSetter};
 use crate::types::keys::Key;
@@ -21,7 +21,7 @@ pub struct Mapping<KeyType, ElementType> {
     __slots_getter: Option<Arc<dyn SlotsGetter>>,
 }
 
-impl<KeyType, ElementType> Mapping<KeyType, ElementType> {
+impl<KeyType: Key, ElementType> Mapping<KeyType, ElementType> {
     pub fn slot(&self) -> U256 {
         self.__slot
     }
@@ -45,18 +45,22 @@ impl<KeyType, ElementType> Mapping<KeyType, ElementType> {
         }
         element
     }
-
-    fn at_bytes_key(&self, key: [u8; 32]) -> ElementType
-        where
-            ElementType: Position + SlotsGetterSetter,
-    {
+    fn storage_at_bytes(&self, key: [u8; 32]) -> U256 {
         let value_slot_bytes = keccak256_concat(key, u256_to_bytes32(self.__slot));
-        let element_slot = bytes32_to_u256(value_slot_bytes);
-        self.new_element(element_slot, 0)
+        bytes32_to_u256(value_slot_bytes)
     }
 
-    pub fn value(&self) -> Result<(), String> {
-        panic!("Not implemented")
+    pub fn get_value_at<T>(&self, key: T) -> Result<<ElementType as Value>::ValueType, String>
+        where
+            T: Into<KeyType>,
+            ElementType: Position + Value + SlotsGetterSetter,
+    {
+        let getter = self.__slots_getter.as_ref().expect("No slots getter");
+        let element_slot = self.storage_at_bytes(key.into().to_bytes());
+        let element_size_slots = ceil_div(ElementType::size(), 32);
+        let element_slot_values = getter.get_slots(element_slot, element_size_slots)
+            .map_err(|err| format!("Failed to get slot values: {}", err))?;
+        self.new_element(element_slot, 0).value_from_slots(element_slot_values)
     }
 }
 
@@ -77,7 +81,8 @@ impl<KeyType: Key, ElementType> Mapping<KeyType, ElementType> {
             T: Into<KeyType>,
             ElementType: Position + SlotsGetterSetter,
     {
-        self.at_bytes_key(key.into().to_bytes())
+        let element_slot = self.storage_at_bytes(key.into().to_bytes());
+        self.new_element(element_slot, 0)
     }
 }
 
@@ -87,11 +92,16 @@ impl<KeyType: Debug, ElementType: Debug> SlotsGetterSetter for Mapping<KeyType, 
     }
 }
 
-
-impl<KeyType, ElementType: Debug + Position + Value + SlotsGetterSetter> Value for Mapping<KeyType, ElementType> {
-    type ValueType = U256; // Dummy.
+impl<KeyType, ElementType> Value for Mapping<KeyType, ElementType> {
+    type ValueType = Self;
 
     fn value_from_slots(&self, _: Vec<U256>) -> Result<Self::ValueType, String> {
-        panic!("Not implemented")
+        // Mapping base slot is always empty and is used only for element storage calculation.
+        // Clone self.
+        Ok(Mapping {
+            __slot: self.__slot,
+            __marker: self.__marker,
+            __slots_getter: self.__slots_getter.clone(),
+        })
     }
 }
