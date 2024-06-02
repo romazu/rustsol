@@ -1,7 +1,7 @@
 use std::sync::Arc;
 use alloy_primitives::{FixedBytes, U256};
 use derivative::Derivative;
-use crate::utils::{bytes32_to_u256, ceil_div, keccak256, u256_to_bytes32, vec_u256_to_vec_bytes};
+use crate::utils::{bytes32_to_u256, ceil_div, keccak256, u256_to_bytes32, u256_to_u64, vec_u256_to_vec_bytes};
 use crate::types::{Address, Primitive, Value};
 use crate::types::{Position, SlotsGetter, SlotsGetterSetter};
 
@@ -63,7 +63,7 @@ impl Value for Bytes {
         let base_slot_value = slot_values[0];
         let is_long = base_slot_value.bit(0);
         if is_long {
-            let string_len_bytes = (base_slot_value.byte(0) - 1) / 2;
+            let string_len_bytes = (u256_to_u64(base_slot_value) - 1) / 2;
             let string_len_slots = ceil_div(string_len_bytes as usize, 32);
             let element_slot_values = getter.get_slots(self.storage(), string_len_slots)
                 .map_err(|err| format!("Failed to get slot values: {}", err))?;
