@@ -96,7 +96,7 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                     }
                     impl Value for #struct_name {
                         type ValueType = u8; // dummy
-                        fn value_from_base_bytes(&self, bytes: &[u8]) -> Result<Self::ValueType, String> {
+                        fn value_from_slots(&self, slot_values: Vec<U256>) -> Result<Self::ValueType, String> {
                             panic!("Not implemented")
                         }
                     }

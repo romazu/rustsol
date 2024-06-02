@@ -17,5 +17,5 @@ pub trait SlotsGetterSetter: Debug {
 
 pub trait Value {
     type ValueType;
-    fn value_from_base_bytes(&self, bytes: &[u8]) -> Result<Self::ValueType, String>;
+    fn value_from_slots(&self, slot_values: Vec<U256>) -> Result<Self::ValueType, String>;
 }

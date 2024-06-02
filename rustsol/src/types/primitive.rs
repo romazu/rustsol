@@ -31,11 +31,7 @@ impl<const SIZE: usize> Primitive<SIZE> {
     pub fn value(self) -> Result<U256, String> {
         let getter = self.__slot_getter.as_ref().expect("No slots getter");
         let slot_values = getter.get_slots(self.__slot, 1)?;
-        let end = 32 - self.__offset as usize;
-        let start = end - SIZE as usize;
-        let element_bytes = &vec_u256_to_vec_bytes(&slot_values, 0, 1)[start..end];
-        let value = self.value_from_base_bytes(element_bytes)?;
-        Ok(value)
+        self.value_from_slots(slot_values)
     }
 }
 
@@ -59,7 +55,8 @@ impl<const SIZE: usize> Value for Primitive<SIZE> {
     // TODO: Change to concrete values type like u64 and bool.
     type ValueType = U256;
 
-    fn value_from_base_bytes(&self, bytes: &[u8]) -> Result<Self::ValueType, String> {
-        Ok(U256::from_be_slice(bytes))
+    fn value_from_slots(&self, slot_values: Vec<U256>) -> Result<Self::ValueType, String> {
+        let bytes = slot_values[0].to_le_bytes::<{ U256::BYTES }>();
+        Ok(U256::from_le_slice(&bytes[self.__offset..self.__offset + SIZE]))
     }
 }

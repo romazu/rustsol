@@ -39,9 +39,9 @@ impl<ElementType: Debug + Position + Value + SlotsGetterSetter> DynamicArray<Ele
 
     pub fn value(&self) -> Result<Vec<<ElementType as Value>::ValueType>, String> {
         let getter = self.__slot_getter.as_ref().expect("No slots getter");
-        let base_slot_value = getter.get_slots(U256::from(self.__slot), 1)
-            .map_err(|err| format!("Failed to get slot values: {}", err))?[0];
-        self.value_from_base_bytes(&u256_to_bytes32(base_slot_value))
+        let slot_values = getter.get_slots(U256::from(self.__slot), 1)
+            .map_err(|err| format!("Failed to get slot values: {}", err))?;
+        self.value_from_slots(slot_values)
     }
 }
 
@@ -90,24 +90,25 @@ impl<ElementType: Debug + Position + Value> SlotsGetterSetter for DynamicArray<E
 impl<ElementType: Debug + Position + Value + SlotsGetterSetter> Value for DynamicArray<ElementType> {
     type ValueType = Vec<<ElementType as Value>::ValueType>;
 
-    fn value_from_base_bytes(&self, bytes: &[u8]) -> Result<Self::ValueType, String> {
+    fn value_from_slots(&self, slot_values: Vec<U256>) -> Result<Self::ValueType, String> {
         let getter = self.__slot_getter.as_ref().expect("No slots getter");
-        let array_len = u256_to_u64(U256::from_be_slice(bytes)); // TODO: More effective conversion?
+        let array_len = u256_to_u64(slot_values[0]);
         let (packing_n, packing_d) = self.packing_ratio();
         let array_size_slots = array_len as usize * packing_n / packing_d;
         let slot_values = getter.get_slots(self.storage(), array_size_slots as usize)
             .map_err(|err| format!("Failed to get slot values: {}", err))?;
         let mut values = Vec::new();
-        // These zeros are enough because we need element only to get its value.
-        let element = self.new_element(U256::ZERO, 0);
+        let storage_slot = self.storage();
         for i in 0..array_len as usize {
             // Simple assumption (holds in Solidity) that element occupying several slots cannot have offset.
             // TODO: Write general element_size_slots estimator.
             let element_size_slots = packing_n;
             let (element_slot, element_offset) = index_to_position(i, packing_n, packing_d);
-            // let element = self.new_element(storage_slot + element_slot, element_offset);
-            let element_bytes = &vec_u256_to_vec_bytes(&slot_values, i, i + element_size_slots as usize)[element_offset as usize..];
-            let value = element.value_from_base_bytes(element_bytes)?;
+            let element = self.new_element(storage_slot + element_slot, element_offset);
+            let start = u256_to_u64(element_slot) as usize;
+            let end = start + element_size_slots;
+            let element_slot_values = slot_values[start..end].to_vec();
+            let value = element.value_from_slots(element_slot_values)?;
             values.push(value);
         }
         Ok(values)

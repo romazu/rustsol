@@ -33,9 +33,9 @@ impl Bytes {
 
     pub fn value(self) -> Result<Vec<u8>, String> {
         let getter = self.__slot_getter.as_ref().expect("No slots getter");
-        let base_slot_value = getter.get_slots(self.__slot, 1)
-            .map_err(|err| format!("Failed to get slot values: {}", err))?[0];
-        self.value_from_base_bytes(&base_slot_value.to_be_bytes::<{ U256::BYTES }>())
+        let slot_values = getter.get_slots(self.__slot, 1)
+            .map_err(|err| format!("Failed to get slot values: {}", err))?;
+        self.value_from_slots(slot_values)
     }
 }
 
@@ -58,22 +58,22 @@ impl SlotsGetterSetter for Bytes {
 impl Value for Bytes {
     type ValueType = Vec<u8>;
 
-    fn value_from_base_bytes(&self, bytes: &[u8]) -> Result<Self::ValueType, String> {
+    fn value_from_slots(&self, slot_values: Vec<U256>) -> Result<Self::ValueType, String> {
         let getter = self.__slot_getter.as_ref().expect("No slots getter");
-        let base_slot_value = U256::from_be_slice(bytes);
+        let base_slot_value = slot_values[0];
         let is_long = base_slot_value.bit(0);
         if is_long {
             let string_len_bytes = (base_slot_value.byte(0) - 1) / 2;
             let string_len_slots = ceil_div(string_len_bytes as usize, 32);
-            let slots = getter.get_slots(self.storage(), string_len_slots)
+            let element_slot_values = getter.get_slots(self.storage(), string_len_slots)
                 .map_err(|err| format!("Failed to get slot values: {}", err))?;
-            let bytes = vec_u256_to_vec_bytes(&slots, 0, string_len_slots);
+            let bytes = vec_u256_to_vec_bytes(&element_slot_values, 0, string_len_slots);
             Ok(bytes[0..string_len_bytes as usize].to_vec())
         } else {
             let string_len = base_slot_value.byte(0) / 2;
             // let bytes = Vec::from(&bytes[0..string_len as usize]);
-            let bytes = bytes[0..string_len as usize].to_vec();
-            Ok(bytes)
+            let bytes = base_slot_value.to_be_bytes::<{ U256::BYTES }>();
+            Ok(bytes[0..string_len as usize].to_vec())
         }
     }
 }

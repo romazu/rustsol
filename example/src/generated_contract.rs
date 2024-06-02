@@ -142,7 +142,10 @@ impl SlotsGetterSetter for MyContract {
 }
 impl Value for MyContract {
     type ValueType = u8;
-    fn value_from_base_bytes(&self, bytes: &[u8]) -> Result<Self::ValueType, String> {
+    fn value_from_slots(
+        &self,
+        slot_values: Vec<U256>,
+    ) -> Result<Self::ValueType, String> {
         panic!("Not implemented")
     }
 }
@@ -193,7 +196,10 @@ impl SlotsGetterSetter for MyContractMyStructNested {
 }
 impl Value for MyContractMyStructNested {
     type ValueType = u8;
-    fn value_from_base_bytes(&self, bytes: &[u8]) -> Result<Self::ValueType, String> {
+    fn value_from_slots(
+        &self,
+        slot_values: Vec<U256>,
+    ) -> Result<Self::ValueType, String> {
         panic!("Not implemented")
     }
 }
@@ -244,7 +250,10 @@ impl SlotsGetterSetter for MyContractMyStruct {
 }
 impl Value for MyContractMyStruct {
     type ValueType = u8;
-    fn value_from_base_bytes(&self, bytes: &[u8]) -> Result<Self::ValueType, String> {
+    fn value_from_slots(
+        &self,
+        slot_values: Vec<U256>,
+    ) -> Result<Self::ValueType, String> {
         panic!("Not implemented")
     }
 }
@@ -295,7 +304,10 @@ impl SlotsGetterSetter for MyContractMyStructSmall {
 }
 impl Value for MyContractMyStructSmall {
     type ValueType = u8;
-    fn value_from_base_bytes(&self, bytes: &[u8]) -> Result<Self::ValueType, String> {
+    fn value_from_slots(
+        &self,
+        slot_values: Vec<U256>,
+    ) -> Result<Self::ValueType, String> {
         panic!("Not implemented")
     }
 }
