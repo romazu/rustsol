@@ -69,15 +69,11 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                         pub fn position(&self) -> (U256, usize, usize) {
                             (self.__slot, 0, #number_of_bytes_literal)
                         }
-                        pub fn value(self) -> Result<U256, String> {
-                            match self.__slot_getter {
-                                None => panic!("No slots getter"),
-                                Some(getter) => {
-                                    let slots = getter.get_slots(self.__slot, 1)
-                                        .map_err(|err| format!("Failed to get slot values: {}", err))?;
-                                    Ok(slots[0]) // debug dummy
-                                },
-                            }
+                        pub fn value(&self) -> Result<U256, String> {
+                            let getter = self.__slot_getter.as_ref().expect("No slots getter");
+                            let slots = getter.get_slots(self.__slot, 1)
+                                .map_err(|err| format!("Failed to get slot values: {}", err))?;
+                            Ok(slots[0]) // debug dummy
                         }
                     }
                     impl Position for #struct_name {
