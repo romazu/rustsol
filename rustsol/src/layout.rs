@@ -1,5 +1,6 @@
 use serde::{Deserialize, Deserializer};
 use std::collections::{HashMap, HashSet};
+use crate::utils::ceil_div;
 
 #[derive(Debug, Clone, Deserialize, Default)]
 #[serde(rename_all = "camelCase")]
@@ -189,15 +190,15 @@ impl NestedType {
         }
     }
 
-    pub fn size(&self) -> u64 {
+    pub fn size(&self) -> usize {
         match self {
-            NestedType::Primitive { number_of_bytes } => {*number_of_bytes}
+            NestedType::Primitive { number_of_bytes } => {*number_of_bytes as usize}
             NestedType::Bytes => {32}
             NestedType::Address => {20}
             NestedType::Mapping { .. } => {32}
-            NestedType::Struct { label: _, members: _, number_of_bytes } => {*number_of_bytes}
+            NestedType::Struct { label: _, members: _, number_of_bytes } => {*number_of_bytes as usize}
             NestedType::DynamicArray { .. } => {32}
-            NestedType::StaticArray { value: _, number_of_bytes } => {*number_of_bytes}
+            NestedType::StaticArray { value: _, number_of_bytes } => {*number_of_bytes as usize}
         }
     }
 }
@@ -233,10 +234,16 @@ impl StorageLayout {
                 self.collect_unique_types(&nested_type, &mut nested_types, &mut unique_representations);
             }
         }
+        let last_member = &member_defs[member_defs.len()-1];
+        let last_member_size_slots = ceil_div(last_member.type_def.size(), 32);
+        let estimated_struct_size = (last_member.member_info.slot + last_member_size_slots as u64) * 32;
+        if size != 0 {
+            assert_eq!(estimated_struct_size, size, "struct size differs from total size of its members")
+        }
         let main_struct = NestedType::Struct {
             label: label,
             members: member_defs,
-            number_of_bytes: size,
+            number_of_bytes: estimated_struct_size,
         };
         nested_types.insert(0, main_struct);
         nested_types

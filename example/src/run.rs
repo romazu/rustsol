@@ -71,6 +71,7 @@ fn main() {
     println!("staticArray.value()               {:?}", contract.staticArray.value());
     println!("staticArrayNestedSmall.position() {:?}", contract.staticArrayNestedSmall.position());
     println!("staticArrayNestedSmall.value()    {:?}", contract.staticArrayNestedSmall.value());
+    println!("contract.value()                  {:?}", contract.value());
 
     // // // Uniswap V3
     // // let contract = generated_contract::UniswapV3Pool::new();

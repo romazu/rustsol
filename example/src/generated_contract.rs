@@ -95,12 +95,12 @@ impl MyContract {
         self.__slot
     }
     pub fn position(&self) -> (U256, usize, usize) {
-        (self.__slot, 0, 0)
+        (self.__slot, 0, 2176)
     }
     pub fn value(&self) -> Result<<Self as Value>::ValueType, String> {
         let getter = self.__slots_getter.as_ref().expect("No slots getter");
         let slot_values = getter
-            .get_slots(self.__slot, 0)
+            .get_slots(self.__slot, 68)
             .map_err(|err| format!("Failed to get slot values: {}", err))?;
         self.value_from_slots(slot_values)
     }
@@ -110,7 +110,7 @@ impl Position for MyContract {
         Self::from_position(slot, offset)
     }
     fn size() -> usize {
-        0
+        2176
     }
 }
 impl SlotsGetterSetter for MyContract {
