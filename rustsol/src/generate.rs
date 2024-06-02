@@ -53,13 +53,13 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                 let struct_size_slots = ceil_div(nested_type.size() as usize, 32) as u64;
                 let struct_size_slots_literal = syn::LitInt::new(&struct_size_slots.to_string(), proc_macro2::Span::call_site());
 
-                let value_from_slots_fields: Vec<TokenStream> = members.iter().map(|member_def| {
+                let get_value_from_slots_content_fields: Vec<TokenStream> = members.iter().map(|member_def| {
                     let field_name = Ident::new(&member_def.member_info.label, proc_macro2::Span::call_site());
                     let size_slots = ceil_div(member_def.type_def.size() as usize, 32) as u64;
                     let member_slot_start_literal = syn::LitInt::new(&member_def.member_info.slot.to_string(), proc_macro2::Span::call_site());
                     let member_slot_end_literal = syn::LitInt::new(&(member_def.member_info.slot + size_slots).to_string(), proc_macro2::Span::call_site());
                     quote! {
-                        #field_name: self.#field_name.value_from_slots(slot_values[#member_slot_start_literal..#member_slot_end_literal].to_vec())?
+                        #field_name: self.#field_name.get_value_from_slots_content(slot_values[#member_slot_start_literal..#member_slot_end_literal].to_vec())?
                     }
                 }).collect();
 
@@ -93,11 +93,11 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                         pub fn position(&self) -> (U256, usize, usize) {
                             (self.__slot, 0, #number_of_bytes_literal)
                         }
-                        pub fn value(&self) -> Result<<Self as Value>::ValueType, String> {
+                        pub fn get_value(&self) -> Result<<Self as Value>::ValueType, String> {
                             let getter = self.__slots_getter.as_ref().expect("No slots getter");
                             let slot_values = getter.get_slots(self.__slot, #struct_size_slots_literal)
                                 .map_err(|err| format!("Failed to get slot values: {}", err))?;
-                            self.value_from_slots(slot_values)
+                            self.get_value_from_slots_content(slot_values)
                         }
                     }
                     impl Position for #struct_name {
@@ -120,10 +120,10 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                     }
                     impl Value for #struct_name {
                         type ValueType = #value_struct_ident;
-                        fn value_from_slots(&self, slot_values: Vec<U256>) -> Result<Self::ValueType, String> {
+                        fn get_value_from_slots_content(&self, slot_values: Vec<U256>) -> Result<Self::ValueType, String> {
                             let getter = self.__slots_getter.as_ref().expect("No slots getter");
                             Ok(#value_struct_ident {
-                                #(#value_from_slots_fields),*
+                                #(#get_value_from_slots_content_fields),*
                             })
                         }
                     }

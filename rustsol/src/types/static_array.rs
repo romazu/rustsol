@@ -48,13 +48,13 @@ impl<const SIZE: usize, ElementType: Debug + Position + Value + SlotsGetterSette
         capacity as usize
     }
 
-    pub fn value(&self) -> Result<<Self as Value>::ValueType, String> {
+    pub fn get_value(&self) -> Result<<Self as Value>::ValueType, String> {
         let getter = self.__slots_getter.as_ref().expect("No slots getter");
         let array_size_slots = SIZE / 32;
         // TODO: Do not get slots if the ElementType is mapping - they are always empty.
         let slot_values = getter.get_slots(self.__slot, array_size_slots)
             .map_err(|err| format!("Failed to get slot values: {}", err))?;
-        self.value_from_slots(slot_values)
+        self.get_value_from_slots_content(slot_values)
     }
 }
 
@@ -108,7 +108,7 @@ impl<const SIZE: usize, ElementType: Debug + Value + Position> SlotsGetterSetter
 impl<const SIZE: usize, ElementType: Debug + Position + Value + SlotsGetterSetter> Value for StaticArray<SIZE, ElementType> {
     type ValueType = Vec<<ElementType as Value>::ValueType>;
 
-    fn value_from_slots(&self, slot_values: Vec<U256>) -> Result<Self::ValueType, String> {
+    fn get_value_from_slots_content(&self, slot_values: Vec<U256>) -> Result<Self::ValueType, String> {
         let (packing_n, packing_d) = self.packing_ratio();
         let capacity = SIZE / 32 * packing_d / packing_n; // >= array_len
         let mut values = Vec::new();
@@ -122,7 +122,7 @@ impl<const SIZE: usize, ElementType: Debug + Position + Value + SlotsGetterSette
             let start = u256_to_u64(element_slot) as usize;
             let end = start + element_size_slots;
             let element_slot_values = slot_values[start..end].to_vec();
-            let value = element.value_from_slots(element_slot_values)?;
+            let value = element.get_value_from_slots_content(element_slot_values)?;
             values.push(value);
         }
         Ok(values)

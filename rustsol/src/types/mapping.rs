@@ -60,7 +60,7 @@ impl<KeyType: Key, ElementType> Mapping<KeyType, ElementType> {
         let element_size_slots = ceil_div(ElementType::size(), 32);
         let element_slot_values = getter.get_slots(element_slot, element_size_slots)
             .map_err(|err| format!("Failed to get slot values: {}", err))?;
-        self.new_element(element_slot, 0).value_from_slots(element_slot_values)
+        self.new_element(element_slot, 0).get_value_from_slots_content(element_slot_values)
     }
 }
 
@@ -95,7 +95,7 @@ impl<KeyType: Debug, ElementType: Debug> SlotsGetterSetter for Mapping<KeyType, 
 impl<KeyType, ElementType> Value for Mapping<KeyType, ElementType> {
     type ValueType = Self;
 
-    fn value_from_slots(&self, _: Vec<U256>) -> Result<Self::ValueType, String> {
+    fn get_value_from_slots_content(&self, _: Vec<U256>) -> Result<Self::ValueType, String> {
         // Mapping base slot is always empty and is used only for element storage calculation.
         // Clone self.
         Ok(Mapping {

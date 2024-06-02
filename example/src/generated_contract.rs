@@ -97,12 +97,12 @@ impl MyContract {
     pub fn position(&self) -> (U256, usize, usize) {
         (self.__slot, 0, 2176)
     }
-    pub fn value(&self) -> Result<<Self as Value>::ValueType, String> {
+    pub fn get_value(&self) -> Result<<Self as Value>::ValueType, String> {
         let getter = self.__slots_getter.as_ref().expect("No slots getter");
         let slot_values = getter
             .get_slots(self.__slot, 68)
             .map_err(|err| format!("Failed to get slot values: {}", err))?;
-        self.value_from_slots(slot_values)
+        self.get_value_from_slots_content(slot_values)
     }
 }
 impl Position for MyContract {
@@ -161,7 +161,7 @@ pub struct MyContractValue {
 }
 impl Value for MyContract {
     type ValueType = MyContractValue;
-    fn value_from_slots(
+    fn get_value_from_slots_content(
         &self,
         slot_values: Vec<U256>,
     ) -> Result<Self::ValueType, String> {
@@ -169,47 +169,61 @@ impl Value for MyContract {
         Ok(MyContractValue {
             plainUint112: self
                 .plainUint112
-                .value_from_slots(slot_values[0..1].to_vec())?,
+                .get_value_from_slots_content(slot_values[0..1].to_vec())?,
             dynamicArray: self
                 .dynamicArray
-                .value_from_slots(slot_values[1..2].to_vec())?,
+                .get_value_from_slots_content(slot_values[1..2].to_vec())?,
             dynamicArrayNested: self
                 .dynamicArrayNested
-                .value_from_slots(slot_values[2..3].to_vec())?,
-            plainUint32: self.plainUint32.value_from_slots(slot_values[3..4].to_vec())?,
+                .get_value_from_slots_content(slot_values[2..3].to_vec())?,
+            plainUint32: self
+                .plainUint32
+                .get_value_from_slots_content(slot_values[3..4].to_vec())?,
             plainAddress: self
                 .plainAddress
-                .value_from_slots(slot_values[3..4].to_vec())?,
+                .get_value_from_slots_content(slot_values[3..4].to_vec())?,
             myStructNested: self
                 .myStructNested
-                .value_from_slots(slot_values[4..7].to_vec())?,
-            staticArray: self.staticArray.value_from_slots(slot_values[7..12].to_vec())?,
+                .get_value_from_slots_content(slot_values[4..7].to_vec())?,
+            staticArray: self
+                .staticArray
+                .get_value_from_slots_content(slot_values[7..12].to_vec())?,
             staticArrayLarge: self
                 .staticArrayLarge
-                .value_from_slots(slot_values[12..16].to_vec())?,
+                .get_value_from_slots_content(slot_values[12..16].to_vec())?,
             staticArrayNestedSmall: self
                 .staticArrayNestedSmall
-                .value_from_slots(slot_values[16..20].to_vec())?,
+                .get_value_from_slots_content(slot_values[16..20].to_vec())?,
             dynamicArrayStruct: self
                 .dynamicArrayStruct
-                .value_from_slots(slot_values[20..21].to_vec())?,
+                .get_value_from_slots_content(slot_values[20..21].to_vec())?,
             dynamicArraySmall: self
                 .dynamicArraySmall
-                .value_from_slots(slot_values[21..22].to_vec())?,
-            myMapping1: self.myMapping1.value_from_slots(slot_values[22..23].to_vec())?,
-            myMapping2: self.myMapping2.value_from_slots(slot_values[23..24].to_vec())?,
+                .get_value_from_slots_content(slot_values[21..22].to_vec())?,
+            myMapping1: self
+                .myMapping1
+                .get_value_from_slots_content(slot_values[22..23].to_vec())?,
+            myMapping2: self
+                .myMapping2
+                .get_value_from_slots_content(slot_values[23..24].to_vec())?,
             myMappingBool: self
                 .myMappingBool
-                .value_from_slots(slot_values[24..25].to_vec())?,
+                .get_value_from_slots_content(slot_values[24..25].to_vec())?,
             myAddressMappingNested: self
                 .myAddressMappingNested
-                .value_from_slots(slot_values[25..26].to_vec())?,
+                .get_value_from_slots_content(slot_values[25..26].to_vec())?,
             myNestedMapping: self
                 .myNestedMapping
-                .value_from_slots(slot_values[26..27].to_vec())?,
-            myEnum: self.myEnum.value_from_slots(slot_values[27..28].to_vec())?,
-            ___gap___: self.___gap___.value_from_slots(slot_values[28..67].to_vec())?,
-            plainString: self.plainString.value_from_slots(slot_values[67..68].to_vec())?,
+                .get_value_from_slots_content(slot_values[26..27].to_vec())?,
+            myEnum: self
+                .myEnum
+                .get_value_from_slots_content(slot_values[27..28].to_vec())?,
+            ___gap___: self
+                .___gap___
+                .get_value_from_slots_content(slot_values[28..67].to_vec())?,
+            plainString: self
+                .plainString
+                .get_value_from_slots_content(slot_values[67..68].to_vec())?,
         })
     }
 }
@@ -231,12 +245,12 @@ impl MyContractMyStructNested {
     pub fn position(&self) -> (U256, usize, usize) {
         (self.__slot, 0, 96)
     }
-    pub fn value(&self) -> Result<<Self as Value>::ValueType, String> {
+    pub fn get_value(&self) -> Result<<Self as Value>::ValueType, String> {
         let getter = self.__slots_getter.as_ref().expect("No slots getter");
         let slot_values = getter
             .get_slots(self.__slot, 3)
             .map_err(|err| format!("Failed to get slot values: {}", err))?;
-        self.value_from_slots(slot_values)
+        self.get_value_from_slots_content(slot_values)
     }
 }
 impl Position for MyContractMyStructNested {
@@ -261,14 +275,18 @@ pub struct MyContractMyStructNestedValue {
 }
 impl Value for MyContractMyStructNested {
     type ValueType = MyContractMyStructNestedValue;
-    fn value_from_slots(
+    fn get_value_from_slots_content(
         &self,
         slot_values: Vec<U256>,
     ) -> Result<Self::ValueType, String> {
         let getter = self.__slots_getter.as_ref().expect("No slots getter");
         Ok(MyContractMyStructNestedValue {
-            myAddress: self.myAddress.value_from_slots(slot_values[0..1].to_vec())?,
-            myStruct: self.myStruct.value_from_slots(slot_values[1..3].to_vec())?,
+            myAddress: self
+                .myAddress
+                .get_value_from_slots_content(slot_values[0..1].to_vec())?,
+            myStruct: self
+                .myStruct
+                .get_value_from_slots_content(slot_values[1..3].to_vec())?,
         })
     }
 }
@@ -290,12 +308,12 @@ impl MyContractMyStruct {
     pub fn position(&self) -> (U256, usize, usize) {
         (self.__slot, 0, 64)
     }
-    pub fn value(&self) -> Result<<Self as Value>::ValueType, String> {
+    pub fn get_value(&self) -> Result<<Self as Value>::ValueType, String> {
         let getter = self.__slots_getter.as_ref().expect("No slots getter");
         let slot_values = getter
             .get_slots(self.__slot, 2)
             .map_err(|err| format!("Failed to get slot values: {}", err))?;
-        self.value_from_slots(slot_values)
+        self.get_value_from_slots_content(slot_values)
     }
 }
 impl Position for MyContractMyStruct {
@@ -320,14 +338,16 @@ pub struct MyContractMyStructValue {
 }
 impl Value for MyContractMyStruct {
     type ValueType = MyContractMyStructValue;
-    fn value_from_slots(
+    fn get_value_from_slots_content(
         &self,
         slot_values: Vec<U256>,
     ) -> Result<Self::ValueType, String> {
         let getter = self.__slots_getter.as_ref().expect("No slots getter");
         Ok(MyContractMyStructValue {
-            myAddress: self.myAddress.value_from_slots(slot_values[0..1].to_vec())?,
-            myUint: self.myUint.value_from_slots(slot_values[1..2].to_vec())?,
+            myAddress: self
+                .myAddress
+                .get_value_from_slots_content(slot_values[0..1].to_vec())?,
+            myUint: self.myUint.get_value_from_slots_content(slot_values[1..2].to_vec())?,
         })
     }
 }
@@ -349,12 +369,12 @@ impl MyContractMyStructSmall {
     pub fn position(&self) -> (U256, usize, usize) {
         (self.__slot, 0, 32)
     }
-    pub fn value(&self) -> Result<<Self as Value>::ValueType, String> {
+    pub fn get_value(&self) -> Result<<Self as Value>::ValueType, String> {
         let getter = self.__slots_getter.as_ref().expect("No slots getter");
         let slot_values = getter
             .get_slots(self.__slot, 1)
             .map_err(|err| format!("Failed to get slot values: {}", err))?;
-        self.value_from_slots(slot_values)
+        self.get_value_from_slots_content(slot_values)
     }
 }
 impl Position for MyContractMyStructSmall {
@@ -379,14 +399,18 @@ pub struct MyContractMyStructSmallValue {
 }
 impl Value for MyContractMyStructSmall {
     type ValueType = MyContractMyStructSmallValue;
-    fn value_from_slots(
+    fn get_value_from_slots_content(
         &self,
         slot_values: Vec<U256>,
     ) -> Result<Self::ValueType, String> {
         let getter = self.__slots_getter.as_ref().expect("No slots getter");
         Ok(MyContractMyStructSmallValue {
-            smallInt1: self.smallInt1.value_from_slots(slot_values[0..1].to_vec())?,
-            smallInt2: self.smallInt2.value_from_slots(slot_values[0..1].to_vec())?,
+            smallInt1: self
+                .smallInt1
+                .get_value_from_slots_content(slot_values[0..1].to_vec())?,
+            smallInt2: self
+                .smallInt2
+                .get_value_from_slots_content(slot_values[0..1].to_vec())?,
         })
     }
 }

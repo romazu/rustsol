@@ -57,21 +57,21 @@ fn main() {
     let mut contract = generated_contract::MyContract::new();
     let getter = Arc::new(DummySlotsGetter);
     contract.set_slots_getter(getter);
-    println!("plainUint112.value()              {:?}", contract.plainUint112.value());
-    println!("myNestedMapping[0][1].value()     {:?}", contract.myNestedMapping.at(0).at(1).value());
-    // println!("plainString.value()               {:?}", contract.plainString.value());
-    println!("dynamicArray.position()           {:?}", contract.dynamicArray.position());
-    println!("dynamicArray.value()              {:?}", contract.dynamicArray.value());
-    println!("dynamicArrayNested.value()        {:?}", contract.dynamicArrayNested.value());
-    println!("dynamicArrayNested[1].value()     {:?}", contract.dynamicArrayNested.at(1).value());
-    println!("plainAddress.value()              {:?}", contract.plainAddress.value());
-    println!("plainString.position()            {:?}", contract.plainString.position());
-    println!("plainString.value()               {:?}", contract.plainString.value());
-    println!("staticArray.position()            {:?}", contract.staticArray.position());
-    println!("staticArray.value()               {:?}", contract.staticArray.value());
-    println!("staticArrayNestedSmall.position() {:?}", contract.staticArrayNestedSmall.position());
-    println!("staticArrayNestedSmall.value()    {:?}", contract.staticArrayNestedSmall.value());
-    println!("contract.value()                  {:?}", contract.value());
+    println!("plainUint112.get_value()              {:?}", contract.plainUint112.get_value());
+    println!("myNestedMapping[0][1].get_value()     {:?}", contract.myNestedMapping.at(0).at(1).get_value());
+    println!("plainString.get_value()               {:?}", contract.plainString.get_value());
+    println!("dynamicArray.position()               {:?}", contract.dynamicArray.position());
+    println!("dynamicArray.get_value()              {:?}", contract.dynamicArray.get_value());
+    println!("dynamicArrayNested.get_value()        {:?}", contract.dynamicArrayNested.get_value());
+    println!("dynamicArrayNested[1].get_value()     {:?}", contract.dynamicArrayNested.at(1).get_value());
+    println!("plainAddress.get_value()              {:?}", contract.plainAddress.get_value());
+    println!("plainString.position()                {:?}", contract.plainString.position());
+    println!("plainString.get_value()               {:?}", contract.plainString.get_value());
+    println!("staticArray.position()                {:?}", contract.staticArray.position());
+    println!("staticArray.get_value()               {:?}", contract.staticArray.get_value());
+    println!("staticArrayNestedSmall.position()     {:?}", contract.staticArrayNestedSmall.position());
+    println!("staticArrayNestedSmall.get_value()    {:?}", contract.staticArrayNestedSmall.get_value());
+    println!("contract.get_value()                  {:?}", contract.get_value());
 
     // // // Uniswap V3
     // // let contract = generated_contract::UniswapV3Pool::new();
@@ -83,7 +83,7 @@ fn main() {
     // // println!("ticks[149150]            {:?}", contract.ticks.at(149150).position());
     // // println!("ticks[887270]            {:?}", contract.ticks.at(887270).position());
     // // println!("ticks[-92110]            {:?}", contract.ticks.at(-92110).position());
-    // // // println!("feeGrowthGlobal0X128.value() {:?}", contract.feeGrowthGlobal0X128.value()); // panic
+    // // // println!("feeGrowthGlobal0X128.get_value() {:?}", contract.feeGrowthGlobal0X128.get_value()); // panic
     //
     // let contract = generated_contract::UniswapV3Pool::new();
     // let (slot, offset, size_bytes) = contract.observations.at(42).tickCumulative.position();
@@ -92,9 +92,9 @@ fn main() {
     // let mut contract = generated_contract::UniswapV3Pool::new();
     // let getter = Arc::new(DummySlotsGetter);
     // contract.set_slots_getter(getter);
-    // println!("feeGrowthGlobal0X128.value() {:?}", contract.feeGrowthGlobal0X128.value());
-    // println!("tickBitmap[123].value() {:?}", contract.tickBitmap.at(123).value());
-    // println!("ticks[123].value() {:?}", contract.ticks.at(123).value());
-    // println!("ticks[123].value() {:?}", contract.ticks.at(123).value());
+    // println!("feeGrowthGlobal0X128.get_value() {:?}", contract.feeGrowthGlobal0X128.get_value());
+    // println!("tickBitmap[123].get_value() {:?}", contract.tickBitmap.at(123).get_value());
+    // println!("ticks[123].get_value() {:?}", contract.ticks.at(123).get_value());
+    // println!("ticks[123].get_value() {:?}", contract.ticks.at(123).get_value());
     
 }
