@@ -13,14 +13,14 @@ use crate::types::{Position, SlotsGetter, SlotsGetterSetter};
 // - for strings and byte arrays, h computes the keccak256 hash of the unpadded data.
 #[derive(Derivative)]
 #[derivative(Debug)]
-pub struct Mapping<KeyType, Value> {
+pub struct Mapping<KeyType, ElementType> {
     __slot: U256,
-    __marker: PhantomData<(KeyType, Value)>,
+    __marker: PhantomData<(KeyType, ElementType)>,
     #[derivative(Debug = "ignore")]
     __slots_getter: Option<Arc<dyn SlotsGetter>>,
 }
 
-impl<KeyType, Value> Mapping<KeyType, Value> {
+impl<KeyType, ElementType> Mapping<KeyType, ElementType> {
     pub fn slot(&self) -> U256 {
         self.__slot
     }
@@ -29,28 +29,35 @@ impl<KeyType, Value> Mapping<KeyType, Value> {
         (self.__slot, 0, 32)
     }
 
-    fn at_bytes_key(&self, key: [u8; 32]) -> Value
-        where
-            Value: Position + SlotsGetterSetter,
+    fn new_element(&self, slot: U256, offset: usize) -> ElementType
+        where ElementType: Position + SlotsGetterSetter,
     {
-        let value_slot_bytes = keccak256_concat(key, u256_to_bytes32(self.__slot));
-        let mut value = Value::from_position(bytes32_to_u256(value_slot_bytes), 0);
+        let mut element = ElementType::from_position(slot, offset);
         match &self.__slots_getter {
             None => {
                 // No slots getter to pass to children.
             }
             Some(getter) => {
                 // Set child's slots getter.
-                value.set_slots_getter(getter.clone());
+                element.set_slots_getter(getter.clone());
             }
         }
-        value
+        element
+    }
+
+    fn at_bytes_key(&self, key: [u8; 32]) -> ElementType
+        where
+            ElementType: Position + SlotsGetterSetter,
+    {
+        let value_slot_bytes = keccak256_concat(key, u256_to_bytes32(self.__slot));
+        let element_slot = bytes32_to_u256(value_slot_bytes);
+        self.new_element(element_slot, 0)
     }
 }
 
-impl<KeyType, Value> Position for Mapping<KeyType, Value> {
+impl<KeyType, ElementType> Position for Mapping<KeyType, ElementType> {
     fn from_position(slot: U256, _: usize) -> Self {
-        Mapping::<KeyType, Value> { __slot: slot, __marker: PhantomData, __slots_getter: None }
+        Mapping::<KeyType, ElementType> { __slot: slot, __marker: PhantomData, __slots_getter: None }
     }
 
     fn size() -> usize {
@@ -59,37 +66,37 @@ impl<KeyType, Value> Position for Mapping<KeyType, Value> {
 }
 
 
-impl<Value> Mapping<PrimitiveKey, Value> {
-    pub fn at<T>(&self, key: T) -> Value
+impl<ElementType> Mapping<PrimitiveKey, ElementType> {
+    pub fn at<T>(&self, key: T) -> ElementType
         where
             T: Into<PrimitiveKey>,
-            Value: Position + SlotsGetterSetter,
+            ElementType: Position + SlotsGetterSetter,
     {
         self.at_bytes_key(key.into().0)
     }
 }
 
-impl<Value> Mapping<BytesKey, Value> {
-    pub fn at<T>(&self, key: T) -> Value
+impl<ElementType> Mapping<BytesKey, ElementType> {
+    pub fn at<T>(&self, key: T) -> ElementType
         where
             T: Into<BytesKey>,
-            Value: Position + SlotsGetterSetter,
+            ElementType: Position + SlotsGetterSetter,
     {
         self.at_bytes_key(key.into().0)
     }
 }
 
-impl<Value> Mapping<AddressKey, Value> {
-    pub fn at<T>(&self, key: T) -> Value
+impl<ElementType> Mapping<AddressKey, ElementType> {
+    pub fn at<T>(&self, key: T) -> ElementType
         where
             T: Into<AddressKey>,
-            Value: Position + SlotsGetterSetter,
+            ElementType: Position + SlotsGetterSetter,
     {
         self.at_bytes_key(key.into().0)
     }
 }
 
-impl<KeyType: Debug, ValueType: Debug> SlotsGetterSetter for Mapping<KeyType, ValueType> {
+impl<KeyType: Debug, ElementType: Debug> SlotsGetterSetter for Mapping<KeyType, ElementType> {
     fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
         self.__slots_getter = Some(getter);
     }
