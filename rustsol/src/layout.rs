@@ -188,6 +188,18 @@ impl NestedType {
             }
         }
     }
+
+    pub fn size(&self) -> u64 {
+        match self {
+            NestedType::Primitive { number_of_bytes } => {*number_of_bytes}
+            NestedType::Bytes => {32}
+            NestedType::Address => {20}
+            NestedType::Mapping { .. } => {32}
+            NestedType::Struct { label: _, members: _, number_of_bytes } => {*number_of_bytes}
+            NestedType::DynamicArray { .. } => {32}
+            NestedType::StaticArray { value: _, number_of_bytes } => {*number_of_bytes}
+        }
+    }
 }
 
 #[derive(Debug, Clone)]

@@ -50,12 +50,12 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
                     }
                 }).collect();
 
-                let struct_size_slots = ceil_div(get_type_size(&nested_type) as usize, 32) as u64;
+                let struct_size_slots = ceil_div(nested_type.size() as usize, 32) as u64;
                 let struct_size_slots_literal = syn::LitInt::new(&struct_size_slots.to_string(), proc_macro2::Span::call_site());
 
                 let value_from_slots_fields: Vec<TokenStream> = members.iter().map(|member_def| {
                     let field_name = Ident::new(&member_def.member_info.label, proc_macro2::Span::call_site());
-                    let size_slots = ceil_div(get_type_size(&member_def.type_def) as usize, 32) as u64;
+                    let size_slots = ceil_div(member_def.type_def.size() as usize, 32) as u64;
                     let member_slot_start_literal = syn::LitInt::new(&member_def.member_info.slot.to_string(), proc_macro2::Span::call_site());
                     let member_slot_end_literal = syn::LitInt::new(&(member_def.member_info.slot + size_slots).to_string(), proc_macro2::Span::call_site());
                     quote! {
@@ -171,18 +171,6 @@ fn get_type_name(nested_type: &NestedType) -> TokenStream {
     };
     let ident = syn::Ident::new(type_name, proc_macro2::Span::call_site());
     quote! { #ident }
-}
-
-fn get_type_size(nested_type: &NestedType) -> u64 {
-    match nested_type {
-        NestedType::Primitive { number_of_bytes } => {*number_of_bytes}
-        NestedType::Bytes => {32}
-        NestedType::Address => {20}
-        NestedType::Mapping { .. } => {32}
-        NestedType::Struct { label: _, members: _, number_of_bytes } => {*number_of_bytes}
-        NestedType::DynamicArray { .. } => {32}
-        NestedType::StaticArray { value: _, number_of_bytes } => {*number_of_bytes}
-    }
 }
 
 fn get_value_type_name(nested_type: &NestedType) -> TokenStream {
