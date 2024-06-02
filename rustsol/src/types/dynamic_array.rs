@@ -95,7 +95,8 @@ impl<ElementType: Debug + Position + Value + SlotsGetterSetter> Value for Dynami
         let array_len = u256_to_u64(slot_values[0]);
         let (packing_n, packing_d) = self.packing_ratio();
         let array_size_slots = array_len as usize * packing_n / packing_d;
-        let slot_values = getter.get_slots(self.storage(), array_size_slots as usize)
+        // TODO: Do not get slots if the ElementType is mapping - they are always empty.
+        let slot_values = getter.get_slots(self.storage(), array_size_slots)
             .map_err(|err| format!("Failed to get slot values: {}", err))?;
         let mut values = Vec::new();
         let storage_slot = self.storage();

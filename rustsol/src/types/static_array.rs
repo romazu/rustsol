@@ -51,6 +51,7 @@ impl<const SIZE: usize, ElementType: Debug + Position + Value + SlotsGetterSette
     pub fn value(&self) -> Result<<Self as Value>::ValueType, String> {
         let getter = self.__slots_getter.as_ref().expect("No slots getter");
         let array_size_slots = SIZE / 32;
+        // TODO: Do not get slots if the ElementType is mapping - they are always empty.
         let slot_values = getter.get_slots(self.__slot, array_size_slots)
             .map_err(|err| format!("Failed to get slot values: {}", err))?;
         self.value_from_slots(slot_values)
@@ -112,7 +113,7 @@ impl<const SIZE: usize, ElementType: Debug + Position + Value + SlotsGetterSette
         let capacity = SIZE / 32 * packing_d / packing_n; // >= array_len
         let mut values = Vec::new();
         let storage_slot = self.storage();
-        for i in 0..capacity as usize {
+        for i in 0..capacity {
             // Simple assumption (holds in Solidity) that element occupying several slots cannot have offset.
             // TODO: Write general element_size_slots estimator.
             let element_size_slots = packing_n;
