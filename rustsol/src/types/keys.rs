@@ -116,3 +116,24 @@ impl From<&String> for AddressKey {
     }
 }
 
+pub trait Key {
+    fn to_bytes(self) -> [u8; 32];
+}
+
+impl Key for PrimitiveKey {
+    fn to_bytes(self) -> [u8; 32] {
+        self.0
+    }
+}
+
+impl Key for BytesKey {
+    fn to_bytes(self) -> [u8; 32] {
+        self.0
+    }
+}
+
+impl Key for AddressKey {
+    fn to_bytes(self) -> [u8; 32] {
+        self.0
+    }
+}

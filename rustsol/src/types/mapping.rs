@@ -6,6 +6,7 @@ use derivative::Derivative;
 use crate::utils::{bytes32_to_u256, index_to_position, keccak256_concat, u256_to_bytes32, u256_to_u64};
 use crate::types::{PrimitiveKey, BytesKey, AddressKey, Value, DynamicArray};
 use crate::types::{Position, SlotsGetter, SlotsGetterSetter};
+use crate::types::keys::Key;
 
 // The value corresponding to a mapping key k is located at keccak256(h(k) . p) where . is
 // concatenation and h is a function that is applied to the key depending on its type:
@@ -70,33 +71,13 @@ impl<KeyType, ElementType> Position for Mapping<KeyType, ElementType> {
 }
 
 
-impl<ElementType> Mapping<PrimitiveKey, ElementType> {
+impl<KeyType: Key, ElementType> Mapping<KeyType, ElementType> {
     pub fn at<T>(&self, key: T) -> ElementType
         where
-            T: Into<PrimitiveKey>,
+            T: Into<KeyType>,
             ElementType: Position + SlotsGetterSetter,
     {
-        self.at_bytes_key(key.into().0)
-    }
-}
-
-impl<ElementType> Mapping<BytesKey, ElementType> {
-    pub fn at<T>(&self, key: T) -> ElementType
-        where
-            T: Into<BytesKey>,
-            ElementType: Position + SlotsGetterSetter,
-    {
-        self.at_bytes_key(key.into().0)
-    }
-}
-
-impl<ElementType> Mapping<AddressKey, ElementType> {
-    pub fn at<T>(&self, key: T) -> ElementType
-        where
-            T: Into<AddressKey>,
-            ElementType: Position + SlotsGetterSetter,
-    {
-        self.at_bytes_key(key.into().0)
+        self.at_bytes_key(key.into().to_bytes())
     }
 }
 
