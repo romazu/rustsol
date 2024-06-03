@@ -1,0 +1,444 @@
+{
+  "contracts": {
+    "Augur.sol": {
+      "Augur": {
+        "storageLayout": {
+          "storage": [
+            {
+              "astId": 4029,
+              "contract": "Augur.sol:Augur",
+              "label": "markets",
+              "offset": 0,
+              "slot": "0",
+              "type": "t_mapping(t_address,t_bool)"
+            },
+            {
+              "astId": 4033,
+              "contract": "Augur.sol:Augur",
+              "label": "universes",
+              "offset": 0,
+              "slot": "1",
+              "type": "t_mapping(t_address,t_bool)"
+            },
+            {
+              "astId": 4037,
+              "contract": "Augur.sol:Augur",
+              "label": "crowdsourcers",
+              "offset": 0,
+              "slot": "2",
+              "type": "t_mapping(t_address,t_bool)"
+            },
+            {
+              "astId": 4041,
+              "contract": "Augur.sol:Augur",
+              "label": "trustedSender",
+              "offset": 0,
+              "slot": "3",
+              "type": "t_mapping(t_address,t_bool)"
+            },
+            {
+              "astId": 4045,
+              "contract": "Augur.sol:Augur",
+              "label": "marketCreationData",
+              "offset": 0,
+              "slot": "4",
+              "type": "t_mapping(t_address,t_struct(MarketCreationData)651_storage)"
+            },
+            {
+              "astId": 4047,
+              "contract": "Augur.sol:Augur",
+              "label": "uploader",
+              "offset": 0,
+              "slot": "5",
+              "type": "t_address"
+            },
+            {
+              "astId": 4051,
+              "contract": "Augur.sol:Augur",
+              "label": "registry",
+              "offset": 0,
+              "slot": "6",
+              "type": "t_mapping(t_bytes32,t_address)"
+            },
+            {
+              "astId": 4053,
+              "contract": "Augur.sol:Augur",
+              "label": "time",
+              "offset": 0,
+              "slot": "7",
+              "type": "t_contract(ITime)716"
+            },
+            {
+              "astId": 4055,
+              "contract": "Augur.sol:Augur",
+              "label": "genesisUniverse",
+              "offset": 0,
+              "slot": "8",
+              "type": "t_contract(IUniverse)2276"
+            },
+            {
+              "astId": 4057,
+              "contract": "Augur.sol:Augur",
+              "label": "forkCounter",
+              "offset": 0,
+              "slot": "9",
+              "type": "t_uint256"
+            },
+            {
+              "astId": 4061,
+              "contract": "Augur.sol:Augur",
+              "label": "universeForkIndex",
+              "offset": 0,
+              "slot": "10",
+              "type": "t_mapping(t_address,t_uint256)"
+            },
+            {
+              "astId": 4066,
+              "contract": "Augur.sol:Augur",
+              "label": "upgradeTimestamp",
+              "offset": 0,
+              "slot": "11",
+              "type": "t_uint256"
+            },
+            {
+              "astId": 4096,
+              "contract": "Augur.sol:Augur",
+              "label": "cash",
+              "offset": 0,
+              "slot": "12",
+              "type": "t_contract(ICash)1162"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "encoding": "inplace",
+              "label": "address",
+              "numberOfBytes": "20"
+            },
+            "t_array(t_bytes32)dyn_storage": {
+              "base": "t_bytes32",
+              "encoding": "dynamic_array",
+              "label": "bytes32[]",
+              "numberOfBytes": "32"
+            },
+            "t_array(t_int256)dyn_storage": {
+              "base": "t_int256",
+              "encoding": "dynamic_array",
+              "label": "int256[]",
+              "numberOfBytes": "32"
+            },
+            "t_bool": {
+              "encoding": "inplace",
+              "label": "bool",
+              "numberOfBytes": "1"
+            },
+            "t_bytes32": {
+              "encoding": "inplace",
+              "label": "bytes32",
+              "numberOfBytes": "32"
+            },
+            "t_contract(ICash)1162": {
+              "encoding": "inplace",
+              "label": "contract ICash",
+              "numberOfBytes": "20"
+            },
+            "t_contract(ITime)716": {
+              "encoding": "inplace",
+              "label": "contract ITime",
+              "numberOfBytes": "20"
+            },
+            "t_contract(IUniverse)2276": {
+              "encoding": "inplace",
+              "label": "contract IUniverse",
+              "numberOfBytes": "20"
+            },
+            "t_enum(MarketType)1323": {
+              "encoding": "inplace",
+              "label": "enum IMarket.MarketType",
+              "numberOfBytes": "1"
+            },
+            "t_int256": {
+              "encoding": "inplace",
+              "label": "int256",
+              "numberOfBytes": "32"
+            },
+            "t_mapping(t_address,t_bool)": {
+              "encoding": "mapping",
+              "key": "t_address",
+              "label": "mapping(address => bool)",
+              "numberOfBytes": "32",
+              "value": "t_bool"
+            },
+            "t_mapping(t_address,t_struct(MarketCreationData)651_storage)": {
+              "encoding": "mapping",
+              "key": "t_address",
+              "label": "mapping(address => struct IAugurCreationDataGetter.MarketCreationData)",
+              "numberOfBytes": "32",
+              "value": "t_struct(MarketCreationData)651_storage"
+            },
+            "t_mapping(t_address,t_uint256)": {
+              "encoding": "mapping",
+              "key": "t_address",
+              "label": "mapping(address => uint256)",
+              "numberOfBytes": "32",
+              "value": "t_uint256"
+            },
+            "t_mapping(t_bytes32,t_address)": {
+              "encoding": "mapping",
+              "key": "t_bytes32",
+              "label": "mapping(bytes32 => address)",
+              "numberOfBytes": "32",
+              "value": "t_address"
+            },
+            "t_string_storage": {
+              "encoding": "bytes",
+              "label": "string",
+              "numberOfBytes": "32"
+            },
+            "t_struct(MarketCreationData)651_storage": {
+              "encoding": "inplace",
+              "label": "struct IAugurCreationDataGetter.MarketCreationData",
+              "members": [
+                {
+                  "astId": 638,
+                  "contract": "Augur.sol:Augur",
+                  "label": "extraInfo",
+                  "offset": 0,
+                  "slot": "0",
+                  "type": "t_string_storage"
+                },
+                {
+                  "astId": 640,
+                  "contract": "Augur.sol:Augur",
+                  "label": "marketCreator",
+                  "offset": 0,
+                  "slot": "1",
+                  "type": "t_address"
+                },
+                {
+                  "astId": 643,
+                  "contract": "Augur.sol:Augur",
+                  "label": "outcomes",
+                  "offset": 0,
+                  "slot": "2",
+                  "type": "t_array(t_bytes32)dyn_storage"
+                },
+                {
+                  "astId": 646,
+                  "contract": "Augur.sol:Augur",
+                  "label": "displayPrices",
+                  "offset": 0,
+                  "slot": "3",
+                  "type": "t_array(t_int256)dyn_storage"
+                },
+                {
+                  "astId": 648,
+                  "contract": "Augur.sol:Augur",
+                  "label": "marketType",
+                  "offset": 0,
+                  "slot": "4",
+                  "type": "t_enum(MarketType)1323"
+                },
+                {
+                  "astId": 650,
+                  "contract": "Augur.sol:Augur",
+                  "label": "recommendedTradeInterval",
+                  "offset": 0,
+                  "slot": "5",
+                  "type": "t_uint256"
+                }
+              ],
+              "numberOfBytes": "192"
+            },
+            "t_uint256": {
+              "encoding": "inplace",
+              "label": "uint256",
+              "numberOfBytes": "32"
+            }
+          }
+        }
+      },
+      "ContractExists": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      },
+      "IAffiliateValidator": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      },
+      "IAffiliates": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      },
+      "IAugur": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      },
+      "IAugurCreationDataGetter": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      },
+      "IAugurTrading": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      },
+      "ICash": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      },
+      "IDisputeCrowdsourcer": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      },
+      "IDisputeWindow": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      },
+      "IERC1155": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      },
+      "IERC20": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      },
+      "IInitialReporter": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      },
+      "IMarket": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      },
+      "IOrders": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      },
+      "IOwnable": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      },
+      "IReportingParticipant": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      },
+      "IReputationToken": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      },
+      "IShareToken": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      },
+      "ITime": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      },
+      "ITyped": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      },
+      "IUniswapV2Pair": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      },
+      "IUniverse": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      },
+      "IUniverseFactory": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      },
+      "IV2ReputationToken": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      },
+      "Order": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      },
+      "Reporting": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      },
+      "SafeMathUint256": {
+        "storageLayout": {
+          "storage": [],
+          "types": null
+        }
+      }
+    }
+  },
+  "errors": [
+    {
+      "component": "general",
+      "formattedMessage": "Augur.sol:1:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\npragma experimental ABIEncoderV2;\n^-------------------------------^\n",
+      "message": "Experimental features are turned on. Do not use experimental features on live deployments.",
+      "severity": "warning",
+      "sourceLocation": {
+        "end": 33,
+        "file": "Augur.sol",
+        "start": 0
+      },
+      "type": "Warning"
+    }
+  ],
+  "sources": {
+    "Augur.sol": {
+      "id": 0
+    }
+  }
+}

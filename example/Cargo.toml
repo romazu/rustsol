@@ -24,3 +24,7 @@ path = "src/run_dummy_simple.rs"
 [[bin]]
 name = "run_ethers_uniswap3"
 path = "src/run_ethers_uniswap3.rs"
+
+[[bin]]
+name = "run_ethers_augur"
+path = "src/run_ethers_augur.rs"
