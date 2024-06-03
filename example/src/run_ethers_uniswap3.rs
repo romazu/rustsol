@@ -1,6 +1,7 @@
 #![allow(non_snake_case)]
 
 use std::sync::Arc;
+use std::time::Instant;
 use ethereum_types::Address;
 use rustsol::types::SlotsGetterSetter;
 use rustsol::utils::u256_to_u64;
@@ -60,6 +61,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let tick_value = contract.ticks.at(-92110).get_value().unwrap();
     println!("ticks.at(-92110).get_value() {:?}", tick_value);
+
+    // benchmark
+    let n = 100_000;
+    let start = Instant::now();
+    for _ in 0..n {
+        contract.ticks.at(-92110).position();
+    }
+    let duration = start.elapsed();
+    println!("Call duration in benchmark is: {:?}", duration / n);
+    // debug:   19.564µs @ 100_000
+    // release:    565ns @ 100_000
+    // release:    284ns @ 10_000_000
 
     Ok(())
 
