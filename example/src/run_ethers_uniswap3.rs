@@ -1,13 +1,15 @@
 #![allow(non_snake_case)]
+
 use std::sync::Arc;
 use ethereum_types::Address;
 use rustsol::types::SlotsGetterSetter;
 use rustsol::utils::u256_to_u64;
 
-mod generated_contract;
 mod utils;
 
-use crate::generated_contract::UniswapV3Pool;
+mod generated_contract_uniswap3pool;
+
+use crate::generated_contract_uniswap3pool::UniswapV3Pool;
 
 
 #[tokio::main]
@@ -19,12 +21,29 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let contract_address: Address = "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640".parse().unwrap();
 
     let slots_getter = Arc::new(
-        utils::EthereumSlotsGetter::new(
+        utils::EthersSlotsGetter::new(
             provider_url,
-            utils::SlotsGetterContext { contract: contract_address, block: None },
+            utils::EthersSlotsGetterContext { contract: contract_address, block: None },
         )?
     );
 
+    // no getter
+    let contract = UniswapV3Pool::new();
+    // println!("slot0 {:#?}", contract.slot0);
+    // println!("ticks {:#?}", contract.ticks);
+    println!("ticks[42u64].initialized {:?}", contract.ticks.at(42u64).initialized.position());
+    println!("slot0.observationIndex   {:?}", contract.slot0.observationIndex.position());
+    println!("ticks[0]                 {:?}", contract.ticks.at(0).position());
+    println!("ticks[149150]            {:?}", contract.ticks.at(149150).position());
+    println!("ticks[887270]            {:?}", contract.ticks.at(887270).position());
+    println!("ticks[-92110]            {:?}", contract.ticks.at(-92110).position());
+    // println!("feeGrowthGlobal0X128.get_value() {:?}", contract.feeGrowthGlobal0X128.get_value()); // panic "No slots getter"
+
+    let (slot, offset, size_bytes) = contract.observations.at(42).tickCumulative.position();
+    println!("observations.at(42).tickCumulative.position(): slot={}, offset={}, size_bytes={}", slot, offset, size_bytes);
+
+
+    // with getter
     let mut contract = UniswapV3Pool::new();
     contract.set_slots_getter(slots_getter);
     let observationIndex = contract.slot0.observationIndex.get_value().unwrap();
@@ -36,8 +55,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("observations[].tickCumulative.get_value() {}", observation.tickCumulative.get_value().unwrap().to_string());
     println!("liquidity.get_value()                     {}", contract.liquidity.get_value().unwrap().to_string());
     println!("slot0.get_value()                         {:?}", contract.slot0.get_value().unwrap());
-    // Get all base storage of contract, take ~infinity time for UniswapV3 because of static array of 65535
+    // Get all the base storage of contract. Take ~infinity time for UniswapV3Pool because of static array of length 65535.
     // println!("contract.get_value()                      {:?}", contract.get_value());
 
+    let tick_value = contract.ticks.at(-92110).get_value().unwrap();
+    println!("ticks.at(-92110).get_value() {:?}", tick_value);
+
     Ok(())
+
 }

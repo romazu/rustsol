@@ -6,6 +6,7 @@ use tokio::runtime::{Builder, Handle, RuntimeFlavor};
 use rustsol::types::SlotsGetter;
 
 /// internal utility function to call tokio feature and wait for output
+/// Taken from revm project.
 #[inline]
 fn block_on<F>(f: F) -> F::Output
     where
@@ -38,25 +39,26 @@ fn block_on<F>(f: F) -> F::Output
 }
 
 
-pub struct SlotsGetterContext {
+pub struct EthersSlotsGetterContext {
     pub contract: Address,
     pub block: Option<BlockId>,
 }
 
-pub struct EthereumSlotsGetter {
+pub struct EthersSlotsGetter {
     provider: Provider<Http>,
-    context: SlotsGetterContext,
+    context: EthersSlotsGetterContext,
 }
 
-impl EthereumSlotsGetter {
-    pub fn new(provider_url: &str, context: SlotsGetterContext) -> Result<Self, String> {
+#[allow(dead_code)]
+impl EthersSlotsGetter {
+    pub fn new(provider_url: &str, context: EthersSlotsGetterContext) -> Result<Self, String> {
         let provider = Provider::<Http>::try_from(provider_url)
             .map_err(|e| format!("Failed to create provider: {}", e))?;
         Ok(Self { provider, context })
     }
 }
 
-impl SlotsGetter for EthereumSlotsGetter {
+impl SlotsGetter for EthersSlotsGetter {
     fn get_slots(&self, start: U256, n: usize) -> Result<Vec<U256>, String> {
         let mut res = Vec::with_capacity(n);
         for i in 0..n {
@@ -64,15 +66,16 @@ impl SlotsGetter for EthereumSlotsGetter {
             let slot_h256 = H256::from(slot.to_be_bytes());
             let slot_value = block_on(self.provider.get_storage_at(self.context.contract, slot_h256, self.context.block))
                 .map_err(|e| format!("Error fetching slot {}: {}", slot, e))?;
-            res.push(U256::from_be_bytes(slot_value.to_fixed_bytes()))
+            res.push(U256::from_be_bytes(slot_value.to_fixed_bytes()));
+            // println!("SlotsGetter: got slot {} = {:?}", slot, slot_value.to_be_bytes::<{ U256::BYTES }>());
+            println!("[debug] SlotsGetter: got slot {}/{}: {} = {:#x}", i+1, n, slot, slot_value);
         }
         Ok(res)
     }
 }
 
 
-#[derive(Debug)]
-struct DummySlotsGetter;
+pub struct DummySlotsGetter;
 impl SlotsGetter for DummySlotsGetter {
     fn get_slots(&self, start: U256, n: usize) -> Result<Vec<U256>, String> {
         let mut start_ = start;

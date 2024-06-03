@@ -18,9 +18,9 @@ name = "generate"
 path = "src/generate.rs"
 
 [[bin]]
-name = "run"
+name = "run_dummy_simple"
 path = "src/run_dummy_simple.rs"
 
 [[bin]]
-name = "storage"
+name = "run_ethers_uniswap3"
 path = "src/run_ethers_uniswap3.rs"
