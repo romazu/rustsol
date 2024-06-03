@@ -6,8 +6,12 @@ license = "MIT"
 edition = "2021"
 
 [dependencies]
+ethereum-types = "0.14"
 alloy-primitives = "0.7"
+ethers-providers = "2.0"
+ethers-core = "2.0"
 rustsol = { path = "../rustsol" }
+tokio = { version = "1.38", features = ["rt", "rt-multi-thread", "macros"] }
 
 [[bin]]
 name = "generate"
@@ -15,4 +19,8 @@ path = "src/generate.rs"
 
 [[bin]]
 name = "run"
-path = "src/run.rs"
+path = "src/run_dummy_simple.rs"
+
+[[bin]]
+name = "storage"
+path = "src/run_ethers_uniswap3.rs"

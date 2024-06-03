@@ -8,58 +8,82 @@ use alloy_primitives;
 use alloy_primitives::U256;
 #[derive(Derivative)]
 #[derivative(Debug)]
-pub struct MyContract {
+pub struct UniswapV3Pool {
     __slot: U256,
     #[derivative(Debug = "ignore")]
     __slots_getter: Option<Arc<dyn SlotsGetter>>,
-    pub plainUint112: Primitive<14>,
-    pub dynamicArray: DynamicArray<Primitive<32>>,
-    pub dynamicArrayNested: DynamicArray<DynamicArray<Primitive<32>>>,
-    pub plainUint32: Primitive<4>,
-    pub plainAddress: Address,
-    pub myStructNested: MyContractMyStructNested,
-    pub staticArray: StaticArray<160, Primitive<14>>,
-    pub staticArrayLarge: StaticArray<128, MyContractMyStruct>,
-    pub staticArrayNestedSmall: StaticArray<128, StaticArray<32, Primitive<1>>>,
-    pub dynamicArrayStruct: DynamicArray<MyContractMyStructNested>,
-    pub dynamicArraySmall: DynamicArray<MyContractMyStructSmall>,
-    pub myMapping1: Mapping<PrimitiveKey, Primitive<32>>,
-    pub myMapping2: Mapping<BytesKey, Primitive<32>>,
-    pub myMappingBool: Mapping<PrimitiveKey, Primitive<1>>,
-    pub myAddressMappingNested: Mapping<AddressKey, Mapping<AddressKey, Address>>,
-    pub myNestedMapping: Mapping<PrimitiveKey, Mapping<PrimitiveKey, Primitive<32>>>,
-    pub myEnum: Primitive<1>,
-    pub ___gap___: StaticArray<1248, Primitive<32>>,
-    pub plainString: Bytes,
+    pub slot0: UniswapV3PoolSlot0,
+    pub feeGrowthGlobal0X128: Primitive<32>,
+    pub feeGrowthGlobal1X128: Primitive<32>,
+    pub protocolFees: UniswapV3PoolProtocolFees,
+    pub liquidity: Primitive<16>,
+    pub ticks: Mapping<PrimitiveKey, TickInfo>,
+    pub tickBitmap: Mapping<PrimitiveKey, Primitive<32>>,
+    pub positions: Mapping<PrimitiveKey, PositionInfo>,
+    pub observations: StaticArray<2097120, OracleObservation>,
 }
 #[derive(Derivative)]
 #[derivative(Debug)]
-pub struct MyContractMyStructNested {
+pub struct UniswapV3PoolSlot0 {
     __slot: U256,
     #[derivative(Debug = "ignore")]
     __slots_getter: Option<Arc<dyn SlotsGetter>>,
-    pub myAddress: Address,
-    pub myStruct: MyContractMyStruct,
+    pub sqrtPriceX96: Primitive<20>,
+    pub tick: Primitive<3>,
+    pub observationIndex: Primitive<2>,
+    pub observationCardinality: Primitive<2>,
+    pub observationCardinalityNext: Primitive<2>,
+    pub feeProtocol: Primitive<1>,
+    pub unlocked: Primitive<1>,
 }
 #[derive(Derivative)]
 #[derivative(Debug)]
-pub struct MyContractMyStruct {
+pub struct UniswapV3PoolProtocolFees {
     __slot: U256,
     #[derivative(Debug = "ignore")]
     __slots_getter: Option<Arc<dyn SlotsGetter>>,
-    pub myAddress: Address,
-    pub myUint: Primitive<32>,
+    pub token0: Primitive<16>,
+    pub token1: Primitive<16>,
 }
 #[derive(Derivative)]
 #[derivative(Debug)]
-pub struct MyContractMyStructSmall {
+pub struct TickInfo {
     __slot: U256,
     #[derivative(Debug = "ignore")]
     __slots_getter: Option<Arc<dyn SlotsGetter>>,
-    pub smallInt1: Primitive<4>,
-    pub smallInt2: Primitive<4>,
+    pub liquidityGross: Primitive<16>,
+    pub liquidityNet: Primitive<16>,
+    pub feeGrowthOutside0X128: Primitive<32>,
+    pub feeGrowthOutside1X128: Primitive<32>,
+    pub tickCumulativeOutside: Primitive<7>,
+    pub secondsPerLiquidityOutsideX128: Primitive<20>,
+    pub secondsOutside: Primitive<4>,
+    pub initialized: Primitive<1>,
 }
-impl MyContract {
+#[derive(Derivative)]
+#[derivative(Debug)]
+pub struct PositionInfo {
+    __slot: U256,
+    #[derivative(Debug = "ignore")]
+    __slots_getter: Option<Arc<dyn SlotsGetter>>,
+    pub liquidity: Primitive<16>,
+    pub feeGrowthInside0LastX128: Primitive<32>,
+    pub feeGrowthInside1LastX128: Primitive<32>,
+    pub tokensOwed0: Primitive<16>,
+    pub tokensOwed1: Primitive<16>,
+}
+#[derive(Derivative)]
+#[derivative(Debug)]
+pub struct OracleObservation {
+    __slot: U256,
+    #[derivative(Debug = "ignore")]
+    __slots_getter: Option<Arc<dyn SlotsGetter>>,
+    pub blockTimestamp: Primitive<4>,
+    pub tickCumulative: Primitive<7>,
+    pub secondsPerLiquidityCumulativeX128: Primitive<20>,
+    pub initialized: Primitive<1>,
+}
+impl UniswapV3Pool {
     pub fn new() -> Self {
         Self::from_position(U256::ZERO, 0)
     }
@@ -67,167 +91,103 @@ impl MyContract {
         Self {
             __slot: slot,
             __slots_getter: None,
-            plainUint112: Primitive::from_position(slot + U256::from(0), 0),
-            dynamicArray: DynamicArray::from_position(slot + U256::from(1), 0),
-            dynamicArrayNested: DynamicArray::from_position(slot + U256::from(2), 0),
-            plainUint32: Primitive::from_position(slot + U256::from(3), 0),
-            plainAddress: Address::from_position(slot + U256::from(3), 4),
-            myStructNested: MyContractMyStructNested::from_position(
-                slot + U256::from(4),
+            slot0: UniswapV3PoolSlot0::from_position(slot + U256::from(0), 0),
+            feeGrowthGlobal0X128: Primitive::from_position(slot + U256::from(1), 0),
+            feeGrowthGlobal1X128: Primitive::from_position(slot + U256::from(2), 0),
+            protocolFees: UniswapV3PoolProtocolFees::from_position(
+                slot + U256::from(3),
                 0,
             ),
-            staticArray: StaticArray::from_position(slot + U256::from(7), 0),
-            staticArrayLarge: StaticArray::from_position(slot + U256::from(12), 0),
-            staticArrayNestedSmall: StaticArray::from_position(slot + U256::from(16), 0),
-            dynamicArrayStruct: DynamicArray::from_position(slot + U256::from(20), 0),
-            dynamicArraySmall: DynamicArray::from_position(slot + U256::from(21), 0),
-            myMapping1: Mapping::from_position(slot + U256::from(22), 0),
-            myMapping2: Mapping::from_position(slot + U256::from(23), 0),
-            myMappingBool: Mapping::from_position(slot + U256::from(24), 0),
-            myAddressMappingNested: Mapping::from_position(slot + U256::from(25), 0),
-            myNestedMapping: Mapping::from_position(slot + U256::from(26), 0),
-            myEnum: Primitive::from_position(slot + U256::from(27), 0),
-            ___gap___: StaticArray::from_position(slot + U256::from(28), 0),
-            plainString: Bytes::from_position(slot + U256::from(67), 0),
+            liquidity: Primitive::from_position(slot + U256::from(4), 0),
+            ticks: Mapping::from_position(slot + U256::from(5), 0),
+            tickBitmap: Mapping::from_position(slot + U256::from(6), 0),
+            positions: Mapping::from_position(slot + U256::from(7), 0),
+            observations: StaticArray::from_position(slot + U256::from(8), 0),
         }
     }
     pub fn slot(&self) -> U256 {
         self.__slot
     }
     pub fn position(&self) -> (U256, usize, usize) {
-        (self.__slot, 0, 2176)
+        (self.__slot, 0, 2097376)
     }
     pub fn get_value(&self) -> Result<<Self as Value>::ValueType, String> {
         let getter = self.__slots_getter.as_ref().expect("No slots getter");
         let slot_values = getter
-            .get_slots(self.__slot, 68)
+            .get_slots(self.__slot, 65543)
             .map_err(|err| format!("Failed to get slot values: {}", err))?;
         self.get_value_from_slots_content(slot_values)
     }
 }
-impl Position for MyContract {
+impl Position for UniswapV3Pool {
     fn from_position(slot: U256, offset: usize) -> Self {
         Self::from_position(slot, offset)
     }
     fn size() -> usize {
-        2176
+        2097376
     }
 }
-impl SlotsGetterSetter for MyContract {
+impl SlotsGetterSetter for UniswapV3Pool {
     fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
         self.__slots_getter = Some(getter.clone());
-        self.plainUint112.set_slots_getter(getter.clone());
-        self.dynamicArray.set_slots_getter(getter.clone());
-        self.dynamicArrayNested.set_slots_getter(getter.clone());
-        self.plainUint32.set_slots_getter(getter.clone());
-        self.plainAddress.set_slots_getter(getter.clone());
-        self.myStructNested.set_slots_getter(getter.clone());
-        self.staticArray.set_slots_getter(getter.clone());
-        self.staticArrayLarge.set_slots_getter(getter.clone());
-        self.staticArrayNestedSmall.set_slots_getter(getter.clone());
-        self.dynamicArrayStruct.set_slots_getter(getter.clone());
-        self.dynamicArraySmall.set_slots_getter(getter.clone());
-        self.myMapping1.set_slots_getter(getter.clone());
-        self.myMapping2.set_slots_getter(getter.clone());
-        self.myMappingBool.set_slots_getter(getter.clone());
-        self.myAddressMappingNested.set_slots_getter(getter.clone());
-        self.myNestedMapping.set_slots_getter(getter.clone());
-        self.myEnum.set_slots_getter(getter.clone());
-        self.___gap___.set_slots_getter(getter.clone());
-        self.plainString.set_slots_getter(getter.clone())
+        self.slot0.set_slots_getter(getter.clone());
+        self.feeGrowthGlobal0X128.set_slots_getter(getter.clone());
+        self.feeGrowthGlobal1X128.set_slots_getter(getter.clone());
+        self.protocolFees.set_slots_getter(getter.clone());
+        self.liquidity.set_slots_getter(getter.clone());
+        self.ticks.set_slots_getter(getter.clone());
+        self.tickBitmap.set_slots_getter(getter.clone());
+        self.positions.set_slots_getter(getter.clone());
+        self.observations.set_slots_getter(getter.clone())
     }
 }
 #[derive(Debug)]
-pub struct MyContractValue {
-    pub plainUint112: U256,
-    pub dynamicArray: Vec<U256>,
-    pub dynamicArrayNested: Vec<Vec<U256>>,
-    pub plainUint32: U256,
-    pub plainAddress: alloy_primitives::Address,
-    pub myStructNested: MyContractMyStructNestedValue,
-    pub staticArray: Vec<U256>,
-    pub staticArrayLarge: Vec<MyContractMyStructValue>,
-    pub staticArrayNestedSmall: Vec<Vec<U256>>,
-    pub dynamicArrayStruct: Vec<MyContractMyStructNestedValue>,
-    pub dynamicArraySmall: Vec<MyContractMyStructSmallValue>,
-    pub myMapping1: Mapping<PrimitiveKey, Primitive<32>>,
-    pub myMapping2: Mapping<BytesKey, Primitive<32>>,
-    pub myMappingBool: Mapping<PrimitiveKey, Primitive<1>>,
-    pub myAddressMappingNested: Mapping<AddressKey, Mapping<AddressKey, Address>>,
-    pub myNestedMapping: Mapping<PrimitiveKey, Mapping<PrimitiveKey, Primitive<32>>>,
-    pub myEnum: U256,
-    pub ___gap___: Vec<U256>,
-    pub plainString: Vec<u8>,
+pub struct UniswapV3PoolValue {
+    pub slot0: UniswapV3PoolSlot0Value,
+    pub feeGrowthGlobal0X128: U256,
+    pub feeGrowthGlobal1X128: U256,
+    pub protocolFees: UniswapV3PoolProtocolFeesValue,
+    pub liquidity: U256,
+    pub ticks: Mapping<PrimitiveKey, TickInfo>,
+    pub tickBitmap: Mapping<PrimitiveKey, Primitive<32>>,
+    pub positions: Mapping<PrimitiveKey, PositionInfo>,
+    pub observations: Vec<OracleObservationValue>,
 }
-impl Value for MyContract {
-    type ValueType = MyContractValue;
+impl Value for UniswapV3Pool {
+    type ValueType = UniswapV3PoolValue;
     fn get_value_from_slots_content(
         &self,
         slot_values: Vec<U256>,
     ) -> Result<Self::ValueType, String> {
         let getter = self.__slots_getter.as_ref().expect("No slots getter");
-        Ok(MyContractValue {
-            plainUint112: self
-                .plainUint112
-                .get_value_from_slots_content(slot_values[0..1].to_vec())?,
-            dynamicArray: self
-                .dynamicArray
+        Ok(UniswapV3PoolValue {
+            slot0: self.slot0.get_value_from_slots_content(slot_values[0..1].to_vec())?,
+            feeGrowthGlobal0X128: self
+                .feeGrowthGlobal0X128
                 .get_value_from_slots_content(slot_values[1..2].to_vec())?,
-            dynamicArrayNested: self
-                .dynamicArrayNested
+            feeGrowthGlobal1X128: self
+                .feeGrowthGlobal1X128
                 .get_value_from_slots_content(slot_values[2..3].to_vec())?,
-            plainUint32: self
-                .plainUint32
+            protocolFees: self
+                .protocolFees
                 .get_value_from_slots_content(slot_values[3..4].to_vec())?,
-            plainAddress: self
-                .plainAddress
-                .get_value_from_slots_content(slot_values[3..4].to_vec())?,
-            myStructNested: self
-                .myStructNested
-                .get_value_from_slots_content(slot_values[4..7].to_vec())?,
-            staticArray: self
-                .staticArray
-                .get_value_from_slots_content(slot_values[7..12].to_vec())?,
-            staticArrayLarge: self
-                .staticArrayLarge
-                .get_value_from_slots_content(slot_values[12..16].to_vec())?,
-            staticArrayNestedSmall: self
-                .staticArrayNestedSmall
-                .get_value_from_slots_content(slot_values[16..20].to_vec())?,
-            dynamicArrayStruct: self
-                .dynamicArrayStruct
-                .get_value_from_slots_content(slot_values[20..21].to_vec())?,
-            dynamicArraySmall: self
-                .dynamicArraySmall
-                .get_value_from_slots_content(slot_values[21..22].to_vec())?,
-            myMapping1: self
-                .myMapping1
-                .get_value_from_slots_content(slot_values[22..23].to_vec())?,
-            myMapping2: self
-                .myMapping2
-                .get_value_from_slots_content(slot_values[23..24].to_vec())?,
-            myMappingBool: self
-                .myMappingBool
-                .get_value_from_slots_content(slot_values[24..25].to_vec())?,
-            myAddressMappingNested: self
-                .myAddressMappingNested
-                .get_value_from_slots_content(slot_values[25..26].to_vec())?,
-            myNestedMapping: self
-                .myNestedMapping
-                .get_value_from_slots_content(slot_values[26..27].to_vec())?,
-            myEnum: self
-                .myEnum
-                .get_value_from_slots_content(slot_values[27..28].to_vec())?,
-            ___gap___: self
-                .___gap___
-                .get_value_from_slots_content(slot_values[28..67].to_vec())?,
-            plainString: self
-                .plainString
-                .get_value_from_slots_content(slot_values[67..68].to_vec())?,
+            liquidity: self
+                .liquidity
+                .get_value_from_slots_content(slot_values[4..5].to_vec())?,
+            ticks: self.ticks.get_value_from_slots_content(slot_values[5..6].to_vec())?,
+            tickBitmap: self
+                .tickBitmap
+                .get_value_from_slots_content(slot_values[6..7].to_vec())?,
+            positions: self
+                .positions
+                .get_value_from_slots_content(slot_values[7..8].to_vec())?,
+            observations: self
+                .observations
+                .get_value_from_slots_content(slot_values[8..65543].to_vec())?,
         })
     }
 }
-impl MyContractMyStructNested {
+impl UniswapV3PoolSlot0 {
     pub fn new() -> Self {
         Self::from_position(U256::ZERO, 0)
     }
@@ -235,132 +195,16 @@ impl MyContractMyStructNested {
         Self {
             __slot: slot,
             __slots_getter: None,
-            myAddress: Address::from_position(slot + U256::from(0), 0),
-            myStruct: MyContractMyStruct::from_position(slot + U256::from(1), 0),
-        }
-    }
-    pub fn slot(&self) -> U256 {
-        self.__slot
-    }
-    pub fn position(&self) -> (U256, usize, usize) {
-        (self.__slot, 0, 96)
-    }
-    pub fn get_value(&self) -> Result<<Self as Value>::ValueType, String> {
-        let getter = self.__slots_getter.as_ref().expect("No slots getter");
-        let slot_values = getter
-            .get_slots(self.__slot, 3)
-            .map_err(|err| format!("Failed to get slot values: {}", err))?;
-        self.get_value_from_slots_content(slot_values)
-    }
-}
-impl Position for MyContractMyStructNested {
-    fn from_position(slot: U256, offset: usize) -> Self {
-        Self::from_position(slot, offset)
-    }
-    fn size() -> usize {
-        96
-    }
-}
-impl SlotsGetterSetter for MyContractMyStructNested {
-    fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
-        self.__slots_getter = Some(getter.clone());
-        self.myAddress.set_slots_getter(getter.clone());
-        self.myStruct.set_slots_getter(getter.clone())
-    }
-}
-#[derive(Debug)]
-pub struct MyContractMyStructNestedValue {
-    pub myAddress: alloy_primitives::Address,
-    pub myStruct: MyContractMyStructValue,
-}
-impl Value for MyContractMyStructNested {
-    type ValueType = MyContractMyStructNestedValue;
-    fn get_value_from_slots_content(
-        &self,
-        slot_values: Vec<U256>,
-    ) -> Result<Self::ValueType, String> {
-        let getter = self.__slots_getter.as_ref().expect("No slots getter");
-        Ok(MyContractMyStructNestedValue {
-            myAddress: self
-                .myAddress
-                .get_value_from_slots_content(slot_values[0..1].to_vec())?,
-            myStruct: self
-                .myStruct
-                .get_value_from_slots_content(slot_values[1..3].to_vec())?,
-        })
-    }
-}
-impl MyContractMyStruct {
-    pub fn new() -> Self {
-        Self::from_position(U256::ZERO, 0)
-    }
-    pub fn from_position(slot: U256, offset: usize) -> Self {
-        Self {
-            __slot: slot,
-            __slots_getter: None,
-            myAddress: Address::from_position(slot + U256::from(0), 0),
-            myUint: Primitive::from_position(slot + U256::from(1), 0),
-        }
-    }
-    pub fn slot(&self) -> U256 {
-        self.__slot
-    }
-    pub fn position(&self) -> (U256, usize, usize) {
-        (self.__slot, 0, 64)
-    }
-    pub fn get_value(&self) -> Result<<Self as Value>::ValueType, String> {
-        let getter = self.__slots_getter.as_ref().expect("No slots getter");
-        let slot_values = getter
-            .get_slots(self.__slot, 2)
-            .map_err(|err| format!("Failed to get slot values: {}", err))?;
-        self.get_value_from_slots_content(slot_values)
-    }
-}
-impl Position for MyContractMyStruct {
-    fn from_position(slot: U256, offset: usize) -> Self {
-        Self::from_position(slot, offset)
-    }
-    fn size() -> usize {
-        64
-    }
-}
-impl SlotsGetterSetter for MyContractMyStruct {
-    fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
-        self.__slots_getter = Some(getter.clone());
-        self.myAddress.set_slots_getter(getter.clone());
-        self.myUint.set_slots_getter(getter.clone())
-    }
-}
-#[derive(Debug)]
-pub struct MyContractMyStructValue {
-    pub myAddress: alloy_primitives::Address,
-    pub myUint: U256,
-}
-impl Value for MyContractMyStruct {
-    type ValueType = MyContractMyStructValue;
-    fn get_value_from_slots_content(
-        &self,
-        slot_values: Vec<U256>,
-    ) -> Result<Self::ValueType, String> {
-        let getter = self.__slots_getter.as_ref().expect("No slots getter");
-        Ok(MyContractMyStructValue {
-            myAddress: self
-                .myAddress
-                .get_value_from_slots_content(slot_values[0..1].to_vec())?,
-            myUint: self.myUint.get_value_from_slots_content(slot_values[1..2].to_vec())?,
-        })
-    }
-}
-impl MyContractMyStructSmall {
-    pub fn new() -> Self {
-        Self::from_position(U256::ZERO, 0)
-    }
-    pub fn from_position(slot: U256, offset: usize) -> Self {
-        Self {
-            __slot: slot,
-            __slots_getter: None,
-            smallInt1: Primitive::from_position(slot + U256::from(0), 0),
-            smallInt2: Primitive::from_position(slot + U256::from(0), 4),
+            sqrtPriceX96: Primitive::from_position(slot + U256::from(0), 0),
+            tick: Primitive::from_position(slot + U256::from(0), 20),
+            observationIndex: Primitive::from_position(slot + U256::from(0), 23),
+            observationCardinality: Primitive::from_position(slot + U256::from(0), 25),
+            observationCardinalityNext: Primitive::from_position(
+                slot + U256::from(0),
+                27,
+            ),
+            feeProtocol: Primitive::from_position(slot + U256::from(0), 29),
+            unlocked: Primitive::from_position(slot + U256::from(0), 30),
         }
     }
     pub fn slot(&self) -> U256 {
@@ -377,7 +221,7 @@ impl MyContractMyStructSmall {
         self.get_value_from_slots_content(slot_values)
     }
 }
-impl Position for MyContractMyStructSmall {
+impl Position for UniswapV3PoolSlot0 {
     fn from_position(slot: U256, offset: usize) -> Self {
         Self::from_position(slot, offset)
     }
@@ -385,31 +229,376 @@ impl Position for MyContractMyStructSmall {
         32
     }
 }
-impl SlotsGetterSetter for MyContractMyStructSmall {
+impl SlotsGetterSetter for UniswapV3PoolSlot0 {
     fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
         self.__slots_getter = Some(getter.clone());
-        self.smallInt1.set_slots_getter(getter.clone());
-        self.smallInt2.set_slots_getter(getter.clone())
+        self.sqrtPriceX96.set_slots_getter(getter.clone());
+        self.tick.set_slots_getter(getter.clone());
+        self.observationIndex.set_slots_getter(getter.clone());
+        self.observationCardinality.set_slots_getter(getter.clone());
+        self.observationCardinalityNext.set_slots_getter(getter.clone());
+        self.feeProtocol.set_slots_getter(getter.clone());
+        self.unlocked.set_slots_getter(getter.clone())
     }
 }
 #[derive(Debug)]
-pub struct MyContractMyStructSmallValue {
-    pub smallInt1: U256,
-    pub smallInt2: U256,
+pub struct UniswapV3PoolSlot0Value {
+    pub sqrtPriceX96: U256,
+    pub tick: U256,
+    pub observationIndex: U256,
+    pub observationCardinality: U256,
+    pub observationCardinalityNext: U256,
+    pub feeProtocol: U256,
+    pub unlocked: U256,
 }
-impl Value for MyContractMyStructSmall {
-    type ValueType = MyContractMyStructSmallValue;
+impl Value for UniswapV3PoolSlot0 {
+    type ValueType = UniswapV3PoolSlot0Value;
     fn get_value_from_slots_content(
         &self,
         slot_values: Vec<U256>,
     ) -> Result<Self::ValueType, String> {
         let getter = self.__slots_getter.as_ref().expect("No slots getter");
-        Ok(MyContractMyStructSmallValue {
-            smallInt1: self
-                .smallInt1
+        Ok(UniswapV3PoolSlot0Value {
+            sqrtPriceX96: self
+                .sqrtPriceX96
                 .get_value_from_slots_content(slot_values[0..1].to_vec())?,
-            smallInt2: self
-                .smallInt2
+            tick: self.tick.get_value_from_slots_content(slot_values[0..1].to_vec())?,
+            observationIndex: self
+                .observationIndex
+                .get_value_from_slots_content(slot_values[0..1].to_vec())?,
+            observationCardinality: self
+                .observationCardinality
+                .get_value_from_slots_content(slot_values[0..1].to_vec())?,
+            observationCardinalityNext: self
+                .observationCardinalityNext
+                .get_value_from_slots_content(slot_values[0..1].to_vec())?,
+            feeProtocol: self
+                .feeProtocol
+                .get_value_from_slots_content(slot_values[0..1].to_vec())?,
+            unlocked: self
+                .unlocked
+                .get_value_from_slots_content(slot_values[0..1].to_vec())?,
+        })
+    }
+}
+impl UniswapV3PoolProtocolFees {
+    pub fn new() -> Self {
+        Self::from_position(U256::ZERO, 0)
+    }
+    pub fn from_position(slot: U256, offset: usize) -> Self {
+        Self {
+            __slot: slot,
+            __slots_getter: None,
+            token0: Primitive::from_position(slot + U256::from(0), 0),
+            token1: Primitive::from_position(slot + U256::from(0), 16),
+        }
+    }
+    pub fn slot(&self) -> U256 {
+        self.__slot
+    }
+    pub fn position(&self) -> (U256, usize, usize) {
+        (self.__slot, 0, 32)
+    }
+    pub fn get_value(&self) -> Result<<Self as Value>::ValueType, String> {
+        let getter = self.__slots_getter.as_ref().expect("No slots getter");
+        let slot_values = getter
+            .get_slots(self.__slot, 1)
+            .map_err(|err| format!("Failed to get slot values: {}", err))?;
+        self.get_value_from_slots_content(slot_values)
+    }
+}
+impl Position for UniswapV3PoolProtocolFees {
+    fn from_position(slot: U256, offset: usize) -> Self {
+        Self::from_position(slot, offset)
+    }
+    fn size() -> usize {
+        32
+    }
+}
+impl SlotsGetterSetter for UniswapV3PoolProtocolFees {
+    fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
+        self.__slots_getter = Some(getter.clone());
+        self.token0.set_slots_getter(getter.clone());
+        self.token1.set_slots_getter(getter.clone())
+    }
+}
+#[derive(Debug)]
+pub struct UniswapV3PoolProtocolFeesValue {
+    pub token0: U256,
+    pub token1: U256,
+}
+impl Value for UniswapV3PoolProtocolFees {
+    type ValueType = UniswapV3PoolProtocolFeesValue;
+    fn get_value_from_slots_content(
+        &self,
+        slot_values: Vec<U256>,
+    ) -> Result<Self::ValueType, String> {
+        let getter = self.__slots_getter.as_ref().expect("No slots getter");
+        Ok(UniswapV3PoolProtocolFeesValue {
+            token0: self
+                .token0
+                .get_value_from_slots_content(slot_values[0..1].to_vec())?,
+            token1: self.token1.get_value_from_slots_content(slot_values[0..1].to_vec())?,
+        })
+    }
+}
+impl TickInfo {
+    pub fn new() -> Self {
+        Self::from_position(U256::ZERO, 0)
+    }
+    pub fn from_position(slot: U256, offset: usize) -> Self {
+        Self {
+            __slot: slot,
+            __slots_getter: None,
+            liquidityGross: Primitive::from_position(slot + U256::from(0), 0),
+            liquidityNet: Primitive::from_position(slot + U256::from(0), 16),
+            feeGrowthOutside0X128: Primitive::from_position(slot + U256::from(1), 0),
+            feeGrowthOutside1X128: Primitive::from_position(slot + U256::from(2), 0),
+            tickCumulativeOutside: Primitive::from_position(slot + U256::from(3), 0),
+            secondsPerLiquidityOutsideX128: Primitive::from_position(
+                slot + U256::from(3),
+                7,
+            ),
+            secondsOutside: Primitive::from_position(slot + U256::from(3), 27),
+            initialized: Primitive::from_position(slot + U256::from(3), 31),
+        }
+    }
+    pub fn slot(&self) -> U256 {
+        self.__slot
+    }
+    pub fn position(&self) -> (U256, usize, usize) {
+        (self.__slot, 0, 128)
+    }
+    pub fn get_value(&self) -> Result<<Self as Value>::ValueType, String> {
+        let getter = self.__slots_getter.as_ref().expect("No slots getter");
+        let slot_values = getter
+            .get_slots(self.__slot, 4)
+            .map_err(|err| format!("Failed to get slot values: {}", err))?;
+        self.get_value_from_slots_content(slot_values)
+    }
+}
+impl Position for TickInfo {
+    fn from_position(slot: U256, offset: usize) -> Self {
+        Self::from_position(slot, offset)
+    }
+    fn size() -> usize {
+        128
+    }
+}
+impl SlotsGetterSetter for TickInfo {
+    fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
+        self.__slots_getter = Some(getter.clone());
+        self.liquidityGross.set_slots_getter(getter.clone());
+        self.liquidityNet.set_slots_getter(getter.clone());
+        self.feeGrowthOutside0X128.set_slots_getter(getter.clone());
+        self.feeGrowthOutside1X128.set_slots_getter(getter.clone());
+        self.tickCumulativeOutside.set_slots_getter(getter.clone());
+        self.secondsPerLiquidityOutsideX128.set_slots_getter(getter.clone());
+        self.secondsOutside.set_slots_getter(getter.clone());
+        self.initialized.set_slots_getter(getter.clone())
+    }
+}
+#[derive(Debug)]
+pub struct TickInfoValue {
+    pub liquidityGross: U256,
+    pub liquidityNet: U256,
+    pub feeGrowthOutside0X128: U256,
+    pub feeGrowthOutside1X128: U256,
+    pub tickCumulativeOutside: U256,
+    pub secondsPerLiquidityOutsideX128: U256,
+    pub secondsOutside: U256,
+    pub initialized: U256,
+}
+impl Value for TickInfo {
+    type ValueType = TickInfoValue;
+    fn get_value_from_slots_content(
+        &self,
+        slot_values: Vec<U256>,
+    ) -> Result<Self::ValueType, String> {
+        let getter = self.__slots_getter.as_ref().expect("No slots getter");
+        Ok(TickInfoValue {
+            liquidityGross: self
+                .liquidityGross
+                .get_value_from_slots_content(slot_values[0..1].to_vec())?,
+            liquidityNet: self
+                .liquidityNet
+                .get_value_from_slots_content(slot_values[0..1].to_vec())?,
+            feeGrowthOutside0X128: self
+                .feeGrowthOutside0X128
+                .get_value_from_slots_content(slot_values[1..2].to_vec())?,
+            feeGrowthOutside1X128: self
+                .feeGrowthOutside1X128
+                .get_value_from_slots_content(slot_values[2..3].to_vec())?,
+            tickCumulativeOutside: self
+                .tickCumulativeOutside
+                .get_value_from_slots_content(slot_values[3..4].to_vec())?,
+            secondsPerLiquidityOutsideX128: self
+                .secondsPerLiquidityOutsideX128
+                .get_value_from_slots_content(slot_values[3..4].to_vec())?,
+            secondsOutside: self
+                .secondsOutside
+                .get_value_from_slots_content(slot_values[3..4].to_vec())?,
+            initialized: self
+                .initialized
+                .get_value_from_slots_content(slot_values[3..4].to_vec())?,
+        })
+    }
+}
+impl PositionInfo {
+    pub fn new() -> Self {
+        Self::from_position(U256::ZERO, 0)
+    }
+    pub fn from_position(slot: U256, offset: usize) -> Self {
+        Self {
+            __slot: slot,
+            __slots_getter: None,
+            liquidity: Primitive::from_position(slot + U256::from(0), 0),
+            feeGrowthInside0LastX128: Primitive::from_position(slot + U256::from(1), 0),
+            feeGrowthInside1LastX128: Primitive::from_position(slot + U256::from(2), 0),
+            tokensOwed0: Primitive::from_position(slot + U256::from(3), 0),
+            tokensOwed1: Primitive::from_position(slot + U256::from(3), 16),
+        }
+    }
+    pub fn slot(&self) -> U256 {
+        self.__slot
+    }
+    pub fn position(&self) -> (U256, usize, usize) {
+        (self.__slot, 0, 128)
+    }
+    pub fn get_value(&self) -> Result<<Self as Value>::ValueType, String> {
+        let getter = self.__slots_getter.as_ref().expect("No slots getter");
+        let slot_values = getter
+            .get_slots(self.__slot, 4)
+            .map_err(|err| format!("Failed to get slot values: {}", err))?;
+        self.get_value_from_slots_content(slot_values)
+    }
+}
+impl Position for PositionInfo {
+    fn from_position(slot: U256, offset: usize) -> Self {
+        Self::from_position(slot, offset)
+    }
+    fn size() -> usize {
+        128
+    }
+}
+impl SlotsGetterSetter for PositionInfo {
+    fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
+        self.__slots_getter = Some(getter.clone());
+        self.liquidity.set_slots_getter(getter.clone());
+        self.feeGrowthInside0LastX128.set_slots_getter(getter.clone());
+        self.feeGrowthInside1LastX128.set_slots_getter(getter.clone());
+        self.tokensOwed0.set_slots_getter(getter.clone());
+        self.tokensOwed1.set_slots_getter(getter.clone())
+    }
+}
+#[derive(Debug)]
+pub struct PositionInfoValue {
+    pub liquidity: U256,
+    pub feeGrowthInside0LastX128: U256,
+    pub feeGrowthInside1LastX128: U256,
+    pub tokensOwed0: U256,
+    pub tokensOwed1: U256,
+}
+impl Value for PositionInfo {
+    type ValueType = PositionInfoValue;
+    fn get_value_from_slots_content(
+        &self,
+        slot_values: Vec<U256>,
+    ) -> Result<Self::ValueType, String> {
+        let getter = self.__slots_getter.as_ref().expect("No slots getter");
+        Ok(PositionInfoValue {
+            liquidity: self
+                .liquidity
+                .get_value_from_slots_content(slot_values[0..1].to_vec())?,
+            feeGrowthInside0LastX128: self
+                .feeGrowthInside0LastX128
+                .get_value_from_slots_content(slot_values[1..2].to_vec())?,
+            feeGrowthInside1LastX128: self
+                .feeGrowthInside1LastX128
+                .get_value_from_slots_content(slot_values[2..3].to_vec())?,
+            tokensOwed0: self
+                .tokensOwed0
+                .get_value_from_slots_content(slot_values[3..4].to_vec())?,
+            tokensOwed1: self
+                .tokensOwed1
+                .get_value_from_slots_content(slot_values[3..4].to_vec())?,
+        })
+    }
+}
+impl OracleObservation {
+    pub fn new() -> Self {
+        Self::from_position(U256::ZERO, 0)
+    }
+    pub fn from_position(slot: U256, offset: usize) -> Self {
+        Self {
+            __slot: slot,
+            __slots_getter: None,
+            blockTimestamp: Primitive::from_position(slot + U256::from(0), 0),
+            tickCumulative: Primitive::from_position(slot + U256::from(0), 4),
+            secondsPerLiquidityCumulativeX128: Primitive::from_position(
+                slot + U256::from(0),
+                11,
+            ),
+            initialized: Primitive::from_position(slot + U256::from(0), 31),
+        }
+    }
+    pub fn slot(&self) -> U256 {
+        self.__slot
+    }
+    pub fn position(&self) -> (U256, usize, usize) {
+        (self.__slot, 0, 32)
+    }
+    pub fn get_value(&self) -> Result<<Self as Value>::ValueType, String> {
+        let getter = self.__slots_getter.as_ref().expect("No slots getter");
+        let slot_values = getter
+            .get_slots(self.__slot, 1)
+            .map_err(|err| format!("Failed to get slot values: {}", err))?;
+        self.get_value_from_slots_content(slot_values)
+    }
+}
+impl Position for OracleObservation {
+    fn from_position(slot: U256, offset: usize) -> Self {
+        Self::from_position(slot, offset)
+    }
+    fn size() -> usize {
+        32
+    }
+}
+impl SlotsGetterSetter for OracleObservation {
+    fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
+        self.__slots_getter = Some(getter.clone());
+        self.blockTimestamp.set_slots_getter(getter.clone());
+        self.tickCumulative.set_slots_getter(getter.clone());
+        self.secondsPerLiquidityCumulativeX128.set_slots_getter(getter.clone());
+        self.initialized.set_slots_getter(getter.clone())
+    }
+}
+#[derive(Debug)]
+pub struct OracleObservationValue {
+    pub blockTimestamp: U256,
+    pub tickCumulative: U256,
+    pub secondsPerLiquidityCumulativeX128: U256,
+    pub initialized: U256,
+}
+impl Value for OracleObservation {
+    type ValueType = OracleObservationValue;
+    fn get_value_from_slots_content(
+        &self,
+        slot_values: Vec<U256>,
+    ) -> Result<Self::ValueType, String> {
+        let getter = self.__slots_getter.as_ref().expect("No slots getter");
+        Ok(OracleObservationValue {
+            blockTimestamp: self
+                .blockTimestamp
+                .get_value_from_slots_content(slot_values[0..1].to_vec())?,
+            tickCumulative: self
+                .tickCumulative
+                .get_value_from_slots_content(slot_values[0..1].to_vec())?,
+            secondsPerLiquidityCumulativeX128: self
+                .secondsPerLiquidityCumulativeX128
+                .get_value_from_slots_content(slot_values[0..1].to_vec())?,
+            initialized: self
+                .initialized
                 .get_value_from_slots_content(slot_values[0..1].to_vec())?,
         })
     }

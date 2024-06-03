@@ -7,23 +7,6 @@ use rustsol::types::{SlotsGetter, SlotsGetterSetter};
 
 mod generated_contract;
 
-// Example implementation for a struct
-#[derive(Debug)]
-struct DummySlotsGetter;
-impl SlotsGetter for DummySlotsGetter {
-    fn get_slots(&self, start: U256, n: usize) -> Result<Vec<U256>, String> {
-        let mut start_ = start;
-        if start > U256::from(1000) {
-            start_ = U256::from(1);
-        }
-        let mut res = Vec::with_capacity(n); // U256 is 32 bytes
-        for i in 0..n {
-            res.push(start_ + U256::from(i));
-        }
-        Ok(res)
-    }
-}
-
 fn main() {
     // // Example contract
     let contract = generated_contract::MyContract::new();
