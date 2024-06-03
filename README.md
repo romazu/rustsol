@@ -21,8 +21,8 @@ Get storage value of a contract variable using provided slots getter:
 ```rust
 let contract = generated_contract::UniswapV3Pool::new();
 contract.set_slots_getter(my_slots_getter);
-let value = contract.observations.at(42).tickCumulative.get_value();
-println!("{:?}", value);
+let tick_value = contract.ticks.at(-92110).get_value().unwrap();
+println!("{:?}", tick_value);
 // Output (prettified):
 // TickInfoValue {
 //     liquidityGross:                 0x0000000000000000000000000000000000000000000000000000005cbbfb3715_U256
