@@ -1,10 +1,9 @@
 use std::marker::PhantomData;
 use std::sync::Arc;
-use alloy_primitives::{Address, FixedBytes, U256};
+use alloy_primitives::U256;
 use derivative::Derivative;
 use crate::utils::{bytes32_to_u256, ceil_div, keccak256, u256_to_bytes32, u256_to_u64, vec_u256_to_vec_bytes};
-use crate::types::{FromLESlice, Primitive, Value};
-use crate::types::{Position, SlotsGetter, SlotsGetterSetter};
+use crate::types::{FromLESlice, Value, Position, SlotsGetter, SlotsGetterSetter};
 
 // In particular: if the data is at most 31 bytes long, the elements are stored in the higher-order
 // bytes (left aligned) and the lowest-order byte stores the value length * 2. For byte arrays that
@@ -77,17 +76,5 @@ impl<NativeType: FromLESlice> Value for Bytes<NativeType> {
             let bytes = base_slot_value.to_be_bytes::<{ U256::BYTES }>();
             Ok(NativeType::from(&bytes[0..string_len as usize]))
         }
-    }
-}
-
-impl FromLESlice for Vec<u8> {
-    fn from(bytes: &[u8]) -> Self {
-        bytes.to_vec()
-    }
-}
-
-impl FromLESlice for String {
-    fn from(bytes: &[u8]) -> Self {
-        String::from_utf8_lossy(bytes).to_string()
     }
 }

@@ -7,6 +7,7 @@ mod keys;
 mod mapping;
 mod dynamic_array;
 mod static_array;
+mod native;
 
 pub use traits::{Position, SlotsGetter, SlotsGetterSetter, Value, FromLESlice};
 pub use primitive::Primitive;

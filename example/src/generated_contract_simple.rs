@@ -3,7 +3,7 @@ use std::sync::Arc;
 use rustsol::types::Derivative;
 use rustsol::types::{Position, SlotsGetter, SlotsGetterSetter, Value};
 use rustsol::types::{Primitive, Bytes, Mapping, DynamicArray, StaticArray};
-use alloy_primitives::{I256, U256, Address};
+use alloy_primitives::{Address, I256, U256};
 #[derive(Derivative)]
 #[derivative(Debug)]
 pub struct MyContract {
