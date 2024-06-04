@@ -13,12 +13,12 @@ pub struct UniswapV3Pool {
     #[derivative(Debug = "ignore")]
     __slots_getter: Option<Arc<dyn SlotsGetter>>,
     pub slot0: UniswapV3PoolSlot0,
-    pub feeGrowthGlobal0X128: Primitive<32>,
-    pub feeGrowthGlobal1X128: Primitive<32>,
+    pub feeGrowthGlobal0X128: Primitive<32, U256>,
+    pub feeGrowthGlobal1X128: Primitive<32, U256>,
     pub protocolFees: UniswapV3PoolProtocolFees,
-    pub liquidity: Primitive<16>,
+    pub liquidity: Primitive<16, U256>,
     pub ticks: Mapping<PrimitiveKey, TickInfo>,
-    pub tickBitmap: Mapping<PrimitiveKey, Primitive<32>>,
+    pub tickBitmap: Mapping<PrimitiveKey, Primitive<32, U256>>,
     pub positions: Mapping<PrimitiveKey, PositionInfo>,
     pub observations: StaticArray<2097120, OracleObservation>,
 }
@@ -28,13 +28,13 @@ pub struct UniswapV3PoolSlot0 {
     __slot: U256,
     #[derivative(Debug = "ignore")]
     __slots_getter: Option<Arc<dyn SlotsGetter>>,
-    pub sqrtPriceX96: Primitive<20>,
-    pub tick: Primitive<3>,
-    pub observationIndex: Primitive<2>,
-    pub observationCardinality: Primitive<2>,
-    pub observationCardinalityNext: Primitive<2>,
-    pub feeProtocol: Primitive<1>,
-    pub unlocked: Primitive<1>,
+    pub sqrtPriceX96: Primitive<20, U256>,
+    pub tick: Primitive<3, U256>,
+    pub observationIndex: Primitive<2, U256>,
+    pub observationCardinality: Primitive<2, U256>,
+    pub observationCardinalityNext: Primitive<2, U256>,
+    pub feeProtocol: Primitive<1, U256>,
+    pub unlocked: Primitive<1, U256>,
 }
 #[derive(Derivative)]
 #[derivative(Debug)]
@@ -42,8 +42,8 @@ pub struct UniswapV3PoolProtocolFees {
     __slot: U256,
     #[derivative(Debug = "ignore")]
     __slots_getter: Option<Arc<dyn SlotsGetter>>,
-    pub token0: Primitive<16>,
-    pub token1: Primitive<16>,
+    pub token0: Primitive<16, U256>,
+    pub token1: Primitive<16, U256>,
 }
 #[derive(Derivative)]
 #[derivative(Debug)]
@@ -51,14 +51,14 @@ pub struct TickInfo {
     __slot: U256,
     #[derivative(Debug = "ignore")]
     __slots_getter: Option<Arc<dyn SlotsGetter>>,
-    pub liquidityGross: Primitive<16>,
-    pub liquidityNet: Primitive<16>,
-    pub feeGrowthOutside0X128: Primitive<32>,
-    pub feeGrowthOutside1X128: Primitive<32>,
-    pub tickCumulativeOutside: Primitive<7>,
-    pub secondsPerLiquidityOutsideX128: Primitive<20>,
-    pub secondsOutside: Primitive<4>,
-    pub initialized: Primitive<1>,
+    pub liquidityGross: Primitive<16, U256>,
+    pub liquidityNet: Primitive<16, U256>,
+    pub feeGrowthOutside0X128: Primitive<32, U256>,
+    pub feeGrowthOutside1X128: Primitive<32, U256>,
+    pub tickCumulativeOutside: Primitive<7, U256>,
+    pub secondsPerLiquidityOutsideX128: Primitive<20, U256>,
+    pub secondsOutside: Primitive<4, U256>,
+    pub initialized: Primitive<1, U256>,
 }
 #[derive(Derivative)]
 #[derivative(Debug)]
@@ -66,11 +66,11 @@ pub struct PositionInfo {
     __slot: U256,
     #[derivative(Debug = "ignore")]
     __slots_getter: Option<Arc<dyn SlotsGetter>>,
-    pub liquidity: Primitive<16>,
-    pub feeGrowthInside0LastX128: Primitive<32>,
-    pub feeGrowthInside1LastX128: Primitive<32>,
-    pub tokensOwed0: Primitive<16>,
-    pub tokensOwed1: Primitive<16>,
+    pub liquidity: Primitive<16, U256>,
+    pub feeGrowthInside0LastX128: Primitive<32, U256>,
+    pub feeGrowthInside1LastX128: Primitive<32, U256>,
+    pub tokensOwed0: Primitive<16, U256>,
+    pub tokensOwed1: Primitive<16, U256>,
 }
 #[derive(Derivative)]
 #[derivative(Debug)]
@@ -78,10 +78,10 @@ pub struct OracleObservation {
     __slot: U256,
     #[derivative(Debug = "ignore")]
     __slots_getter: Option<Arc<dyn SlotsGetter>>,
-    pub blockTimestamp: Primitive<4>,
-    pub tickCumulative: Primitive<7>,
-    pub secondsPerLiquidityCumulativeX128: Primitive<20>,
-    pub initialized: Primitive<1>,
+    pub blockTimestamp: Primitive<4, U256>,
+    pub tickCumulative: Primitive<7, U256>,
+    pub secondsPerLiquidityCumulativeX128: Primitive<20, U256>,
+    pub initialized: Primitive<1, U256>,
 }
 impl UniswapV3Pool {
     pub fn new() -> Self {
@@ -149,7 +149,7 @@ pub struct UniswapV3PoolValue {
     pub protocolFees: UniswapV3PoolProtocolFeesValue,
     pub liquidity: U256,
     pub ticks: Mapping<PrimitiveKey, TickInfo>,
-    pub tickBitmap: Mapping<PrimitiveKey, Primitive<32>>,
+    pub tickBitmap: Mapping<PrimitiveKey, Primitive<32, U256>>,
     pub positions: Mapping<PrimitiveKey, PositionInfo>,
     pub observations: Vec<OracleObservationValue>,
 }

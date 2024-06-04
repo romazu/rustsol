@@ -175,7 +175,10 @@ fn get_type_name(nested_type: &NestedType) -> TokenStream {
 
 fn get_value_type_name(nested_type: &NestedType) -> TokenStream {
     let type_name = match nested_type {
-        NestedType::Primitive { .. } => quote! {U256},
+        NestedType::Primitive { number_of_bytes: _, native_type } => {
+            let native_type_ident = syn::Ident::new(native_type, proc_macro2::Span::call_site());
+            quote! {#native_type_ident}
+        }
         NestedType::Bytes => quote! {Vec<u8>},
         NestedType::Address => quote! {alloy_primitives::Address},
         NestedType::Mapping { .. } => {
@@ -191,7 +194,7 @@ fn get_value_type_name(nested_type: &NestedType) -> TokenStream {
             let element_value_type_name = get_value_type_name(value);
             quote! {Vec<#element_value_type_name>}
         }
-        NestedType::StaticArray { value, ..} => {
+        NestedType::StaticArray { value, .. } => {
             let element_value_type_name = get_value_type_name(value);
             quote! {Vec<#element_value_type_name>}
         }
@@ -202,10 +205,11 @@ fn get_value_type_name(nested_type: &NestedType) -> TokenStream {
 
 fn get_nested_type(nested_type: &NestedType) -> TokenStream {
     match nested_type {
-        NestedType::Primitive { number_of_bytes } => {
+        NestedType::Primitive { number_of_bytes, native_type } => {
             // Avoid verbose definitions like Primitive<32u64>.
             let number_of_bytes_literal = syn::LitInt::new(&number_of_bytes.to_string(), proc_macro2::Span::call_site());
-            quote! { Primitive<#number_of_bytes_literal> }
+            let native_type_ident = syn::Ident::new(native_type, proc_macro2::Span::call_site());
+            quote! { Primitive<#number_of_bytes_literal, #native_type_ident> }
         }
         NestedType::Bytes => quote! { Bytes },
         NestedType::Address => quote! { Address },

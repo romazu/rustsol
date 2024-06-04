@@ -147,6 +147,7 @@ fn string_to_u64<'de, D>(deserializer: D) -> Result<u64, D::Error>
 pub enum NestedType {
     Primitive {
         number_of_bytes: u64,
+        native_type: String,
     },
     Bytes,
     Address,
@@ -172,8 +173,8 @@ pub enum NestedType {
 impl NestedType {
     fn to_string(&self) -> String {
         match self {
-            NestedType::Primitive { number_of_bytes } => {
-                format!("Primitive<{}>", number_of_bytes.to_string())
+            NestedType::Primitive { number_of_bytes, native_type } => {
+                format!("Primitive<{}, {}>", number_of_bytes.to_string(), native_type)
             }
             NestedType::Bytes => "Bytes".to_string(),
             NestedType::Address => "Address".to_string(),
@@ -194,13 +195,13 @@ impl NestedType {
 
     pub fn size(&self) -> usize {
         match self {
-            NestedType::Primitive { number_of_bytes } => {*number_of_bytes as usize}
-            NestedType::Bytes => {32}
-            NestedType::Address => {20}
-            NestedType::Mapping { .. } => {32}
-            NestedType::Struct { label: _, members: _, number_of_bytes } => {*number_of_bytes as usize}
-            NestedType::DynamicArray { .. } => {32}
-            NestedType::StaticArray { value: _, number_of_bytes } => {*number_of_bytes as usize}
+            NestedType::Primitive { number_of_bytes, .. } => { *number_of_bytes as usize }
+            NestedType::Bytes => { 32 }
+            NestedType::Address => { 20 }
+            NestedType::Mapping { .. } => { 32 }
+            NestedType::Struct { label: _, members: _, number_of_bytes } => { *number_of_bytes as usize }
+            NestedType::DynamicArray { .. } => { 32 }
+            NestedType::StaticArray { value: _, number_of_bytes } => { *number_of_bytes as usize }
         }
     }
 }
@@ -236,7 +237,7 @@ impl StorageLayout {
                 self.collect_unique_types(&nested_type, &mut nested_types, &mut unique_representations);
             }
         }
-        let last_member = &member_defs[member_defs.len()-1];
+        let last_member = &member_defs[member_defs.len() - 1];
         let last_member_size_slots = ceil_div(last_member.type_def.size(), 32);
         let estimated_struct_size = (last_member.member_info.slot + last_member_size_slots as u64) * 32;
         if size != 0 {
@@ -255,12 +256,16 @@ impl StorageLayout {
         let type_def = self.types.as_ref().expect("Types map is None")
             .get(type_name).expect("No type definition found for {}");
         match type_def {
-            MemberType::Primitive { label: _, number_of_bytes } => Some(NestedType::Primitive { number_of_bytes: *number_of_bytes }),
+            MemberType::Primitive { label: _, number_of_bytes } => {
+                // TODO: label -> native_type
+                let native_type = "U256".to_string();
+                Some(NestedType::Primitive { number_of_bytes: *number_of_bytes, native_type: native_type })
+            }
             MemberType::Bytes { .. } => Some(NestedType::Bytes),
             MemberType::Address => Some(NestedType::Address),
             MemberType::Mapping { key, value, .. } => {
                 let key_type = match self.traverse_type(key) {
-                    Some(NestedType::Primitive { number_of_bytes }) => Some(NestedType::Primitive { number_of_bytes }),
+                    Some(NestedType::Primitive { number_of_bytes, native_type }) => Some(NestedType::Primitive { number_of_bytes, native_type }),
                     Some(NestedType::Bytes) => Some(NestedType::Bytes),
                     Some(NestedType::Address) => Some(NestedType::Address),
                     _ => panic!("Key type must be Primitive or Bytes"),

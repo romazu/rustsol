@@ -1,4 +1,5 @@
 use std::fmt::Debug;
+use std::marker::PhantomData;
 use std::sync::Arc;
 use alloy_primitives::U256;
 use crate::types::{Mapping, SlotsGetterSetter};
@@ -8,14 +9,15 @@ use crate::utils::vec_u256_to_vec_bytes;
 
 #[derive(Derivative, Default)]
 #[derivative(Debug)]
-pub struct Primitive<const SIZE: usize> {
+pub struct Primitive<const SIZE: usize, NativeType> {
     __slot: U256,
     __offset: usize,
     #[derivative(Debug = "ignore")]
     __slots_getter: Option<Arc<dyn SlotsGetter>>,
+    __marker: PhantomData<NativeType>,
 }
 
-impl<const SIZE: usize> Primitive<SIZE> {
+impl<const SIZE: usize, NativeType: From<U256>> Primitive<SIZE, NativeType> {
     pub fn slot(&self) -> U256 {
         self.__slot
     }
@@ -36,9 +38,9 @@ impl<const SIZE: usize> Primitive<SIZE> {
     }
 }
 
-impl<const SIZE: usize> Position for Primitive<SIZE> {
+impl<const SIZE: usize, NativeType> Position for Primitive<SIZE, NativeType> {
     fn from_position(slot: U256, offset: usize) -> Self {
-        Primitive { __slot: slot, __offset: offset, __slots_getter: None }  // Use the conversion from U256 to u64
+        Primitive { __slot: slot, __offset: offset, __slots_getter: None, __marker: PhantomData }
     }
 
     fn size() -> usize {
@@ -46,18 +48,19 @@ impl<const SIZE: usize> Position for Primitive<SIZE> {
     }
 }
 
-impl<const SIZE: usize> SlotsGetterSetter for Primitive<SIZE> {
+impl<const SIZE: usize, NativeType> SlotsGetterSetter for Primitive<SIZE, NativeType> {
     fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
         self.__slots_getter = Some(getter);
     }
 }
 
-impl<const SIZE: usize> Value for Primitive<SIZE> {
-    // TODO: Change to concrete values type like u64 and bool.
-    type ValueType = U256;
+impl<const SIZE: usize, NativeType: From<U256>> Value for Primitive<SIZE, NativeType> {
+    type ValueType = NativeType;
 
     fn get_value_from_slots_content(&self, slot_values: Vec<U256>) -> Result<Self::ValueType, String> {
         let bytes = slot_values[0].to_le_bytes::<{ U256::BYTES }>();
-        Ok(U256::from_le_slice(&bytes[self.__offset..self.__offset + SIZE]))
+        let value_u256 = U256::from_le_slice(&bytes[self.__offset..self.__offset + SIZE]);
+        Ok(value_u256.into())
     }
 }
+

@@ -12,10 +12,10 @@ pub struct Augur {
     __slot: U256,
     #[derivative(Debug = "ignore")]
     __slots_getter: Option<Arc<dyn SlotsGetter>>,
-    pub markets: Mapping<AddressKey, Primitive<1>>,
-    pub universes: Mapping<AddressKey, Primitive<1>>,
-    pub crowdsourcers: Mapping<AddressKey, Primitive<1>>,
-    pub trustedSender: Mapping<AddressKey, Primitive<1>>,
+    pub markets: Mapping<AddressKey, Primitive<1, U256>>,
+    pub universes: Mapping<AddressKey, Primitive<1, U256>>,
+    pub crowdsourcers: Mapping<AddressKey, Primitive<1, U256>>,
+    pub trustedSender: Mapping<AddressKey, Primitive<1, U256>>,
     pub marketCreationData: Mapping<
         AddressKey,
         IAugurCreationDataGetterMarketCreationData,
@@ -24,9 +24,9 @@ pub struct Augur {
     pub registry: Mapping<PrimitiveKey, Address>,
     pub time: Address,
     pub genesisUniverse: Address,
-    pub forkCounter: Primitive<32>,
-    pub universeForkIndex: Mapping<AddressKey, Primitive<32>>,
-    pub upgradeTimestamp: Primitive<32>,
+    pub forkCounter: Primitive<32, U256>,
+    pub universeForkIndex: Mapping<AddressKey, Primitive<32, U256>>,
+    pub upgradeTimestamp: Primitive<32, U256>,
     pub cash: Address,
 }
 #[derive(Derivative)]
@@ -37,10 +37,10 @@ pub struct IAugurCreationDataGetterMarketCreationData {
     __slots_getter: Option<Arc<dyn SlotsGetter>>,
     pub extraInfo: Bytes,
     pub marketCreator: Address,
-    pub outcomes: DynamicArray<Primitive<32>>,
-    pub displayPrices: DynamicArray<Primitive<32>>,
-    pub marketType: Primitive<1>,
-    pub recommendedTradeInterval: Primitive<32>,
+    pub outcomes: DynamicArray<Primitive<32, U256>>,
+    pub displayPrices: DynamicArray<Primitive<32, U256>>,
+    pub marketType: Primitive<1, U256>,
+    pub recommendedTradeInterval: Primitive<32, U256>,
 }
 impl Augur {
     pub fn new() -> Self {
@@ -107,10 +107,10 @@ impl SlotsGetterSetter for Augur {
 }
 #[derive(Debug)]
 pub struct AugurValue {
-    pub markets: Mapping<AddressKey, Primitive<1>>,
-    pub universes: Mapping<AddressKey, Primitive<1>>,
-    pub crowdsourcers: Mapping<AddressKey, Primitive<1>>,
-    pub trustedSender: Mapping<AddressKey, Primitive<1>>,
+    pub markets: Mapping<AddressKey, Primitive<1, U256>>,
+    pub universes: Mapping<AddressKey, Primitive<1, U256>>,
+    pub crowdsourcers: Mapping<AddressKey, Primitive<1, U256>>,
+    pub trustedSender: Mapping<AddressKey, Primitive<1, U256>>,
     pub marketCreationData: Mapping<
         AddressKey,
         IAugurCreationDataGetterMarketCreationData,
@@ -120,7 +120,7 @@ pub struct AugurValue {
     pub time: alloy_primitives::Address,
     pub genesisUniverse: alloy_primitives::Address,
     pub forkCounter: U256,
-    pub universeForkIndex: Mapping<AddressKey, Primitive<32>>,
+    pub universeForkIndex: Mapping<AddressKey, Primitive<32, U256>>,
     pub upgradeTimestamp: U256,
     pub cash: alloy_primitives::Address,
 }

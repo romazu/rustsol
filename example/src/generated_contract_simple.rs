@@ -12,24 +12,27 @@ pub struct MyContract {
     __slot: U256,
     #[derivative(Debug = "ignore")]
     __slots_getter: Option<Arc<dyn SlotsGetter>>,
-    pub plainUint112: Primitive<14>,
-    pub dynamicArray: DynamicArray<Primitive<32>>,
-    pub dynamicArrayNested: DynamicArray<DynamicArray<Primitive<32>>>,
-    pub plainUint32: Primitive<4>,
+    pub plainUint112: Primitive<14, U256>,
+    pub dynamicArray: DynamicArray<Primitive<32, U256>>,
+    pub dynamicArrayNested: DynamicArray<DynamicArray<Primitive<32, U256>>>,
+    pub plainUint32: Primitive<4, U256>,
     pub plainAddress: Address,
     pub myStructNested: MyContractMyStructNested,
-    pub staticArray: StaticArray<160, Primitive<14>>,
+    pub staticArray: StaticArray<160, Primitive<14, U256>>,
     pub staticArrayLarge: StaticArray<128, MyContractMyStruct>,
-    pub staticArrayNestedSmall: StaticArray<128, StaticArray<32, Primitive<1>>>,
+    pub staticArrayNestedSmall: StaticArray<128, StaticArray<32, Primitive<1, U256>>>,
     pub dynamicArrayStruct: DynamicArray<MyContractMyStructNested>,
     pub dynamicArraySmall: DynamicArray<MyContractMyStructSmall>,
-    pub myMapping1: Mapping<PrimitiveKey, Primitive<32>>,
-    pub myMapping2: Mapping<BytesKey, Primitive<32>>,
-    pub myMappingBool: Mapping<PrimitiveKey, Primitive<1>>,
+    pub myMapping1: Mapping<PrimitiveKey, Primitive<32, U256>>,
+    pub myMapping2: Mapping<BytesKey, Primitive<32, U256>>,
+    pub myMappingBool: Mapping<PrimitiveKey, Primitive<1, U256>>,
     pub myAddressMappingNested: Mapping<AddressKey, Mapping<AddressKey, Address>>,
-    pub myNestedMapping: Mapping<PrimitiveKey, Mapping<PrimitiveKey, Primitive<32>>>,
-    pub myEnum: Primitive<1>,
-    pub ___gap___: StaticArray<1248, Primitive<32>>,
+    pub myNestedMapping: Mapping<
+        PrimitiveKey,
+        Mapping<PrimitiveKey, Primitive<32, U256>>,
+    >,
+    pub myEnum: Primitive<1, U256>,
+    pub ___gap___: StaticArray<1248, Primitive<32, U256>>,
     pub plainString: Bytes,
 }
 #[derive(Derivative)]
@@ -48,7 +51,7 @@ pub struct MyContractMyStruct {
     #[derivative(Debug = "ignore")]
     __slots_getter: Option<Arc<dyn SlotsGetter>>,
     pub myAddress: Address,
-    pub myUint: Primitive<32>,
+    pub myUint: Primitive<32, U256>,
 }
 #[derive(Derivative)]
 #[derivative(Debug)]
@@ -56,8 +59,8 @@ pub struct MyContractMyStructSmall {
     __slot: U256,
     #[derivative(Debug = "ignore")]
     __slots_getter: Option<Arc<dyn SlotsGetter>>,
-    pub smallInt1: Primitive<4>,
-    pub smallInt2: Primitive<4>,
+    pub smallInt1: Primitive<4, U256>,
+    pub smallInt2: Primitive<4, U256>,
 }
 impl MyContract {
     pub fn new() -> Self {
@@ -150,11 +153,14 @@ pub struct MyContractValue {
     pub staticArrayNestedSmall: Vec<Vec<U256>>,
     pub dynamicArrayStruct: Vec<MyContractMyStructNestedValue>,
     pub dynamicArraySmall: Vec<MyContractMyStructSmallValue>,
-    pub myMapping1: Mapping<PrimitiveKey, Primitive<32>>,
-    pub myMapping2: Mapping<BytesKey, Primitive<32>>,
-    pub myMappingBool: Mapping<PrimitiveKey, Primitive<1>>,
+    pub myMapping1: Mapping<PrimitiveKey, Primitive<32, U256>>,
+    pub myMapping2: Mapping<BytesKey, Primitive<32, U256>>,
+    pub myMappingBool: Mapping<PrimitiveKey, Primitive<1, U256>>,
     pub myAddressMappingNested: Mapping<AddressKey, Mapping<AddressKey, Address>>,
-    pub myNestedMapping: Mapping<PrimitiveKey, Mapping<PrimitiveKey, Primitive<32>>>,
+    pub myNestedMapping: Mapping<
+        PrimitiveKey,
+        Mapping<PrimitiveKey, Primitive<32, U256>>,
+    >,
     pub myEnum: U256,
     pub ___gap___: Vec<U256>,
     pub plainString: Vec<u8>,
