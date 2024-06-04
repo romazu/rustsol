@@ -1,139 +1,67 @@
-use std::str::FromStr;
-use alloy_primitives::{Address, U256};
+use alloy_primitives::{Address, I256, U256};
 use crate::utils::{address_to_bytes32, bool_to_bytes32, keccak256, u256_to_bytes32};
 
-#[derive(Debug, Default)]
-pub struct PrimitiveKey(pub [u8; 32]);
-
-impl PrimitiveKey {
-    fn from_be_bytes(bytes: [u8; 32]) -> Self {
-        PrimitiveKey(bytes)
-    }
-}
-
-macro_rules! impl_from_for {
-    ($target:ty, $($type:ty),+) => {
+macro_rules! impl_key_for {
+    ($($type:ty),+) => {
         $(
-            impl From<$type> for $target {
-                fn from(value: $type) -> Self {
+            impl Key for $type {
+                fn to_bytes(self) -> [u8; 32] {
                     #[allow(unused_comparisons)]
-                    let mut bytes = if value < 0 {
+                    let mut bytes = if self < 0 {
                         [0xFF; 32]
                     } else {
                         [0u8; 32]
                     };
 
-                    let be_bytes = value.to_be_bytes();
+                    let be_bytes = self.to_be_bytes();
                     let start = 32 - be_bytes.len();
                     bytes[start..].copy_from_slice(&be_bytes);
-
-                    <$target>::from_be_bytes(bytes)
+                    bytes
                 }
             }
         )+
     };
 }
 
-impl_from_for!(PrimitiveKey, u8, u16, u32, u64, u128, i8, i16, i32, i64, i128);
-impl From<U256> for PrimitiveKey {
-    fn from(value: U256) -> Self {
-        PrimitiveKey(u256_to_bytes32(value))
-    }
-}
-impl From<bool> for PrimitiveKey {
-    fn from(value: bool) -> Self {
-        PrimitiveKey(bool_to_bytes32(value))
+impl_key_for!(i8, i16, i32, i64, i128, u8, u16, u32, u64, u128);
+impl Key for U256 {
+    fn to_bytes(self) -> [u8; 32] {
+        self.to_be_bytes()
     }
 }
 
-#[derive(Debug, Default)]
-pub struct BytesKey(pub [u8; 32]);
-
-impl From<&str> for BytesKey {
-    fn from(value: &str) -> Self {
-        BytesKey(keccak256(value.as_bytes()))
+impl Key for I256 {
+    fn to_bytes(self) -> [u8; 32] {
+        self.to_be_bytes()
     }
 }
 
-impl From<String> for BytesKey {
-    fn from(value: String) -> Self {
-        BytesKey::from(value.as_str())
+impl Key for bool {
+    fn to_bytes(self) -> [u8; 32] {
+        bool_to_bytes32(self)
     }
 }
 
-impl From<&String> for BytesKey {
-    fn from(value: &String) -> Self {
-        BytesKey::from(value.as_str())
-    }
-}
-
-impl From<&[u8]> for BytesKey {
-    fn from(value: &[u8]) -> Self {
+impl Key for Vec<u8> {
+    fn to_bytes(self) -> [u8; 32] {
         let mut bytes = [0u8; 32];
-        bytes.copy_from_slice(&keccak256(value)[..32]);
-        BytesKey(bytes)
+        bytes.copy_from_slice(&keccak256(self.as_slice()));
+        bytes
     }
 }
 
-impl From<Vec<u8>> for BytesKey {
-    fn from(value: Vec<u8>) -> Self {
-        BytesKey::from(value.as_slice())
+impl Key for String {
+    fn to_bytes(self) -> [u8; 32] {
+        keccak256(self.as_bytes())
     }
 }
 
-impl From<&Vec<u8>> for BytesKey {
-    fn from(value: &Vec<u8>) -> Self {
-        BytesKey::from(value.as_slice())
-    }
-}
-
-
-#[derive(Debug, Default)]
-pub struct AddressKey(pub [u8; 32]);
-
-impl From<Address> for AddressKey {
-    fn from(value: Address) -> Self {
-        AddressKey(address_to_bytes32(value))
-    }
-}
-
-impl From<&str> for AddressKey {
-    fn from(value: &str) -> Self {
-        let address = Address::from_str(value).unwrap();
-        AddressKey(address_to_bytes32(address))
-    }
-}
-
-impl From<String> for AddressKey {
-    fn from(value: String) -> Self {
-        AddressKey::from(value.as_str())
-    }
-}
-
-impl From<&String> for AddressKey {
-    fn from(value: &String) -> Self {
-        AddressKey::from(value.as_str())
+impl Key for Address {
+    fn to_bytes(self) -> [u8; 32] {
+        address_to_bytes32(self)
     }
 }
 
 pub trait Key {
     fn to_bytes(self) -> [u8; 32];
-}
-
-impl Key for PrimitiveKey {
-    fn to_bytes(self) -> [u8; 32] {
-        self.0
-    }
-}
-
-impl Key for BytesKey {
-    fn to_bytes(self) -> [u8; 32] {
-        self.0
-    }
-}
-
-impl Key for AddressKey {
-    fn to_bytes(self) -> [u8; 32] {
-        self.0
-    }
 }

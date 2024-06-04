@@ -31,8 +31,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut contract = Augur::new();
     contract.set_slots_getter(slots_getter);
     let market_address = address!("51A18333479472D1250Ee5063910079fc0B9b801");
-    let bytes = contract.marketCreationData.at(market_address).extraInfo.get_value().unwrap();
-    println!("marketCreationData[].extraInfo.get_value()     {}", String::from_utf8_lossy(&bytes));
+    let value_string = contract.marketCreationData.at(market_address).extraInfo.get_value().unwrap();
+    println!("marketCreationData[].extraInfo.get_value()     {}", value_string);
     println!("cash.get_value()                               {}", contract.cash.get_value().unwrap());
     println!("marketCreationData[].marketCreator.get_value() {}", contract.marketCreationData.at(market_address).marketCreator.get_value().unwrap());
     println!("marketCreationData.get_value_at()              {:?}", contract.marketCreationData.get_value_at(market_address).unwrap());
@@ -41,5 +41,4 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // println!("contract.get_value()                           {:?}", contract.get_value());
 
     Ok(())
-
 }

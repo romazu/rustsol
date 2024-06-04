@@ -3,7 +3,6 @@ use std::sync::Arc;
 use rustsol::types::Derivative;
 use rustsol::types::{Position, SlotsGetter, SlotsGetterSetter, Value};
 use rustsol::types::{Primitive, Bytes, Mapping, DynamicArray, StaticArray};
-use rustsol::types::{PrimitiveKey, BytesKey, AddressKey};
 use alloy_primitives::{I256, U256, Address};
 #[derive(Derivative)]
 #[derivative(Debug)]
@@ -16,9 +15,9 @@ pub struct UniswapV3Pool {
     pub feeGrowthGlobal1X128: Primitive<32, U256>,
     pub protocolFees: UniswapV3PoolProtocolFees,
     pub liquidity: Primitive<16, u128>,
-    pub ticks: Mapping<PrimitiveKey, TickInfo>,
-    pub tickBitmap: Mapping<PrimitiveKey, Primitive<32, U256>>,
-    pub positions: Mapping<PrimitiveKey, PositionInfo>,
+    pub ticks: Mapping<i32, TickInfo>,
+    pub tickBitmap: Mapping<i16, Primitive<32, U256>>,
+    pub positions: Mapping<U256, PositionInfo>,
     pub observations: StaticArray<2097120, OracleObservation>,
 }
 #[derive(Derivative)]
@@ -147,9 +146,9 @@ pub struct UniswapV3PoolValue {
     pub feeGrowthGlobal1X128: U256,
     pub protocolFees: UniswapV3PoolProtocolFeesValue,
     pub liquidity: u128,
-    pub ticks: Mapping<PrimitiveKey, TickInfo>,
-    pub tickBitmap: Mapping<PrimitiveKey, Primitive<32, U256>>,
-    pub positions: Mapping<PrimitiveKey, PositionInfo>,
+    pub ticks: Mapping<i32, TickInfo>,
+    pub tickBitmap: Mapping<i16, Primitive<32, U256>>,
+    pub positions: Mapping<U256, PositionInfo>,
     pub observations: Vec<OracleObservationValue>,
 }
 impl Value for UniswapV3Pool {

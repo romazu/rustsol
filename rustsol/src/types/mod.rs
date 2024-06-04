@@ -8,10 +8,9 @@ mod mapping;
 mod dynamic_array;
 mod static_array;
 
-pub use traits::{Position, SlotsGetter, SlotsGetterSetter, Value};
+pub use traits::{Position, SlotsGetter, SlotsGetterSetter, Value, FromLESlice};
 pub use primitive::Primitive;
 pub use bytes::Bytes;
-pub use keys::{PrimitiveKey, BytesKey, AddressKey};
 pub use mapping::Mapping;
 pub use dynamic_array::DynamicArray;
 pub use static_array::StaticArray;

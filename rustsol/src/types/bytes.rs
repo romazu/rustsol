@@ -1,8 +1,9 @@
+use std::marker::PhantomData;
 use std::sync::Arc;
-use alloy_primitives::{FixedBytes, U256};
+use alloy_primitives::{Address, FixedBytes, U256};
 use derivative::Derivative;
 use crate::utils::{bytes32_to_u256, ceil_div, keccak256, u256_to_bytes32, u256_to_u64, vec_u256_to_vec_bytes};
-use crate::types::{Primitive, Value};
+use crate::types::{FromLESlice, Primitive, Value};
 use crate::types::{Position, SlotsGetter, SlotsGetterSetter};
 
 // In particular: if the data is at most 31 bytes long, the elements are stored in the higher-order
@@ -12,13 +13,14 @@ use crate::types::{Position, SlotsGetter, SlotsGetterSetter};
 // array by checking if the lowest bit is set: short (not set) and long (set).
 #[derive(Derivative, Default)]
 #[derivative(Debug)]
-pub struct Bytes {
+pub struct Bytes<NativeType> {
     __slot: U256,
     #[derivative(Debug = "ignore")]
     __slots_getter: Option<Arc<dyn SlotsGetter>>,
+    __marker: PhantomData<NativeType>,
 }
 
-impl Bytes {
+impl<NativeType: FromLESlice> Bytes<NativeType> {
     pub fn slot(&self) -> U256 {
         self.__slot
     }
@@ -39,9 +41,9 @@ impl Bytes {
     }
 }
 
-impl Position for Bytes {
+impl<NativeType> Position for Bytes<NativeType> {
     fn from_position(slot: U256, _: usize) -> Self {
-        Bytes { __slot: slot, __slots_getter: None }
+        Bytes { __slot: slot, __slots_getter: None, __marker: PhantomData }
     }
 
     fn size() -> usize {
@@ -49,14 +51,14 @@ impl Position for Bytes {
     }
 }
 
-impl SlotsGetterSetter for Bytes {
+impl<NativeType> SlotsGetterSetter for Bytes<NativeType> {
     fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
         self.__slots_getter = Some(getter);
     }
 }
 
-impl Value for Bytes {
-    type ValueType = Vec<u8>;
+impl<NativeType: FromLESlice> Value for Bytes<NativeType> {
+    type ValueType = NativeType;
 
     fn get_value_from_slots_content(&self, slot_values: Vec<U256>) -> Result<Self::ValueType, String> {
         let getter = self.__slots_getter.as_ref().expect("No slots getter");
@@ -68,12 +70,24 @@ impl Value for Bytes {
             let element_slot_values = getter.get_slots(self.storage(), string_len_slots)
                 .map_err(|err| format!("Failed to get slot values: {}", err))?;
             let bytes = vec_u256_to_vec_bytes(&element_slot_values, 0, string_len_slots);
-            Ok(bytes[0..string_len_bytes as usize].to_vec())
+            Ok(NativeType::from(&bytes[0..string_len_bytes as usize]))
         } else {
             let string_len = base_slot_value.byte(0) / 2;
             // let bytes = Vec::from(&bytes[0..string_len as usize]);
             let bytes = base_slot_value.to_be_bytes::<{ U256::BYTES }>();
-            Ok(bytes[0..string_len as usize].to_vec())
+            Ok(NativeType::from(&bytes[0..string_len as usize]))
         }
+    }
+}
+
+impl FromLESlice for Vec<u8> {
+    fn from(bytes: &[u8]) -> Self {
+        bytes.to_vec()
+    }
+}
+
+impl FromLESlice for String {
+    fn from(bytes: &[u8]) -> Self {
+        String::from_utf8_lossy(bytes).to_string()
     }
 }

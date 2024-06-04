@@ -3,7 +3,6 @@ use std::sync::Arc;
 use rustsol::types::Derivative;
 use rustsol::types::{Position, SlotsGetter, SlotsGetterSetter, Value};
 use rustsol::types::{Primitive, Bytes, Mapping, DynamicArray, StaticArray};
-use rustsol::types::{PrimitiveKey, BytesKey, AddressKey};
 use alloy_primitives::{I256, U256, Address};
 #[derive(Derivative)]
 #[derivative(Debug)]
@@ -11,20 +10,17 @@ pub struct Augur {
     __slot: U256,
     #[derivative(Debug = "ignore")]
     __slots_getter: Option<Arc<dyn SlotsGetter>>,
-    pub markets: Mapping<AddressKey, Primitive<1, bool>>,
-    pub universes: Mapping<AddressKey, Primitive<1, bool>>,
-    pub crowdsourcers: Mapping<AddressKey, Primitive<1, bool>>,
-    pub trustedSender: Mapping<AddressKey, Primitive<1, bool>>,
-    pub marketCreationData: Mapping<
-        AddressKey,
-        IAugurCreationDataGetterMarketCreationData,
-    >,
+    pub markets: Mapping<Address, Primitive<1, bool>>,
+    pub universes: Mapping<Address, Primitive<1, bool>>,
+    pub crowdsourcers: Mapping<Address, Primitive<1, bool>>,
+    pub trustedSender: Mapping<Address, Primitive<1, bool>>,
+    pub marketCreationData: Mapping<Address, IAugurCreationDataGetterMarketCreationData>,
     pub uploader: Primitive<20, Address>,
-    pub registry: Mapping<PrimitiveKey, Primitive<20, Address>>,
+    pub registry: Mapping<U256, Primitive<20, Address>>,
     pub time: Primitive<20, Address>,
     pub genesisUniverse: Primitive<20, Address>,
     pub forkCounter: Primitive<32, U256>,
-    pub universeForkIndex: Mapping<AddressKey, Primitive<32, U256>>,
+    pub universeForkIndex: Mapping<Address, Primitive<32, U256>>,
     pub upgradeTimestamp: Primitive<32, U256>,
     pub cash: Primitive<20, Address>,
 }
@@ -34,7 +30,7 @@ pub struct IAugurCreationDataGetterMarketCreationData {
     __slot: U256,
     #[derivative(Debug = "ignore")]
     __slots_getter: Option<Arc<dyn SlotsGetter>>,
-    pub extraInfo: Bytes,
+    pub extraInfo: Bytes<String>,
     pub marketCreator: Primitive<20, Address>,
     pub outcomes: DynamicArray<Primitive<32, U256>>,
     pub displayPrices: DynamicArray<Primitive<32, I256>>,
@@ -106,20 +102,17 @@ impl SlotsGetterSetter for Augur {
 }
 #[derive(Debug)]
 pub struct AugurValue {
-    pub markets: Mapping<AddressKey, Primitive<1, bool>>,
-    pub universes: Mapping<AddressKey, Primitive<1, bool>>,
-    pub crowdsourcers: Mapping<AddressKey, Primitive<1, bool>>,
-    pub trustedSender: Mapping<AddressKey, Primitive<1, bool>>,
-    pub marketCreationData: Mapping<
-        AddressKey,
-        IAugurCreationDataGetterMarketCreationData,
-    >,
+    pub markets: Mapping<Address, Primitive<1, bool>>,
+    pub universes: Mapping<Address, Primitive<1, bool>>,
+    pub crowdsourcers: Mapping<Address, Primitive<1, bool>>,
+    pub trustedSender: Mapping<Address, Primitive<1, bool>>,
+    pub marketCreationData: Mapping<Address, IAugurCreationDataGetterMarketCreationData>,
     pub uploader: Address,
-    pub registry: Mapping<PrimitiveKey, Primitive<20, Address>>,
+    pub registry: Mapping<U256, Primitive<20, Address>>,
     pub time: Address,
     pub genesisUniverse: Address,
     pub forkCounter: U256,
-    pub universeForkIndex: Mapping<AddressKey, Primitive<32, U256>>,
+    pub universeForkIndex: Mapping<Address, Primitive<32, U256>>,
     pub upgradeTimestamp: U256,
     pub cash: Address,
 }
@@ -220,7 +213,7 @@ impl SlotsGetterSetter for IAugurCreationDataGetterMarketCreationData {
 }
 #[derive(Debug)]
 pub struct IAugurCreationDataGetterMarketCreationDataValue {
-    pub extraInfo: Vec<u8>,
+    pub extraInfo: String,
     pub marketCreator: Address,
     pub outcomes: Vec<U256>,
     pub displayPrices: Vec<I256>,

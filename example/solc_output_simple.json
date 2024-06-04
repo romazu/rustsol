@@ -155,6 +155,14 @@
               "offset": 0,
               "slot": "67",
               "type": "t_string_storage"
+            },
+            {
+              "astId": 93,
+              "contract": "contract.sol:MyContract",
+              "label": "plainBytes",
+              "offset": 0,
+              "slot": "68",
+              "type": "t_bytes_storage"
             }
           ],
           "types": {
@@ -221,6 +229,11 @@
               "encoding": "inplace",
               "label": "bool",
               "numberOfBytes": "1"
+            },
+            "t_bytes_storage": {
+              "encoding": "bytes",
+              "label": "bytes",
+              "numberOfBytes": "32"
             },
             "t_enum(MyEnum)82": {
               "encoding": "inplace",

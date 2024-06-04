@@ -2,7 +2,7 @@ use std::fmt::Debug;
 use std::marker::PhantomData;
 use std::sync::Arc;
 use alloy_primitives::{I256, U256, Address};
-use crate::types::{Mapping, SlotsGetterSetter};
+use crate::types::{FromLESlice, Mapping, SlotsGetterSetter};
 use crate::types::traits::{Position, SlotsGetter, Value};
 use derivative::Derivative;
 use crate::utils::vec_u256_to_vec_bytes;
@@ -63,10 +63,6 @@ impl<const SIZE: usize, NativeType: FromLESlice> Value for Primitive<SIZE, Nativ
     }
 }
 
-pub trait FromLESlice {
-    fn from(bytes: &[u8]) -> Self;
-}
-
 macro_rules! from_le_slice_impl_signed {
     ($($t:ty),+) => {
         $(
@@ -110,6 +106,7 @@ impl FromLESlice for bool {
         bytes[0] == 1
     }
 }
+
 impl FromLESlice for Address {
     fn from(bytes: &[u8]) -> Self {
         // Convert little-endian bytes to big-endian.

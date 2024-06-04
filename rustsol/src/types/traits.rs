@@ -19,3 +19,7 @@ pub trait Value {
     type ValueType;
     fn get_value_from_slots_content(&self, slot_values: Vec<U256>) -> Result<Self::ValueType, String>;
 }
+
+pub trait FromLESlice {
+    fn from(bytes: &[u8]) -> Self;
+}

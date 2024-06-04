@@ -3,7 +3,6 @@ use std::sync::Arc;
 use rustsol::types::Derivative;
 use rustsol::types::{Position, SlotsGetter, SlotsGetterSetter, Value};
 use rustsol::types::{Primitive, Bytes, Mapping, DynamicArray, StaticArray};
-use rustsol::types::{PrimitiveKey, BytesKey, AddressKey};
 use alloy_primitives::{I256, U256, Address};
 #[derive(Derivative)]
 #[derivative(Debug)]
@@ -22,20 +21,18 @@ pub struct MyContract {
     pub staticArrayNestedSmall: StaticArray<128, StaticArray<32, Primitive<1, u8>>>,
     pub dynamicArrayStruct: DynamicArray<MyContractMyStructNested>,
     pub dynamicArraySmall: DynamicArray<MyContractMyStructSmall>,
-    pub myMapping1: Mapping<PrimitiveKey, Primitive<32, U256>>,
-    pub myMapping2: Mapping<BytesKey, Primitive<32, U256>>,
-    pub myMappingBool: Mapping<PrimitiveKey, Primitive<1, bool>>,
+    pub myMapping1: Mapping<U256, Primitive<32, U256>>,
+    pub myMapping2: Mapping<String, Primitive<32, U256>>,
+    pub myMappingBool: Mapping<bool, Primitive<1, bool>>,
     pub myAddressMappingNested: Mapping<
-        AddressKey,
-        Mapping<AddressKey, Primitive<20, Address>>,
+        Address,
+        Mapping<Address, Primitive<20, Address>>,
     >,
-    pub myNestedMapping: Mapping<
-        PrimitiveKey,
-        Mapping<PrimitiveKey, Primitive<32, U256>>,
-    >,
+    pub myNestedMapping: Mapping<U256, Mapping<U256, Primitive<32, U256>>>,
     pub myEnum: Primitive<1, U256>,
     pub ___gap___: StaticArray<1248, Primitive<32, U256>>,
-    pub plainString: Bytes,
+    pub plainString: Bytes<String>,
+    pub plainBytes: Bytes<Vec<u8>>,
 }
 #[derive(Derivative)]
 #[derivative(Debug)]
@@ -94,18 +91,19 @@ impl MyContract {
             myEnum: Primitive::from_position(slot + U256::from(27), 0),
             ___gap___: StaticArray::from_position(slot + U256::from(28), 0),
             plainString: Bytes::from_position(slot + U256::from(67), 0),
+            plainBytes: Bytes::from_position(slot + U256::from(68), 0),
         }
     }
     pub fn slot(&self) -> U256 {
         self.__slot
     }
     pub fn position(&self) -> (U256, usize, usize) {
-        (self.__slot, 0, 2176)
+        (self.__slot, 0, 2208)
     }
     pub fn get_value(&self) -> Result<<Self as Value>::ValueType, String> {
         let getter = self.__slots_getter.as_ref().expect("No slots getter");
         let slot_values = getter
-            .get_slots(self.__slot, 68)
+            .get_slots(self.__slot, 69)
             .map_err(|err| format!("Failed to get slot values: {}", err))?;
         self.get_value_from_slots_content(slot_values)
     }
@@ -115,7 +113,7 @@ impl Position for MyContract {
         Self::from_position(slot, offset)
     }
     fn size() -> usize {
-        2176
+        2208
     }
 }
 impl SlotsGetterSetter for MyContract {
@@ -139,7 +137,8 @@ impl SlotsGetterSetter for MyContract {
         self.myNestedMapping.set_slots_getter(getter.clone());
         self.myEnum.set_slots_getter(getter.clone());
         self.___gap___.set_slots_getter(getter.clone());
-        self.plainString.set_slots_getter(getter.clone())
+        self.plainString.set_slots_getter(getter.clone());
+        self.plainBytes.set_slots_getter(getter.clone())
     }
 }
 #[derive(Debug)]
@@ -155,20 +154,18 @@ pub struct MyContractValue {
     pub staticArrayNestedSmall: Vec<Vec<u8>>,
     pub dynamicArrayStruct: Vec<MyContractMyStructNestedValue>,
     pub dynamicArraySmall: Vec<MyContractMyStructSmallValue>,
-    pub myMapping1: Mapping<PrimitiveKey, Primitive<32, U256>>,
-    pub myMapping2: Mapping<BytesKey, Primitive<32, U256>>,
-    pub myMappingBool: Mapping<PrimitiveKey, Primitive<1, bool>>,
+    pub myMapping1: Mapping<U256, Primitive<32, U256>>,
+    pub myMapping2: Mapping<String, Primitive<32, U256>>,
+    pub myMappingBool: Mapping<bool, Primitive<1, bool>>,
     pub myAddressMappingNested: Mapping<
-        AddressKey,
-        Mapping<AddressKey, Primitive<20, Address>>,
+        Address,
+        Mapping<Address, Primitive<20, Address>>,
     >,
-    pub myNestedMapping: Mapping<
-        PrimitiveKey,
-        Mapping<PrimitiveKey, Primitive<32, U256>>,
-    >,
+    pub myNestedMapping: Mapping<U256, Mapping<U256, Primitive<32, U256>>>,
     pub myEnum: U256,
     pub ___gap___: Vec<U256>,
-    pub plainString: Vec<u8>,
+    pub plainString: String,
+    pub plainBytes: Vec<u8>,
 }
 impl Value for MyContract {
     type ValueType = MyContractValue;
@@ -235,6 +232,9 @@ impl Value for MyContract {
             plainString: self
                 .plainString
                 .get_value_from_slots_content(slot_values[67..68].to_vec())?,
+            plainBytes: self
+                .plainBytes
+                .get_value_from_slots_content(slot_values[68..69].to_vec())?,
         })
     }
 }

@@ -38,4 +38,5 @@ contract MyContract {
 //    uint8[31] public ___gap___;
     uint256[39] public ___gap___;
     string public plainString;
+    bytes public plainBytes;
 }

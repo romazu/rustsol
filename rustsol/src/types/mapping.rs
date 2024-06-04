@@ -4,7 +4,7 @@ use std::sync::Arc;
 use alloy_primitives::U256;
 use derivative::Derivative;
 use crate::utils::{bytes32_to_u256, ceil_div, index_to_position, keccak256_concat, u256_to_bytes32, u256_to_u64};
-use crate::types::{PrimitiveKey, BytesKey, AddressKey, Value, DynamicArray};
+use crate::types::{Value, DynamicArray};
 use crate::types::{Position, SlotsGetter, SlotsGetterSetter};
 use crate::types::keys::Key;
 
@@ -14,14 +14,14 @@ use crate::types::keys::Key;
 // - for strings and byte arrays, h computes the keccak256 hash of the unpadded data.
 #[derive(Derivative)]
 #[derivative(Debug)]
-pub struct Mapping<KeyType, ElementType> {
+pub struct Mapping<KeyNativeType, ElementType> {
     __slot: U256,
-    __marker: PhantomData<(KeyType, ElementType)>,
+    __marker: PhantomData<(KeyNativeType, ElementType)>,
     #[derivative(Debug = "ignore")]
     __slots_getter: Option<Arc<dyn SlotsGetter>>,
 }
 
-impl<KeyType: Key, ElementType> Mapping<KeyType, ElementType> {
+impl<KeyNativeType: Key, ElementType> Mapping<KeyNativeType, ElementType> {
     pub fn slot(&self) -> U256 {
         self.__slot
     }
@@ -50,13 +50,13 @@ impl<KeyType: Key, ElementType> Mapping<KeyType, ElementType> {
         bytes32_to_u256(value_slot_bytes)
     }
 
-    pub fn get_value_at<T>(&self, key: T) -> Result<<ElementType as Value>::ValueType, String>
+    pub fn get_value_at(&self, key: KeyNativeType) -> Result<<ElementType as Value>::ValueType, String>
         where
-            T: Into<KeyType>,
+            KeyNativeType: Key,
             ElementType: Position + Value + SlotsGetterSetter,
     {
         let getter = self.__slots_getter.as_ref().expect("No slots getter");
-        let element_slot = self.storage_at_bytes(key.into().to_bytes());
+        let element_slot = self.storage_at_bytes(key.to_bytes());
         let element_size_slots = ceil_div(ElementType::size(), 32);
         let element_slot_values = getter.get_slots(element_slot, element_size_slots)
             .map_err(|err| format!("Failed to get slot values: {}", err))?;
@@ -64,9 +64,9 @@ impl<KeyType: Key, ElementType> Mapping<KeyType, ElementType> {
     }
 }
 
-impl<KeyType, ElementType> Position for Mapping<KeyType, ElementType> {
+impl<KeyNativeType, ElementType> Position for Mapping<KeyNativeType, ElementType> {
     fn from_position(slot: U256, _: usize) -> Self {
-        Mapping::<KeyType, ElementType> { __slot: slot, __marker: PhantomData, __slots_getter: None }
+        Mapping::<KeyNativeType, ElementType> { __slot: slot, __marker: PhantomData, __slots_getter: None }
     }
 
     fn size() -> usize {
@@ -75,24 +75,24 @@ impl<KeyType, ElementType> Position for Mapping<KeyType, ElementType> {
 }
 
 
-impl<KeyType: Key, ElementType> Mapping<KeyType, ElementType> {
-    pub fn at<T>(&self, key: T) -> ElementType
+impl<KeyNativeType, ElementType> Mapping<KeyNativeType, ElementType> {
+    pub fn at(&self, key: KeyNativeType) -> ElementType
         where
-            T: Into<KeyType>,
+            KeyNativeType: Key,
             ElementType: Position + SlotsGetterSetter,
     {
-        let element_slot = self.storage_at_bytes(key.into().to_bytes());
+        let element_slot = self.storage_at_bytes(key.to_bytes());
         self.new_element(element_slot, 0)
     }
 }
 
-impl<KeyType: Debug, ElementType: Debug> SlotsGetterSetter for Mapping<KeyType, ElementType> {
+impl<KeyNativeType: Debug, ElementType: Debug> SlotsGetterSetter for Mapping<KeyNativeType, ElementType> {
     fn set_slots_getter(&mut self, getter: Arc<dyn SlotsGetter>) {
         self.__slots_getter = Some(getter);
     }
 }
 
-impl<KeyType, ElementType> Value for Mapping<KeyType, ElementType> {
+impl<KeyNativeType, ElementType> Value for Mapping<KeyNativeType, ElementType> {
     type ValueType = Self;
 
     fn get_value_from_slots_content(&self, _: Vec<U256>) -> Result<Self::ValueType, String> {
