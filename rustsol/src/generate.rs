@@ -142,10 +142,9 @@ pub fn generate_structs(nested_types: Vec<NestedType>) -> TokenStream {
         parse_str("use std::sync::Arc;").expect("Failed to parse"),
         parse_str("use rustsol::types::Derivative;").expect("Failed to parse"),
         parse_str("use rustsol::types::{Position, SlotsGetter, SlotsGetterSetter, Value};").expect("Failed to parse"),
-        parse_str("use rustsol::types::{Primitive, Bytes, Address, Mapping, DynamicArray, StaticArray};").expect("Failed to parse"),
+        parse_str("use rustsol::types::{Primitive, Bytes, Mapping, DynamicArray, StaticArray};").expect("Failed to parse"),
         parse_str("use rustsol::types::{PrimitiveKey, BytesKey, AddressKey};").expect("Failed to parse"),
-        parse_str("use alloy_primitives;").expect("Failed to parse"),
-        parse_str("use alloy_primitives::{I256, U256};").expect("Failed to parse"),
+        parse_str("use alloy_primitives::{I256, U256, Address};").expect("Failed to parse"),
     ];
     let imports_definition: TokenStream = imports_definition_items.into_iter().map(|item| item.into_token_stream()).collect();
 
@@ -163,7 +162,6 @@ fn get_type_name(nested_type: &NestedType) -> TokenStream {
     let type_name = match nested_type {
         NestedType::Primitive { .. } => "Primitive",
         NestedType::Bytes => "Bytes",
-        NestedType::Address => "Address",
         NestedType::Mapping { .. } => "Mapping",
         NestedType::Struct { label, .. } => label,
         NestedType::DynamicArray { .. } => "DynamicArray",
@@ -180,7 +178,6 @@ fn get_value_type_name(nested_type: &NestedType) -> TokenStream {
             quote! {#native_type_ident}
         }
         NestedType::Bytes => quote! {Vec<u8>},
-        NestedType::Address => quote! {alloy_primitives::Address},
         NestedType::Mapping { .. } => {
             // Mapping value type is Mapping itself.
             get_nested_type(nested_type)
@@ -212,13 +209,16 @@ fn get_nested_type(nested_type: &NestedType) -> TokenStream {
             quote! { Primitive<#number_of_bytes_literal, #native_type_ident> }
         }
         NestedType::Bytes => quote! { Bytes },
-        NestedType::Address => quote! { Address },
         NestedType::Mapping { key, value } => {
             let value_type = get_nested_type(value);
             let key_type_for_mapping = match key.as_ref() {
-                NestedType::Primitive { .. } => quote! { PrimitiveKey },
+                NestedType::Primitive { number_of_bytes: _, native_type } => {
+                    match native_type.as_str() {
+                        "Address" => quote! { AddressKey },
+                        _ => quote! { PrimitiveKey },
+                    }
+                }
                 NestedType::Bytes => quote! { BytesKey },
-                NestedType::Address => quote! { AddressKey },
                 _ => panic!("Bad key type")
             };
 

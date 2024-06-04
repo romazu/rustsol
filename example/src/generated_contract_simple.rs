@@ -2,10 +2,9 @@
 use std::sync::Arc;
 use rustsol::types::Derivative;
 use rustsol::types::{Position, SlotsGetter, SlotsGetterSetter, Value};
-use rustsol::types::{Primitive, Bytes, Address, Mapping, DynamicArray, StaticArray};
+use rustsol::types::{Primitive, Bytes, Mapping, DynamicArray, StaticArray};
 use rustsol::types::{PrimitiveKey, BytesKey, AddressKey};
-use alloy_primitives;
-use alloy_primitives::{I256, U256};
+use alloy_primitives::{I256, U256, Address};
 #[derive(Derivative)]
 #[derivative(Debug)]
 pub struct MyContract {
@@ -16,7 +15,7 @@ pub struct MyContract {
     pub dynamicArray: DynamicArray<Primitive<32, U256>>,
     pub dynamicArrayNested: DynamicArray<DynamicArray<Primitive<32, U256>>>,
     pub plainUint32: Primitive<4, u32>,
-    pub plainAddress: Address,
+    pub plainAddress: Primitive<20, Address>,
     pub myStructNested: MyContractMyStructNested,
     pub staticArray: StaticArray<160, Primitive<14, u128>>,
     pub staticArrayLarge: StaticArray<128, MyContractMyStruct>,
@@ -26,7 +25,10 @@ pub struct MyContract {
     pub myMapping1: Mapping<PrimitiveKey, Primitive<32, U256>>,
     pub myMapping2: Mapping<BytesKey, Primitive<32, U256>>,
     pub myMappingBool: Mapping<PrimitiveKey, Primitive<1, bool>>,
-    pub myAddressMappingNested: Mapping<AddressKey, Mapping<AddressKey, Address>>,
+    pub myAddressMappingNested: Mapping<
+        AddressKey,
+        Mapping<AddressKey, Primitive<20, Address>>,
+    >,
     pub myNestedMapping: Mapping<
         PrimitiveKey,
         Mapping<PrimitiveKey, Primitive<32, U256>>,
@@ -41,7 +43,7 @@ pub struct MyContractMyStructNested {
     __slot: U256,
     #[derivative(Debug = "ignore")]
     __slots_getter: Option<Arc<dyn SlotsGetter>>,
-    pub myAddress: Address,
+    pub myAddress: Primitive<20, Address>,
     pub myStruct: MyContractMyStruct,
 }
 #[derive(Derivative)]
@@ -50,7 +52,7 @@ pub struct MyContractMyStruct {
     __slot: U256,
     #[derivative(Debug = "ignore")]
     __slots_getter: Option<Arc<dyn SlotsGetter>>,
-    pub myAddress: Address,
+    pub myAddress: Primitive<20, Address>,
     pub myUint: Primitive<32, U256>,
 }
 #[derive(Derivative)]
@@ -74,7 +76,7 @@ impl MyContract {
             dynamicArray: DynamicArray::from_position(slot + U256::from(1), 0),
             dynamicArrayNested: DynamicArray::from_position(slot + U256::from(2), 0),
             plainUint32: Primitive::from_position(slot + U256::from(3), 0),
-            plainAddress: Address::from_position(slot + U256::from(3), 4),
+            plainAddress: Primitive::from_position(slot + U256::from(3), 4),
             myStructNested: MyContractMyStructNested::from_position(
                 slot + U256::from(4),
                 0,
@@ -146,7 +148,7 @@ pub struct MyContractValue {
     pub dynamicArray: Vec<U256>,
     pub dynamicArrayNested: Vec<Vec<U256>>,
     pub plainUint32: u32,
-    pub plainAddress: alloy_primitives::Address,
+    pub plainAddress: Address,
     pub myStructNested: MyContractMyStructNestedValue,
     pub staticArray: Vec<u128>,
     pub staticArrayLarge: Vec<MyContractMyStructValue>,
@@ -156,7 +158,10 @@ pub struct MyContractValue {
     pub myMapping1: Mapping<PrimitiveKey, Primitive<32, U256>>,
     pub myMapping2: Mapping<BytesKey, Primitive<32, U256>>,
     pub myMappingBool: Mapping<PrimitiveKey, Primitive<1, bool>>,
-    pub myAddressMappingNested: Mapping<AddressKey, Mapping<AddressKey, Address>>,
+    pub myAddressMappingNested: Mapping<
+        AddressKey,
+        Mapping<AddressKey, Primitive<20, Address>>,
+    >,
     pub myNestedMapping: Mapping<
         PrimitiveKey,
         Mapping<PrimitiveKey, Primitive<32, U256>>,
@@ -241,7 +246,7 @@ impl MyContractMyStructNested {
         Self {
             __slot: slot,
             __slots_getter: None,
-            myAddress: Address::from_position(slot + U256::from(0), 0),
+            myAddress: Primitive::from_position(slot + U256::from(0), 0),
             myStruct: MyContractMyStruct::from_position(slot + U256::from(1), 0),
         }
     }
@@ -276,7 +281,7 @@ impl SlotsGetterSetter for MyContractMyStructNested {
 }
 #[derive(Debug)]
 pub struct MyContractMyStructNestedValue {
-    pub myAddress: alloy_primitives::Address,
+    pub myAddress: Address,
     pub myStruct: MyContractMyStructValue,
 }
 impl Value for MyContractMyStructNested {
@@ -304,7 +309,7 @@ impl MyContractMyStruct {
         Self {
             __slot: slot,
             __slots_getter: None,
-            myAddress: Address::from_position(slot + U256::from(0), 0),
+            myAddress: Primitive::from_position(slot + U256::from(0), 0),
             myUint: Primitive::from_position(slot + U256::from(1), 0),
         }
     }
@@ -339,7 +344,7 @@ impl SlotsGetterSetter for MyContractMyStruct {
 }
 #[derive(Debug)]
 pub struct MyContractMyStructValue {
-    pub myAddress: alloy_primitives::Address,
+    pub myAddress: Address,
     pub myUint: U256,
 }
 impl Value for MyContractMyStruct {

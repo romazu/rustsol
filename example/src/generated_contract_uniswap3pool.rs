@@ -2,10 +2,9 @@
 use std::sync::Arc;
 use rustsol::types::Derivative;
 use rustsol::types::{Position, SlotsGetter, SlotsGetterSetter, Value};
-use rustsol::types::{Primitive, Bytes, Address, Mapping, DynamicArray, StaticArray};
+use rustsol::types::{Primitive, Bytes, Mapping, DynamicArray, StaticArray};
 use rustsol::types::{PrimitiveKey, BytesKey, AddressKey};
-use alloy_primitives;
-use alloy_primitives::{I256, U256};
+use alloy_primitives::{I256, U256, Address};
 #[derive(Derivative)]
 #[derivative(Debug)]
 pub struct UniswapV3Pool {

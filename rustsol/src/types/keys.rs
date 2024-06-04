@@ -6,7 +6,7 @@ use crate::utils::{address_to_bytes32, bool_to_bytes32, keccak256, u256_to_bytes
 pub struct PrimitiveKey(pub [u8; 32]);
 
 impl PrimitiveKey {
-    fn new(bytes: [u8; 32]) -> Self {
+    fn from_be_bytes(bytes: [u8; 32]) -> Self {
         PrimitiveKey(bytes)
     }
 }
@@ -27,7 +27,7 @@ macro_rules! impl_from_for {
                     let start = 32 - be_bytes.len();
                     bytes[start..].copy_from_slice(&be_bytes);
 
-                    <$target>::new(bytes)
+                    <$target>::from_be_bytes(bytes)
                 }
             }
         )+

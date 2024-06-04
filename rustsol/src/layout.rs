@@ -25,7 +25,6 @@ pub enum MemberType {
         label: String,
         number_of_bytes: u64,
     },
-    Address,
     Mapping {
         key: String,
         value: String,
@@ -103,10 +102,18 @@ impl<'de> Deserialize<'de> for MemberType {
                         members: members,
                         number_of_bytes: intermediate.number_of_bytes,
                     })
-                } else if intermediate.label == "address" {
-                    Ok(MemberType::Address)
                 } else if intermediate.label.starts_with("contract ") {
-                    Ok(MemberType::Address)
+                    // TODO: Process labels only in primitive_label_to_native_type function.
+                    Ok(MemberType::Primitive {
+                        label: "contract".into(),
+                        number_of_bytes: intermediate.number_of_bytes
+                    })
+                } else if intermediate.label.starts_with("enum") {
+                    // TODO: Process labels only in primitive_label_to_native_type function.
+                    Ok(MemberType::Primitive {
+                        label: "enum".into(),
+                        number_of_bytes: intermediate.number_of_bytes
+                    })
                 } else {
                     Ok(MemberType::Primitive {
                         label: intermediate.label,
@@ -150,7 +157,6 @@ pub enum NestedType {
         native_type: String,
     },
     Bytes,
-    Address,
     Mapping {
         // Box is needed to avoid problems with recursive definition of NestedType
         key: Box<NestedType>,
@@ -177,7 +183,6 @@ impl NestedType {
                 format!("Primitive<{}, {}>", number_of_bytes.to_string(), native_type)
             }
             NestedType::Bytes => "Bytes".to_string(),
-            NestedType::Address => "Address".to_string(),
             NestedType::Mapping { key, value } => {
                 format!("Mapping<{}, {}>", key.to_string(), value.to_string())
             }
@@ -197,7 +202,6 @@ impl NestedType {
         match self {
             NestedType::Primitive { number_of_bytes, .. } => { *number_of_bytes as usize }
             NestedType::Bytes => { 32 }
-            NestedType::Address => { 20 }
             NestedType::Mapping { .. } => { 32 }
             NestedType::Struct { label: _, members: _, number_of_bytes } => { *number_of_bytes as usize }
             NestedType::DynamicArray { .. } => { 32 }
@@ -261,12 +265,10 @@ impl StorageLayout {
                 Some(NestedType::Primitive { number_of_bytes: *number_of_bytes, native_type: native_type })
             }
             MemberType::Bytes { .. } => Some(NestedType::Bytes),
-            MemberType::Address => Some(NestedType::Address),
             MemberType::Mapping { key, value, .. } => {
                 let key_type = match self.traverse_type(key) {
                     Some(NestedType::Primitive { number_of_bytes, native_type }) => Some(NestedType::Primitive { number_of_bytes, native_type }),
                     Some(NestedType::Bytes) => Some(NestedType::Bytes),
-                    Some(NestedType::Address) => Some(NestedType::Address),
                     _ => panic!("Key type must be Primitive or Bytes"),
                 };
 
@@ -332,9 +334,6 @@ impl StorageLayout {
             NestedType::Bytes => {
                 // This is a leaf type. Do nothing.
             }
-            NestedType::Address => {
-                // This is a leaf type. Do nothing.
-            }
             NestedType::Mapping { key, value } => {
                 self.collect_unique_types(key, nested_types, unique_representations);
                 self.collect_unique_types(value, nested_types, unique_representations);
@@ -358,6 +357,9 @@ fn primitive_label_to_native_type(label: &str) -> &str {
     // TODO: Use programmatic conversion instead of direct mapping.
     // TODO: Check for invalid type for Primitive.
     match label {
+        "address" => "Address",
+        "contract" => "Address",
+        "enum" => "U256",
         "bool" => "bool",
         "int" => "I256",
         "int8" => "i8",
@@ -425,7 +427,6 @@ fn primitive_label_to_native_type(label: &str) -> &str {
         "uint240" => "U256",
         "uint248" => "U256",
         "uint256" => "U256",
-        // "address" => "U256",
         // "bytes" => "U256",
         // "bytes1" => "U256",
         // "bytes2" => "U256",

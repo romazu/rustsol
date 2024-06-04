@@ -1,7 +1,7 @@
 use std::fmt::Debug;
 use std::marker::PhantomData;
 use std::sync::Arc;
-use alloy_primitives::{I256, U256};
+use alloy_primitives::{I256, U256, Address};
 use crate::types::{Mapping, SlotsGetterSetter};
 use crate::types::traits::{Position, SlotsGetter, Value};
 use derivative::Derivative;
@@ -58,8 +58,8 @@ impl<const SIZE: usize, NativeType: FromLESlice> Value for Primitive<SIZE, Nativ
     type ValueType = NativeType;
 
     fn get_value_from_slots_content(&self, slot_values: Vec<U256>) -> Result<Self::ValueType, String> {
-        let bytes = &slot_values[0].to_le_bytes::<{ U256::BYTES }>()[self.__offset..self.__offset + SIZE];
-        Ok(NativeType::from(bytes))
+        let le_bytes = &slot_values[0].to_le_bytes::<{ U256::BYTES }>()[self.__offset..self.__offset + SIZE];
+        Ok(NativeType::from(le_bytes))
     }
 }
 
@@ -96,7 +96,7 @@ macro_rules! from_le_slice_impl_unsigned {
                     const TYPE_SIZE: usize = (<$t>::BITS / 8) as usize;
                     let mut bytes_sized = [0u8; TYPE_SIZE];
                     bytes_sized[0..bytes.len()].copy_from_slice(bytes);
-                    Self::from_le_bytes(bytes_sized.try_into().unwrap())
+                    Self::from_le_bytes(bytes_sized)
                 }
             }
         )+
@@ -108,5 +108,13 @@ from_le_slice_impl_unsigned!(u8, u16, u32, u64, u128, U256);
 impl FromLESlice for bool {
     fn from(bytes: &[u8]) -> Self {
         bytes[0] == 1
+    }
+}
+impl FromLESlice for Address {
+    fn from(bytes: &[u8]) -> Self {
+        // Convert little-endian bytes to big-endian.
+        let mut big_endian_bytes = bytes.to_vec();
+        big_endian_bytes.reverse();
+        Address::from_slice(&big_endian_bytes)
     }
 }

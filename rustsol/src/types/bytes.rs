@@ -2,7 +2,7 @@ use std::sync::Arc;
 use alloy_primitives::{FixedBytes, U256};
 use derivative::Derivative;
 use crate::utils::{bytes32_to_u256, ceil_div, keccak256, u256_to_bytes32, u256_to_u64, vec_u256_to_vec_bytes};
-use crate::types::{Address, Primitive, Value};
+use crate::types::{Primitive, Value};
 use crate::types::{Position, SlotsGetter, SlotsGetterSetter};
 
 // In particular: if the data is at most 31 bytes long, the elements are stored in the higher-order
