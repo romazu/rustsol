@@ -111,45 +111,53 @@
             {
               "astId": 67,
               "contract": "contract.sol:MyContract",
-              "label": "myMappingBool",
+              "label": "myMapping3",
               "offset": 0,
               "slot": "24",
+              "type": "t_mapping(t_bytes_memory_ptr,t_uint64)"
+            },
+            {
+              "astId": 71,
+              "contract": "contract.sol:MyContract",
+              "label": "myMappingBool",
+              "offset": 0,
+              "slot": "25",
               "type": "t_mapping(t_bool,t_bool)"
             },
             {
-              "astId": 73,
+              "astId": 77,
               "contract": "contract.sol:MyContract",
               "label": "myAddressMappingNested",
               "offset": 0,
-              "slot": "25",
+              "slot": "26",
               "type": "t_mapping(t_address,t_mapping(t_address,t_address))"
             },
             {
-              "astId": 79,
+              "astId": 83,
               "contract": "contract.sol:MyContract",
               "label": "myNestedMapping",
               "offset": 0,
-              "slot": "26",
-              "type": "t_mapping(t_uint256,t_mapping(t_uint256,t_uint256))"
-            },
-            {
-              "astId": 85,
-              "contract": "contract.sol:MyContract",
-              "label": "myEnum",
-              "offset": 0,
               "slot": "27",
-              "type": "t_enum(MyEnum)82"
+              "type": "t_mapping(t_uint256,t_mapping(t_uint256,t_uint256))"
             },
             {
               "astId": 89,
               "contract": "contract.sol:MyContract",
-              "label": "___gap___",
+              "label": "myEnum",
               "offset": 0,
               "slot": "28",
-              "type": "t_array(t_uint256)39_storage"
+              "type": "t_enum(MyEnum)86"
             },
             {
-              "astId": 91,
+              "astId": 93,
+              "contract": "contract.sol:MyContract",
+              "label": "___gap___",
+              "offset": 0,
+              "slot": "29",
+              "type": "t_array(t_uint256)38_storage"
+            },
+            {
+              "astId": 95,
               "contract": "contract.sol:MyContract",
               "label": "plainString",
               "offset": 0,
@@ -157,7 +165,7 @@
               "type": "t_string_storage"
             },
             {
-              "astId": 93,
+              "astId": 97,
               "contract": "contract.sol:MyContract",
               "label": "plainBytes",
               "offset": 0,
@@ -207,11 +215,11 @@
               "label": "uint112[10]",
               "numberOfBytes": "160"
             },
-            "t_array(t_uint256)39_storage": {
+            "t_array(t_uint256)38_storage": {
               "base": "t_uint256",
               "encoding": "inplace",
-              "label": "uint256[39]",
-              "numberOfBytes": "1248"
+              "label": "uint256[38]",
+              "numberOfBytes": "1216"
             },
             "t_array(t_uint256)dyn_storage": {
               "base": "t_uint256",
@@ -230,12 +238,17 @@
               "label": "bool",
               "numberOfBytes": "1"
             },
+            "t_bytes_memory_ptr": {
+              "encoding": "bytes",
+              "label": "bytes",
+              "numberOfBytes": "32"
+            },
             "t_bytes_storage": {
               "encoding": "bytes",
               "label": "bytes",
               "numberOfBytes": "32"
             },
-            "t_enum(MyEnum)82": {
+            "t_enum(MyEnum)86": {
               "encoding": "inplace",
               "label": "enum MyContract.MyEnum",
               "numberOfBytes": "1"
@@ -260,6 +273,13 @@
               "label": "mapping(bool => bool)",
               "numberOfBytes": "32",
               "value": "t_bool"
+            },
+            "t_mapping(t_bytes_memory_ptr,t_uint64)": {
+              "encoding": "mapping",
+              "key": "t_bytes_memory_ptr",
+              "label": "mapping(bytes => uint64)",
+              "numberOfBytes": "32",
+              "value": "t_uint64"
             },
             "t_mapping(t_string_memory_ptr,t_uint256)": {
               "encoding": "mapping",
@@ -375,6 +395,11 @@
               "encoding": "inplace",
               "label": "uint32",
               "numberOfBytes": "4"
+            },
+            "t_uint64": {
+              "encoding": "inplace",
+              "label": "uint64",
+              "numberOfBytes": "8"
             },
             "t_uint8": {
               "encoding": "inplace",

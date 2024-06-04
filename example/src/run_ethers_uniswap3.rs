@@ -2,7 +2,6 @@
 
 use std::sync::Arc;
 use std::time::Instant;
-use alloy_primitives::I256;
 use ethereum_types::Address;
 use rustsol::types::SlotsGetterSetter;
 
@@ -30,15 +29,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // no getter
     let contract = UniswapV3Pool::new();
-    // println!("slot0 {:#?}", contract.slot0);
-    // println!("ticks {:#?}", contract.ticks);
-    // println!("ticks[42u64].initialized {:?}", contract.ticks.at(42u64).initialized.position()); // incorrect key type
-    // println!("ticks[42u64].initialized {:?}", contract.ticks.at(42).initialized.position());
-    // println!("slot0.observationIndex   {:?}", contract.slot0.observationIndex.position());
-    // println!("ticks[0]                 {:?}", contract.ticks.at(0).position());
-    // println!("ticks[149150]            {:?}", contract.ticks.at(149150).position());
-    // println!("ticks[887270]            {:?}", contract.ticks.at(887270).position());
-    // println!("ticks[-92110]            {:?}", contract.ticks.at(-92110).position());
+    println!("slot0 {:#?}", contract.slot0);
+    println!("ticks {:#?}", contract.ticks);
+    // println!("ticks[42u64].initialized {:?}", contract.ticks.at(42u64).initialized.position()); // Won't compile: incorrect key type.
+    println!("ticks[42u64].initialized {:?}", contract.ticks.at(42).initialized.position());
+    println!("slot0.observationIndex   {:?}", contract.slot0.observationIndex.position());
+    println!("ticks[0]                 {:?}", contract.ticks.at(0).position());
+    println!("ticks[149150]            {:?}", contract.ticks.at(149150).position());
+    println!("ticks[887270]            {:?}", contract.ticks.at(887270).position());
+    println!("ticks[-92110]            {:?}", contract.ticks.at(-92110).position());
     // println!("feeGrowthGlobal0X128.get_value() {:?}", contract.feeGrowthGlobal0X128.get_value()); // panic "No slots getter"
 
     let (slot, offset, size_bytes) = contract.observations.at(42).tickCumulative.position();
@@ -60,7 +59,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Get all the base storage of contract. Take ~infinity time for UniswapV3Pool because of static array of length 65535.
     // println!("contract.get_value()                      {:?}", contract.get_value());
 
-    let tick_value = contract.ticks.at(I256::try_from(-92110).unwrap()).get_value().unwrap();
+    let tick_value = contract.ticks.at(-92110).get_value().unwrap();
     println!("ticks.at(-92110).get_value() {:?}", tick_value);
 
     // Change contract address.
@@ -73,20 +72,20 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 block: None },
         )?
     );
-    // // Set slots getter only for this variable.
-    // let mut tick_info = contract.ticks.at(39120);
-    // tick_info.set_slots_getter(slots_getter);
-    // let value = tick_info.get_value().unwrap().tickCumulativeOutside;
-    // println!("ticks.at(39120).get_value().tickCumulativeOutside {}", value); // negative number
+    // Set slots getter only for this variable.
+    let mut tick_info = contract.ticks.at(39120);
+    tick_info.set_slots_getter(slots_getter);
+    let value = tick_info.get_value().unwrap().tickCumulativeOutside;
+    println!("ticks.at(39120).get_value().tickCumulativeOutside {}", value); // negative value
 
     // benchmark
-    // let n = 100_000;
-    // let start = Instant::now();
-    // for _ in 0..n {
-    //     contract.ticks.at(-92110).position();
-    // }
-    // let duration = start.elapsed();
-    // println!("Call duration in benchmark is: {:?}", duration / n);
+    let n = 100_000;
+    let start = Instant::now();
+    for _ in 0..n {
+        contract.ticks.at(-92110).position();
+    }
+    let duration = start.elapsed();
+    println!("Call duration in benchmark is: {:?}", duration / n);
     // debug:   19.564µs @ 100_000
     // release:    565ns @ 100_000
     // release:    284ns @ 10_000_000

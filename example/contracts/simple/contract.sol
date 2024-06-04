@@ -29,6 +29,7 @@ contract MyContract {
 
     mapping(uint256 => uint256) public myMapping1;
     mapping(string => uint256) public myMapping2;
+    mapping(bytes => uint64) public myMapping3;
     mapping(bool => bool) public myMappingBool;
     mapping(address => mapping(address => address)) public myAddressMappingNested;
     mapping(uint256 => mapping(uint256 => uint256)) public myNestedMapping;
@@ -36,7 +37,7 @@ contract MyContract {
     enum MyEnum {Enum1, Enum2}
     MyEnum myEnum;
 //    uint8[31] public ___gap___;
-    uint256[39] public ___gap___;
+    uint256[38] public ___gap___;
     string public plainString;
     bytes public plainBytes;
 }

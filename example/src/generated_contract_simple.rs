@@ -23,6 +23,7 @@ pub struct MyContract {
     pub dynamicArraySmall: DynamicArray<MyContractMyStructSmall>,
     pub myMapping1: Mapping<U256, Primitive<32, U256>>,
     pub myMapping2: Mapping<String, Primitive<32, U256>>,
+    pub myMapping3: Mapping<Vec<u8>, Primitive<8, u64>>,
     pub myMappingBool: Mapping<bool, Primitive<1, bool>>,
     pub myAddressMappingNested: Mapping<
         Address,
@@ -30,7 +31,7 @@ pub struct MyContract {
     >,
     pub myNestedMapping: Mapping<U256, Mapping<U256, Primitive<32, U256>>>,
     pub myEnum: Primitive<1, U256>,
-    pub ___gap___: StaticArray<1248, Primitive<32, U256>>,
+    pub ___gap___: StaticArray<1216, Primitive<32, U256>>,
     pub plainString: Bytes<String>,
     pub plainBytes: Bytes<Vec<u8>>,
 }
@@ -85,11 +86,12 @@ impl MyContract {
             dynamicArraySmall: DynamicArray::from_position(slot + U256::from(21), 0),
             myMapping1: Mapping::from_position(slot + U256::from(22), 0),
             myMapping2: Mapping::from_position(slot + U256::from(23), 0),
-            myMappingBool: Mapping::from_position(slot + U256::from(24), 0),
-            myAddressMappingNested: Mapping::from_position(slot + U256::from(25), 0),
-            myNestedMapping: Mapping::from_position(slot + U256::from(26), 0),
-            myEnum: Primitive::from_position(slot + U256::from(27), 0),
-            ___gap___: StaticArray::from_position(slot + U256::from(28), 0),
+            myMapping3: Mapping::from_position(slot + U256::from(24), 0),
+            myMappingBool: Mapping::from_position(slot + U256::from(25), 0),
+            myAddressMappingNested: Mapping::from_position(slot + U256::from(26), 0),
+            myNestedMapping: Mapping::from_position(slot + U256::from(27), 0),
+            myEnum: Primitive::from_position(slot + U256::from(28), 0),
+            ___gap___: StaticArray::from_position(slot + U256::from(29), 0),
             plainString: Bytes::from_position(slot + U256::from(67), 0),
             plainBytes: Bytes::from_position(slot + U256::from(68), 0),
         }
@@ -132,6 +134,7 @@ impl SlotsGetterSetter for MyContract {
         self.dynamicArraySmall.set_slots_getter(getter.clone());
         self.myMapping1.set_slots_getter(getter.clone());
         self.myMapping2.set_slots_getter(getter.clone());
+        self.myMapping3.set_slots_getter(getter.clone());
         self.myMappingBool.set_slots_getter(getter.clone());
         self.myAddressMappingNested.set_slots_getter(getter.clone());
         self.myNestedMapping.set_slots_getter(getter.clone());
@@ -156,6 +159,7 @@ pub struct MyContractValue {
     pub dynamicArraySmall: Vec<MyContractMyStructSmallValue>,
     pub myMapping1: Mapping<U256, Primitive<32, U256>>,
     pub myMapping2: Mapping<String, Primitive<32, U256>>,
+    pub myMapping3: Mapping<Vec<u8>, Primitive<8, u64>>,
     pub myMappingBool: Mapping<bool, Primitive<1, bool>>,
     pub myAddressMappingNested: Mapping<
         Address,
@@ -214,21 +218,24 @@ impl Value for MyContract {
             myMapping2: self
                 .myMapping2
                 .get_value_from_slots_content(slot_values[23..24].to_vec())?,
+            myMapping3: self
+                .myMapping3
+                .get_value_from_slots_content(slot_values[24..25].to_vec())?,
             myMappingBool: self
                 .myMappingBool
-                .get_value_from_slots_content(slot_values[24..25].to_vec())?,
+                .get_value_from_slots_content(slot_values[25..26].to_vec())?,
             myAddressMappingNested: self
                 .myAddressMappingNested
-                .get_value_from_slots_content(slot_values[25..26].to_vec())?,
+                .get_value_from_slots_content(slot_values[26..27].to_vec())?,
             myNestedMapping: self
                 .myNestedMapping
-                .get_value_from_slots_content(slot_values[26..27].to_vec())?,
+                .get_value_from_slots_content(slot_values[27..28].to_vec())?,
             myEnum: self
                 .myEnum
-                .get_value_from_slots_content(slot_values[27..28].to_vec())?,
+                .get_value_from_slots_content(slot_values[28..29].to_vec())?,
             ___gap___: self
                 .___gap___
-                .get_value_from_slots_content(slot_values[28..67].to_vec())?,
+                .get_value_from_slots_content(slot_values[29..67].to_vec())?,
             plainString: self
                 .plainString
                 .get_value_from_slots_content(slot_values[67..68].to_vec())?,
