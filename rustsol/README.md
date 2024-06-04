@@ -54,6 +54,16 @@ pub struct UniswapV3Pool {
     pub positions: Mapping<U256, PositionInfo>,
     pub observations: StaticArray<2097120, OracleObservation>,
 }
+
+pub struct UniswapV3PoolSlot0Value {
+    pub sqrtPriceX96: U256,
+    pub tick: i32,
+    pub observationIndex: u16,
+    pub observationCardinality: u16,
+    pub observationCardinalityNext: u16,
+    pub feeProtocol: u8,
+    pub unlocked: bool,
+}
 ```
 
 ## Installation
@@ -140,7 +150,7 @@ Variable values obtained with `get_value()` are converted to native types accord
 | `Bytes<String>`             | `String`                                      |
 | `Bytes<Vec<u8>>`            | `Vec<u8>`                                     |
 | `StaticArray<value_type>`   | `Vec<recursive native type of value_type>`    |
-| `DynamicArray`              | `Vec<recursive native type of value_type>`    |
+| `DynamicArray<value_type>`  | `Vec<recursive native type of value_type>`    |
 | `Mapping`                   | `Mapping<key_native_type, value_type>` getter |
 | `SomeStruct`                | `SomeStructValue`                             |
 
