@@ -34,6 +34,8 @@ pub struct MyContract {
     pub ___gap___: StaticArray<1216, Primitive<32, U256>>,
     pub plainString: Bytes<String>,
     pub plainBytes: Bytes<Vec<u8>>,
+    pub plainBytesN32: Primitive<32, U256>,
+    pub plainBytesN1: Primitive<1, U256>,
 }
 #[derive(Derivative)]
 #[derivative(Debug)]
@@ -94,18 +96,20 @@ impl MyContract {
             ___gap___: StaticArray::from_position(slot + U256::from(29), 0),
             plainString: Bytes::from_position(slot + U256::from(67), 0),
             plainBytes: Bytes::from_position(slot + U256::from(68), 0),
+            plainBytesN32: Primitive::from_position(slot + U256::from(69), 0),
+            plainBytesN1: Primitive::from_position(slot + U256::from(70), 0),
         }
     }
     pub fn slot(&self) -> U256 {
         self.__slot
     }
     pub fn position(&self) -> (U256, usize, usize) {
-        (self.__slot, 0, 2208)
+        (self.__slot, 0, 2272)
     }
     pub fn get_value(&self) -> Result<<Self as Value>::ValueType, String> {
         let getter = self.__slots_getter.as_ref().expect("No slots getter");
         let slot_values = getter
-            .get_slots(self.__slot, 69)
+            .get_slots(self.__slot, 71)
             .map_err(|err| format!("Failed to get slot values: {}", err))?;
         self.get_value_from_slots_content(slot_values)
     }
@@ -115,7 +119,7 @@ impl Position for MyContract {
         Self::from_position(slot, offset)
     }
     fn size() -> usize {
-        2208
+        2272
     }
 }
 impl SlotsGetterSetter for MyContract {
@@ -141,7 +145,9 @@ impl SlotsGetterSetter for MyContract {
         self.myEnum.set_slots_getter(getter.clone());
         self.___gap___.set_slots_getter(getter.clone());
         self.plainString.set_slots_getter(getter.clone());
-        self.plainBytes.set_slots_getter(getter.clone())
+        self.plainBytes.set_slots_getter(getter.clone());
+        self.plainBytesN32.set_slots_getter(getter.clone());
+        self.plainBytesN1.set_slots_getter(getter.clone())
     }
 }
 #[derive(Debug)]
@@ -170,6 +176,8 @@ pub struct MyContractValue {
     pub ___gap___: Vec<U256>,
     pub plainString: String,
     pub plainBytes: Vec<u8>,
+    pub plainBytesN32: U256,
+    pub plainBytesN1: U256,
 }
 impl Value for MyContract {
     type ValueType = MyContractValue;
@@ -242,6 +250,12 @@ impl Value for MyContract {
             plainBytes: self
                 .plainBytes
                 .get_value_from_slots_content(slot_values[68..69].to_vec())?,
+            plainBytesN32: self
+                .plainBytesN32
+                .get_value_from_slots_content(slot_values[69..70].to_vec())?,
+            plainBytesN1: self
+                .plainBytesN1
+                .get_value_from_slots_content(slot_values[70..71].to_vec())?,
         })
     }
 }

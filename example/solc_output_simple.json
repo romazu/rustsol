@@ -171,6 +171,22 @@
               "offset": 0,
               "slot": "68",
               "type": "t_bytes_storage"
+            },
+            {
+              "astId": 99,
+              "contract": "contract.sol:MyContract",
+              "label": "plainBytesN32",
+              "offset": 0,
+              "slot": "69",
+              "type": "t_bytes32"
+            },
+            {
+              "astId": 101,
+              "contract": "contract.sol:MyContract",
+              "label": "plainBytesN1",
+              "offset": 0,
+              "slot": "70",
+              "type": "t_bytes1"
             }
           ],
           "types": {
@@ -237,6 +253,16 @@
               "encoding": "inplace",
               "label": "bool",
               "numberOfBytes": "1"
+            },
+            "t_bytes1": {
+              "encoding": "inplace",
+              "label": "bytes1",
+              "numberOfBytes": "1"
+            },
+            "t_bytes32": {
+              "encoding": "inplace",
+              "label": "bytes32",
+              "numberOfBytes": "32"
             },
             "t_bytes_memory_ptr": {
               "encoding": "bytes",
