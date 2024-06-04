@@ -4,7 +4,6 @@ use std::sync::Arc;
 use std::time::Instant;
 use ethereum_types::Address;
 use rustsol::types::SlotsGetterSetter;
-use rustsol::utils::u256_to_u64;
 
 mod utils;
 
@@ -48,7 +47,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut contract = UniswapV3Pool::new();
     contract.set_slots_getter(slots_getter);
     let observationIndex = contract.slot0.observationIndex.get_value().unwrap();
-    let observation = contract.observations.at(u256_to_u64(observationIndex) as usize);
+    let observation = contract.observations.at(observationIndex as usize);
     println!("slot0.observationIndex.get_value()        {}", observationIndex.to_string());
     println!("slot0.observationCardinality.get_value()  {}", contract.slot0.observationCardinality.get_value().unwrap().to_string());
     println!("observations[].blockTimestamp.get_value() {}", observation.blockTimestamp.get_value().unwrap().to_string());
@@ -61,6 +60,22 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let tick_value = contract.ticks.at(-92110).get_value().unwrap();
     println!("ticks.at(-92110).get_value() {:?}", tick_value);
+
+    // Change contract address.
+    // TODO: Create a method to change context conveniently.
+    let slots_getter = Arc::new(
+        utils::EthersSlotsGetter::new(
+            provider_url,
+            utils::EthersSlotsGetterContext {
+                contract: "0x92560c178ce069cc014138ed3c2f5221ba71f58a".parse().unwrap(),
+                block: None },
+        )?
+    );
+    // Set slots getter only for this variable.
+    let mut tick_info = contract.ticks.at(39120);
+    tick_info.set_slots_getter(slots_getter);
+    let value = tick_info.get_value().unwrap().tickCumulativeOutside;
+    println!("ticks.at(39120).get_value().tickCumulativeOutside {}", value); // negative number
 
     // benchmark
     let n = 100_000;

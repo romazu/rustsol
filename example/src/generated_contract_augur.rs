@@ -5,17 +5,17 @@ use rustsol::types::{Position, SlotsGetter, SlotsGetterSetter, Value};
 use rustsol::types::{Primitive, Bytes, Address, Mapping, DynamicArray, StaticArray};
 use rustsol::types::{PrimitiveKey, BytesKey, AddressKey};
 use alloy_primitives;
-use alloy_primitives::U256;
+use alloy_primitives::{I256, U256};
 #[derive(Derivative)]
 #[derivative(Debug)]
 pub struct Augur {
     __slot: U256,
     #[derivative(Debug = "ignore")]
     __slots_getter: Option<Arc<dyn SlotsGetter>>,
-    pub markets: Mapping<AddressKey, Primitive<1, U256>>,
-    pub universes: Mapping<AddressKey, Primitive<1, U256>>,
-    pub crowdsourcers: Mapping<AddressKey, Primitive<1, U256>>,
-    pub trustedSender: Mapping<AddressKey, Primitive<1, U256>>,
+    pub markets: Mapping<AddressKey, Primitive<1, bool>>,
+    pub universes: Mapping<AddressKey, Primitive<1, bool>>,
+    pub crowdsourcers: Mapping<AddressKey, Primitive<1, bool>>,
+    pub trustedSender: Mapping<AddressKey, Primitive<1, bool>>,
     pub marketCreationData: Mapping<
         AddressKey,
         IAugurCreationDataGetterMarketCreationData,
@@ -38,7 +38,7 @@ pub struct IAugurCreationDataGetterMarketCreationData {
     pub extraInfo: Bytes,
     pub marketCreator: Address,
     pub outcomes: DynamicArray<Primitive<32, U256>>,
-    pub displayPrices: DynamicArray<Primitive<32, U256>>,
+    pub displayPrices: DynamicArray<Primitive<32, I256>>,
     pub marketType: Primitive<1, U256>,
     pub recommendedTradeInterval: Primitive<32, U256>,
 }
@@ -107,10 +107,10 @@ impl SlotsGetterSetter for Augur {
 }
 #[derive(Debug)]
 pub struct AugurValue {
-    pub markets: Mapping<AddressKey, Primitive<1, U256>>,
-    pub universes: Mapping<AddressKey, Primitive<1, U256>>,
-    pub crowdsourcers: Mapping<AddressKey, Primitive<1, U256>>,
-    pub trustedSender: Mapping<AddressKey, Primitive<1, U256>>,
+    pub markets: Mapping<AddressKey, Primitive<1, bool>>,
+    pub universes: Mapping<AddressKey, Primitive<1, bool>>,
+    pub crowdsourcers: Mapping<AddressKey, Primitive<1, bool>>,
+    pub trustedSender: Mapping<AddressKey, Primitive<1, bool>>,
     pub marketCreationData: Mapping<
         AddressKey,
         IAugurCreationDataGetterMarketCreationData,
@@ -224,7 +224,7 @@ pub struct IAugurCreationDataGetterMarketCreationDataValue {
     pub extraInfo: Vec<u8>,
     pub marketCreator: alloy_primitives::Address,
     pub outcomes: Vec<U256>,
-    pub displayPrices: Vec<U256>,
+    pub displayPrices: Vec<I256>,
     pub marketType: U256,
     pub recommendedTradeInterval: U256,
 }

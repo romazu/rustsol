@@ -91,7 +91,7 @@ impl<const SIZE: usize, ElementType: Debug + Value + Position + SlotsGetterSette
     {
         let (packing_n, packing_d) = self.packing_ratio();
         let capacity = SIZE / 32 * packing_d / packing_n;
-        if index >= capacity as usize {
+        if index >= capacity {
             panic!("Index is outside array capacity: {} vs {}", index, capacity)
         }
         let (index_slot, index_offset) = index_to_position(index, packing_n, packing_d);

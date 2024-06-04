@@ -45,8 +45,8 @@ pub struct EthersSlotsGetterContext {
 }
 
 pub struct EthersSlotsGetter {
-    provider: Provider<Http>,
-    context: EthersSlotsGetterContext,
+    pub provider: Provider<Http>,
+    pub context: EthersSlotsGetterContext,
 }
 
 #[allow(dead_code)]

@@ -5,7 +5,7 @@ use rustsol::types::{Position, SlotsGetter, SlotsGetterSetter, Value};
 use rustsol::types::{Primitive, Bytes, Address, Mapping, DynamicArray, StaticArray};
 use rustsol::types::{PrimitiveKey, BytesKey, AddressKey};
 use alloy_primitives;
-use alloy_primitives::U256;
+use alloy_primitives::{I256, U256};
 #[derive(Derivative)]
 #[derivative(Debug)]
 pub struct UniswapV3Pool {
@@ -16,7 +16,7 @@ pub struct UniswapV3Pool {
     pub feeGrowthGlobal0X128: Primitive<32, U256>,
     pub feeGrowthGlobal1X128: Primitive<32, U256>,
     pub protocolFees: UniswapV3PoolProtocolFees,
-    pub liquidity: Primitive<16, U256>,
+    pub liquidity: Primitive<16, u128>,
     pub ticks: Mapping<PrimitiveKey, TickInfo>,
     pub tickBitmap: Mapping<PrimitiveKey, Primitive<32, U256>>,
     pub positions: Mapping<PrimitiveKey, PositionInfo>,
@@ -29,12 +29,12 @@ pub struct UniswapV3PoolSlot0 {
     #[derivative(Debug = "ignore")]
     __slots_getter: Option<Arc<dyn SlotsGetter>>,
     pub sqrtPriceX96: Primitive<20, U256>,
-    pub tick: Primitive<3, U256>,
-    pub observationIndex: Primitive<2, U256>,
-    pub observationCardinality: Primitive<2, U256>,
-    pub observationCardinalityNext: Primitive<2, U256>,
-    pub feeProtocol: Primitive<1, U256>,
-    pub unlocked: Primitive<1, U256>,
+    pub tick: Primitive<3, i32>,
+    pub observationIndex: Primitive<2, u16>,
+    pub observationCardinality: Primitive<2, u16>,
+    pub observationCardinalityNext: Primitive<2, u16>,
+    pub feeProtocol: Primitive<1, u8>,
+    pub unlocked: Primitive<1, bool>,
 }
 #[derive(Derivative)]
 #[derivative(Debug)]
@@ -42,8 +42,8 @@ pub struct UniswapV3PoolProtocolFees {
     __slot: U256,
     #[derivative(Debug = "ignore")]
     __slots_getter: Option<Arc<dyn SlotsGetter>>,
-    pub token0: Primitive<16, U256>,
-    pub token1: Primitive<16, U256>,
+    pub token0: Primitive<16, u128>,
+    pub token1: Primitive<16, u128>,
 }
 #[derive(Derivative)]
 #[derivative(Debug)]
@@ -51,14 +51,14 @@ pub struct TickInfo {
     __slot: U256,
     #[derivative(Debug = "ignore")]
     __slots_getter: Option<Arc<dyn SlotsGetter>>,
-    pub liquidityGross: Primitive<16, U256>,
-    pub liquidityNet: Primitive<16, U256>,
+    pub liquidityGross: Primitive<16, u128>,
+    pub liquidityNet: Primitive<16, i128>,
     pub feeGrowthOutside0X128: Primitive<32, U256>,
     pub feeGrowthOutside1X128: Primitive<32, U256>,
-    pub tickCumulativeOutside: Primitive<7, U256>,
+    pub tickCumulativeOutside: Primitive<7, i64>,
     pub secondsPerLiquidityOutsideX128: Primitive<20, U256>,
-    pub secondsOutside: Primitive<4, U256>,
-    pub initialized: Primitive<1, U256>,
+    pub secondsOutside: Primitive<4, u32>,
+    pub initialized: Primitive<1, bool>,
 }
 #[derive(Derivative)]
 #[derivative(Debug)]
@@ -66,11 +66,11 @@ pub struct PositionInfo {
     __slot: U256,
     #[derivative(Debug = "ignore")]
     __slots_getter: Option<Arc<dyn SlotsGetter>>,
-    pub liquidity: Primitive<16, U256>,
+    pub liquidity: Primitive<16, u128>,
     pub feeGrowthInside0LastX128: Primitive<32, U256>,
     pub feeGrowthInside1LastX128: Primitive<32, U256>,
-    pub tokensOwed0: Primitive<16, U256>,
-    pub tokensOwed1: Primitive<16, U256>,
+    pub tokensOwed0: Primitive<16, u128>,
+    pub tokensOwed1: Primitive<16, u128>,
 }
 #[derive(Derivative)]
 #[derivative(Debug)]
@@ -78,10 +78,10 @@ pub struct OracleObservation {
     __slot: U256,
     #[derivative(Debug = "ignore")]
     __slots_getter: Option<Arc<dyn SlotsGetter>>,
-    pub blockTimestamp: Primitive<4, U256>,
-    pub tickCumulative: Primitive<7, U256>,
+    pub blockTimestamp: Primitive<4, u32>,
+    pub tickCumulative: Primitive<7, i64>,
     pub secondsPerLiquidityCumulativeX128: Primitive<20, U256>,
-    pub initialized: Primitive<1, U256>,
+    pub initialized: Primitive<1, bool>,
 }
 impl UniswapV3Pool {
     pub fn new() -> Self {
@@ -147,7 +147,7 @@ pub struct UniswapV3PoolValue {
     pub feeGrowthGlobal0X128: U256,
     pub feeGrowthGlobal1X128: U256,
     pub protocolFees: UniswapV3PoolProtocolFeesValue,
-    pub liquidity: U256,
+    pub liquidity: u128,
     pub ticks: Mapping<PrimitiveKey, TickInfo>,
     pub tickBitmap: Mapping<PrimitiveKey, Primitive<32, U256>>,
     pub positions: Mapping<PrimitiveKey, PositionInfo>,
@@ -244,12 +244,12 @@ impl SlotsGetterSetter for UniswapV3PoolSlot0 {
 #[derive(Debug)]
 pub struct UniswapV3PoolSlot0Value {
     pub sqrtPriceX96: U256,
-    pub tick: U256,
-    pub observationIndex: U256,
-    pub observationCardinality: U256,
-    pub observationCardinalityNext: U256,
-    pub feeProtocol: U256,
-    pub unlocked: U256,
+    pub tick: i32,
+    pub observationIndex: u16,
+    pub observationCardinality: u16,
+    pub observationCardinalityNext: u16,
+    pub feeProtocol: u8,
+    pub unlocked: bool,
 }
 impl Value for UniswapV3PoolSlot0 {
     type ValueType = UniswapV3PoolSlot0Value;
@@ -324,8 +324,8 @@ impl SlotsGetterSetter for UniswapV3PoolProtocolFees {
 }
 #[derive(Debug)]
 pub struct UniswapV3PoolProtocolFeesValue {
-    pub token0: U256,
-    pub token1: U256,
+    pub token0: u128,
+    pub token1: u128,
 }
 impl Value for UniswapV3PoolProtocolFees {
     type ValueType = UniswapV3PoolProtocolFeesValue;
@@ -400,14 +400,14 @@ impl SlotsGetterSetter for TickInfo {
 }
 #[derive(Debug)]
 pub struct TickInfoValue {
-    pub liquidityGross: U256,
-    pub liquidityNet: U256,
+    pub liquidityGross: u128,
+    pub liquidityNet: i128,
     pub feeGrowthOutside0X128: U256,
     pub feeGrowthOutside1X128: U256,
-    pub tickCumulativeOutside: U256,
+    pub tickCumulativeOutside: i64,
     pub secondsPerLiquidityOutsideX128: U256,
-    pub secondsOutside: U256,
-    pub initialized: U256,
+    pub secondsOutside: u32,
+    pub initialized: bool,
 }
 impl Value for TickInfo {
     type ValueType = TickInfoValue;
@@ -493,11 +493,11 @@ impl SlotsGetterSetter for PositionInfo {
 }
 #[derive(Debug)]
 pub struct PositionInfoValue {
-    pub liquidity: U256,
+    pub liquidity: u128,
     pub feeGrowthInside0LastX128: U256,
     pub feeGrowthInside1LastX128: U256,
-    pub tokensOwed0: U256,
-    pub tokensOwed1: U256,
+    pub tokensOwed0: u128,
+    pub tokensOwed1: u128,
 }
 impl Value for PositionInfo {
     type ValueType = PositionInfoValue;
@@ -575,10 +575,10 @@ impl SlotsGetterSetter for OracleObservation {
 }
 #[derive(Debug)]
 pub struct OracleObservationValue {
-    pub blockTimestamp: U256,
-    pub tickCumulative: U256,
+    pub blockTimestamp: u32,
+    pub tickCumulative: i64,
     pub secondsPerLiquidityCumulativeX128: U256,
-    pub initialized: U256,
+    pub initialized: bool,
 }
 impl Value for OracleObservation {
     type ValueType = OracleObservationValue;

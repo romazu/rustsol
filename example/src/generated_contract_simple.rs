@@ -5,27 +5,27 @@ use rustsol::types::{Position, SlotsGetter, SlotsGetterSetter, Value};
 use rustsol::types::{Primitive, Bytes, Address, Mapping, DynamicArray, StaticArray};
 use rustsol::types::{PrimitiveKey, BytesKey, AddressKey};
 use alloy_primitives;
-use alloy_primitives::U256;
+use alloy_primitives::{I256, U256};
 #[derive(Derivative)]
 #[derivative(Debug)]
 pub struct MyContract {
     __slot: U256,
     #[derivative(Debug = "ignore")]
     __slots_getter: Option<Arc<dyn SlotsGetter>>,
-    pub plainUint112: Primitive<14, U256>,
+    pub plainUint112: Primitive<14, u128>,
     pub dynamicArray: DynamicArray<Primitive<32, U256>>,
     pub dynamicArrayNested: DynamicArray<DynamicArray<Primitive<32, U256>>>,
-    pub plainUint32: Primitive<4, U256>,
+    pub plainUint32: Primitive<4, u32>,
     pub plainAddress: Address,
     pub myStructNested: MyContractMyStructNested,
-    pub staticArray: StaticArray<160, Primitive<14, U256>>,
+    pub staticArray: StaticArray<160, Primitive<14, u128>>,
     pub staticArrayLarge: StaticArray<128, MyContractMyStruct>,
-    pub staticArrayNestedSmall: StaticArray<128, StaticArray<32, Primitive<1, U256>>>,
+    pub staticArrayNestedSmall: StaticArray<128, StaticArray<32, Primitive<1, u8>>>,
     pub dynamicArrayStruct: DynamicArray<MyContractMyStructNested>,
     pub dynamicArraySmall: DynamicArray<MyContractMyStructSmall>,
     pub myMapping1: Mapping<PrimitiveKey, Primitive<32, U256>>,
     pub myMapping2: Mapping<BytesKey, Primitive<32, U256>>,
-    pub myMappingBool: Mapping<PrimitiveKey, Primitive<1, U256>>,
+    pub myMappingBool: Mapping<PrimitiveKey, Primitive<1, bool>>,
     pub myAddressMappingNested: Mapping<AddressKey, Mapping<AddressKey, Address>>,
     pub myNestedMapping: Mapping<
         PrimitiveKey,
@@ -59,8 +59,8 @@ pub struct MyContractMyStructSmall {
     __slot: U256,
     #[derivative(Debug = "ignore")]
     __slots_getter: Option<Arc<dyn SlotsGetter>>,
-    pub smallInt1: Primitive<4, U256>,
-    pub smallInt2: Primitive<4, U256>,
+    pub smallInt1: Primitive<4, u32>,
+    pub smallInt2: Primitive<4, u32>,
 }
 impl MyContract {
     pub fn new() -> Self {
@@ -142,20 +142,20 @@ impl SlotsGetterSetter for MyContract {
 }
 #[derive(Debug)]
 pub struct MyContractValue {
-    pub plainUint112: U256,
+    pub plainUint112: u128,
     pub dynamicArray: Vec<U256>,
     pub dynamicArrayNested: Vec<Vec<U256>>,
-    pub plainUint32: U256,
+    pub plainUint32: u32,
     pub plainAddress: alloy_primitives::Address,
     pub myStructNested: MyContractMyStructNestedValue,
-    pub staticArray: Vec<U256>,
+    pub staticArray: Vec<u128>,
     pub staticArrayLarge: Vec<MyContractMyStructValue>,
-    pub staticArrayNestedSmall: Vec<Vec<U256>>,
+    pub staticArrayNestedSmall: Vec<Vec<u8>>,
     pub dynamicArrayStruct: Vec<MyContractMyStructNestedValue>,
     pub dynamicArraySmall: Vec<MyContractMyStructSmallValue>,
     pub myMapping1: Mapping<PrimitiveKey, Primitive<32, U256>>,
     pub myMapping2: Mapping<BytesKey, Primitive<32, U256>>,
-    pub myMappingBool: Mapping<PrimitiveKey, Primitive<1, U256>>,
+    pub myMappingBool: Mapping<PrimitiveKey, Primitive<1, bool>>,
     pub myAddressMappingNested: Mapping<AddressKey, Mapping<AddressKey, Address>>,
     pub myNestedMapping: Mapping<
         PrimitiveKey,
@@ -400,8 +400,8 @@ impl SlotsGetterSetter for MyContractMyStructSmall {
 }
 #[derive(Debug)]
 pub struct MyContractMyStructSmallValue {
-    pub smallInt1: U256,
-    pub smallInt2: U256,
+    pub smallInt1: u32,
+    pub smallInt2: u32,
 }
 impl Value for MyContractMyStructSmall {
     type ValueType = MyContractMyStructSmallValue;
